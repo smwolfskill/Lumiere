@@ -10,16 +10,18 @@
 * Always add a space between keywords. No space is required inside parentheses.
   e.g. `while (condition != true) { ... }`.
 * Braces are to be put on a separate line. e.g.
-  ```
-  int main(int argc, char **argv)
+
+```c
+int main(int argc, char **argv)
+{
+  while (global_condition != true)
   {
-    while (global_condition != true)
-    {
-      // ...
-    }
-    return 0;
+    // ...
   }
-  ```
+  return 0;
+}
+```
+
 * Variable names should reflect their scope. If at any point a variable name
   (minus prefixes) is over 8 characters long, ask yourself if it is really
   necessary. Nobody wants to type a 5 character loop variable several times
@@ -28,17 +30,19 @@
 * Global variables should be prefixed with `g_`, and class member variables
   should be prefixed with `m_`. e.g. `g_globVar` and `m_membVar`.
 * Functions with a long list of arguments should be formatted as follows:
-  ```
-  functionWithAReallyLongNameForSomeReason(arg1, arg2, arg3,
-                                           arg4, arg5, arg6,
-                                           // ...
-                                          );
-  functionWithAReallyLongNameForSomeReason(
-    arg1, arg2, arg3,
-    arg4, arg5, arg6,
-    // ...
-  );
-  ```
+
+```c
+functionWithAReallyLongNameForSomeReason(arg1, arg2, arg3,
+                                         arg4, arg5, arg6,
+                                         // ...
+                                        );
+functionWithAReallyLongNameForSomeReason(
+  arg1, arg2, arg3,
+  arg4, arg5, arg6,
+  // ...
+);
+```
+
   If arguments occur on the same line as the function, indent to the first
   argument. Otherwise, add one level of indentation.
 * Predetermined constants should be capitalized and underscored (not camelCase).
