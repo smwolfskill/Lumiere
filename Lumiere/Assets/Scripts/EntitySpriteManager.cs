@@ -6,8 +6,10 @@ public class EntitySpriteManager : MonoBehaviour {
 
 	public Entity entity;
 
+	/// <summary>
+	/// On initialization, set sprite renderer's sprite to be the entity's sprite.
+	/// </summary>
 	void Start () {
-		//Set our game object's sprite renderer's sprite to be the entity's sprite
 		SpriteRenderer renderer = GetComponent<SpriteRenderer>();
 		renderer.sprite = entity.getSprite();
 	}
