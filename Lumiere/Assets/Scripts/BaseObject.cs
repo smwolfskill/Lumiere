@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseObject : ScriptableObject {
-	protected Sprite sprite;
+	public Sprite sprite;
 
 	public Sprite getSprite() {
 		return sprite;
