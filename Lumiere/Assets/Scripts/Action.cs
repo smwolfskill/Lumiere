@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Action : ScriptableObject {
-	
+public abstract class Action : ScriptableObject {
+
+	abstract public bool execute();
+
 }
