@@ -2,6 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameTile : BaseObject {
-	
+/// <summary>
+/// Representation of tiles for the creation of the game and the map.
+/// </summary>
+public class GameTile : BaseObject
+{
+	/// <summary>
+	/// Base constructor for an ultra generic gametile.
+	/// </summary>
+	/// <param name="spritedata">Contains the image information in regards to this tile.</param>
+	public GameTile(Sprite spritedata)
+	{
+		this.sprite = spritedata;
+	}
 }
+
