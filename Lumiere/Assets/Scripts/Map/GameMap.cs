@@ -7,9 +7,11 @@ using UnityEngine;
 /// </summary>
 public class GameMap
 {
+    // public vars allow for quick modification within Unity's GUI
     public const double tileOffset = 32.0;    // Tile size offset in the game's units. A unit is defined by the position logic for objects not locked on the grid.
     public int width;
     public int height;
+
 
     private GameTile[,] tileMap;
 
@@ -42,7 +44,11 @@ public class GameMap
     /// </summary>
     private void buildMapSimpleMap()
     {
-        
+
+        // Initially cover the map in Wall
+        setTileArea(0, 0, width, height, new WallTile());
+
+
     }
 
     /// <summary>
