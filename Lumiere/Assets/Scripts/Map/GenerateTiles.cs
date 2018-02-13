@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GenerateTiles : MonoBehaviour {
@@ -27,6 +28,10 @@ public class GenerateTiles : MonoBehaviour {
     public GameObject floorTile;
     public GameObject earthTile;
 
+    [Header("Containers")]
+    public GameObject roomContainer;
+    public GameObject earthContainer;
+
     // Random number generator
     private System.Random random;
 
@@ -38,11 +43,14 @@ public class GenerateTiles : MonoBehaviour {
     // 2D array.
     private GameObject[,] tileMap;
 
+    private List<GameObject> containers;
+
     void Start()
     {
         random = new System.Random();
 
         this.tileMap = new GameObject[height, width];
+        this.containers = new List<GameObject>();
 
         switch (generationAlgorithm)
         {
@@ -56,18 +64,19 @@ public class GenerateTiles : MonoBehaviour {
     private void GenerateMapSimple()
     {
         // Initially cover the map in Earth
-        SetTileArea(0, 0, width, height, earthTile);
+        SetTileArea(0, 0, width, height, earthTile, null, InstantiateContainer(earthContainer));
 
         for (int roomAttempt = 0; roomAttempt < roomAttempts; roomAttempt++)
         {
             AttemptGenRandomRoom();
         }
 
-
+ 
     }
 
     /// <summary>
-    /// Attempting to generate a room that is randomly placed in the map.
+    /// Attempting to generate a room that is randomly placed in the map. If a room is
+    /// created, a room container will be added to containers.
     /// </summary>
     /// <returns>
     /// False when a room is not created, True otherwise
@@ -80,50 +89,28 @@ public class GenerateTiles : MonoBehaviour {
         int left = random.Next(0, this.width - roomWidth);
         int top = random.Next(0, this.height - roomHeight);
 
-        print(""+left+", "+top+", "+roomWidth+", "+roomHeight+"");
-
         TileAttributes.TileType[] nonGroundTiles = { TileAttributes.TileType.FLOOR, TileAttributes.TileType.WALL };
         // Verify this area is not overlapping non ground tiles.
         bool isRoomPossible = !IsTileTypeInRect(left, top, roomWidth, roomHeight, nonGroundTiles);
         if(isRoomPossible)
         {
-            SetTileArea(left, top, roomWidth, roomHeight, floorTile, wallTile);
+            // Since the creation of a room is possible, create a room. The room will be the size of
+            // width,height starting from left,top. The room's outter rim will be wallTiles and the
+            // room's center will be floorTiles. The room will be contained in a roomContainer.
+            SetTileArea(left, top, roomWidth, roomHeight, floorTile, wallTile, InstantiateContainer(roomContainer));
         }
 
         return isRoomPossible;
     }
 
-
-    /// <summary>
-    /// Applies a GameObject to a coordinate in the tileMap as well as adding that tile
-    /// to the Unity heirarchy as a child to Map. Removes the tile that existed in the
-    /// specified location if a tile exists.
-    /// </summary>
-    /// <returns>
-    /// True if the tile was placed correctly, false otherwise (such as when the tile
-    /// cannot be placed in the specified coordinate due to the coordinate being invalid)
-    /// </returns>
-    private bool SetTile(int x, int y, GameObject tile)
+    private GameObject InstantiateContainer(GameObject container)
     {
-        if (!validTileSpace(x, y))
-            return false;
-
-        // Remove a tile from the Unity hierarchy if one is existing in this tile location.
-        GameObject preExistingTile = GetTile(x, y);
-        if (preExistingTile)
-            Destroy(preExistingTile);
-
-        // Instantiate the tile; this takes a Unity prefab (the tile) and generates a 
-        // GameObject from the prefab. The generated GameObject is considered to be a
-        // clone of the prefab.
-        GameObject tileClone = Instantiate(tile, new Vector3(x*tileOffset, y*tileOffset, 0.0f), Quaternion.identity);
-        tileClone.transform.parent = gameObject.transform;
-
-        this.tileMap[y, x] = tileClone;
-
-        return true;
-
+        GameObject currContainer = Instantiate(container, gameObject.transform.position, gameObject.transform.rotation);
+        currContainer.transform.parent = gameObject.transform;
+        containers.Add(currContainer);
+        return currContainer;
     }
+
 
     /// <summary>
     /// Returns the TileType of a Tile. A TileType is a value in the enum TileAttributes.TileType.
@@ -191,12 +178,54 @@ public class GenerateTiles : MonoBehaviour {
         return this.tileMap[y, x];
     }
 
+
+    /// <summary>
+    /// Applies a GameObject to a coordinate in the tileMap as well as adding that tile
+    /// to the Unity heirarchy as a child to a Container. Removes the tile that existed 
+    /// in the specified location if a tile exists.
+    /// </summary>
+    /// <returns>
+    /// True if the tile was placed correctly, false otherwise (such as when the tile
+    /// cannot be placed in the specified coordinate due to the coordinate being invalid)
+    /// </returns>
+    private bool SetTile(int x, int y, GameObject tile, GameObject container = null)
+    {
+        // Defaulting container to be gameObject; this has to be done this way as gameObject
+        // is a compile time object.
+        if (container == null)
+            container = gameObject;
+
+        if (!validTileSpace(x, y))
+            return false;
+
+        // Remove a tile from the Unity hierarchy if one is existing in this tile location.
+        GameObject preExistingTile = GetTile(x, y);
+        if (preExistingTile)
+            Destroy(preExistingTile);
+
+        // Instantiate the tile; this takes a Unity prefab (the tile) and generates a 
+        // GameObject from the prefab. The generated GameObject is considered to be a
+        // clone of the prefab.
+        GameObject tileClone = Instantiate(tile, new Vector3(x * tileOffset, y * tileOffset, 0.0f), Quaternion.identity);
+        tileClone.transform.parent = container.transform;
+
+        this.tileMap[y, x] = tileClone;
+
+        return true;
+
+    }
+
     /// <summary>
     /// Sets an area of the map (from left,top to left+width,top+height) all to a 
     /// specified gameTile.
     /// </summary>
-    private void SetTileArea(int left, int top, int width, int height, GameObject fillGameObject, GameObject borderGameObject = null)
+    private void SetTileArea(int left, int top, int width, int height, GameObject fillGameObject, GameObject borderGameObject = null, GameObject container = null)
     {
+        // Defaulting container to be gameObject; this has to be done this way as gameObject
+        // is a compile time object.
+        if (container == null)
+            container = gameObject;
+
         // Force top and left of rectangle to be inside the map.
         if (left < 0)
             left = 0;
@@ -219,12 +248,12 @@ public class GenerateTiles : MonoBehaviour {
                     (x == left || x == left + width - 1 || y == top || y == top + height - 1)
                 )
                 {
-                    SetTile(x, y, borderGameObject);
+                    SetTile(x, y, borderGameObject, container);
                 }
                 // Otherwise, place the default fill GameObject
                 else
                 {
-                    SetTile(x, y, fillGameObject);
+                    SetTile(x, y, fillGameObject, container);
                 }
             }
         }
