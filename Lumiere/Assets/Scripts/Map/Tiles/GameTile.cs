@@ -5,15 +5,15 @@ using UnityEngine;
 /// <summary>
 /// Representation of tiles for the creation of the game and the map.
 /// </summary>
-public class GameTile : BaseObject
+public abstract class GameTile : BaseObject
 {
 	/// <summary>
 	/// Base constructor for an ultra generic gametile.
 	/// </summary>
 	/// <param name="spritedata">Contains the image information in regards to this tile.</param>
-	public GameTile(Sprite spritedata)
+	public GameTile(Sprite sprite)
 	{
-		this.sprite = spritedata;
+		this.sprite = sprite;
 	}
 }
 
