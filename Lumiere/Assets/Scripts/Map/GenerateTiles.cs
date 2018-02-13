@@ -9,10 +9,12 @@ public class GenerateTiles : MonoBehaviour {
         SIMPLE
     };
 
+
     public GenerationAlgorithm generationAlgorithm;
 
     [Header("GenAlgo Simple")]
     public int roomAttempts = 30;
+    public int pathAttempts = 30;
 
     [Header("GenAlgo Constraints")]
     public int smallestRoomDim = 5; //inclusive
@@ -31,6 +33,7 @@ public class GenerateTiles : MonoBehaviour {
     [Header("Containers")]
     public GameObject roomContainer;
     public GameObject earthContainer;
+    public GameObject pathContainer;
 
     // Random number generator
     private System.Random random;
@@ -61,6 +64,11 @@ public class GenerateTiles : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// The GenerateMapSimple algorithm first places at most roomAttempts rooms in the map, then
+    /// places at most pathAttempts paths connecting the rooms. Paths are started from a side of
+    /// a room and continue until the path hits a room. 
+    /// </summary>
     private void GenerateMapSimple()
     {
         // Initially cover the map in Earth
@@ -71,7 +79,96 @@ public class GenerateTiles : MonoBehaviour {
             AttemptGenRandomRoom();
         }
 
- 
+        for(int pathAttempt = 0; pathAttempt < pathAttempts; pathAttempt++)
+        {
+            AttemptGenRandomPath();
+        }
+    }
+
+    private void AttemptGenRandomPath()
+    {
+        // The container that will hold all tiles related to this path.
+        GameObject currPathContainer = InstantiateContainer(pathContainer);
+
+        GameObject roomContainer = GetRandomContainer(ContainerAttributes.ContainerType.ROOM);
+        ContainerAttributes roomContainerAttributes = roomContainer.GetComponent<ContainerAttributes>();
+
+        // These values should be refactored into a struct that exists in an abstract utilities class.
+        int left = roomContainerAttributes.GetLeft();
+        int top = roomContainerAttributes.GetTop();
+        int width = roomContainerAttributes.GetWidth();
+        int height = roomContainerAttributes.GetHeight();
+
+        GameObject startingTile = null;
+
+        // Obtain a random direction to start creating a path in. This direction will also be the
+        // side of the room that the path starts generating from (ex: North = start making a path 
+        // from the North side of a room)
+        Utilities.Directions startingDirection = GetRandomEnumValue<Utilities.Directions>();
+
+        // Based on the startingDirection choose a startingTile.
+        switch(startingDirection)
+        {
+            case Utilities.Directions.NORTH:
+
+                // We want to choose a tile that is not in a corner and that is on the
+                // north wall of the room.
+                startingTile = GetTile(random.Next(left + 1, left + width - 1), top);
+                break;
+
+            case Utilities.Directions.SOUTH:
+                startingTile = GetTile(random.Next(left + 1, left + width - 1), top + height - 1);
+                break;
+
+            case Utilities.Directions.WEST:
+                startingTile = GetTile(left, random.Next(top + 1, top + height - 1));
+                break;
+
+            case Utilities.Directions.EAST:
+                startingTile = GetTile(left + width - 1, random.Next(top + 1, top + height - 1));
+                break;
+        }
+
+        AttemptGenRandomPathStep(startingTile, startingDirection, currPathContainer);
+    }
+
+    private void AttemptGenRandomPathStep(GameObject tile, Utilities.Directions direction, GameObject currPathContainer)
+    {
+        TileAttributes tileAttributes = tile.GetComponent<TileAttributes>();
+
+        // Overwrite passed in tile with floor
+        SetTile(tileAttributes.GetX(), tileAttributes.GetY(), floorTile, currPathContainer);
+    }
+
+    // refactor: Should be made public static in a public utility class.
+    private T GetRandomEnumValue<T>()
+    {
+        Type type = typeof(T);
+        Array values = Enum.GetValues(type);
+        return (T)values.GetValue(random.Next(0, values.Length));
+    }
+
+    private GameObject GetRandomContainer(ContainerAttributes.ContainerType containerType)
+    {
+        GameObject container;
+
+        // Continually search for a container of a containerType until one is found, then
+        // return that container.
+        //
+        // WARNING: currently this function will not halt unless a container of containerType
+        //          exists in containers.
+        do
+        {
+            container = containers[random.Next(0, containers.Count)];
+        }
+        while (!IsContainerTypeOf(container, containerType));
+
+        return container;
+    }
+
+    private bool IsContainerTypeOf(GameObject container, ContainerAttributes.ContainerType containerType)
+    {
+        return container.GetComponent<ContainerAttributes>().containerType == containerType;
     }
 
     /// <summary>
@@ -97,7 +194,9 @@ public class GenerateTiles : MonoBehaviour {
             // Since the creation of a room is possible, create a room. The room will be the size of
             // width,height starting from left,top. The room's outter rim will be wallTiles and the
             // room's center will be floorTiles. The room will be contained in a roomContainer.
-            SetTileArea(left, top, roomWidth, roomHeight, floorTile, wallTile, InstantiateContainer(roomContainer));
+            GameObject currRoomContainer = InstantiateContainer(roomContainer);
+            currRoomContainer.GetComponent<ContainerAttributes>().SetDimensions(left, top, roomWidth, roomHeight);
+            SetTileArea(left, top, roomWidth, roomHeight, floorTile, wallTile, currRoomContainer);
         }
 
         return isRoomPossible;
@@ -170,9 +269,9 @@ public class GenerateTiles : MonoBehaviour {
         return false;
     }
 
-    private GameObject GetTile(int x, int y)
+    public GameObject GetTile(int x, int y)
     {
-        if (!validTileSpace(x, y))
+        if (!ValidTileSpace(x, y))
             return null;
 
         return this.tileMap[y, x];
@@ -195,7 +294,7 @@ public class GenerateTiles : MonoBehaviour {
         if (container == null)
             container = gameObject;
 
-        if (!validTileSpace(x, y))
+        if (!ValidTileSpace(x, y))
             return false;
 
         // Remove a tile from the Unity hierarchy if one is existing in this tile location.
@@ -207,8 +306,17 @@ public class GenerateTiles : MonoBehaviour {
         // GameObject from the prefab. The generated GameObject is considered to be a
         // clone of the prefab.
         GameObject tileClone = Instantiate(tile, new Vector3(x * tileOffset, y * tileOffset, 0.0f), Quaternion.identity);
+
+        // Set tile as a child of a container.
         tileClone.transform.parent = container.transform;
 
+        // Give the tile more info about itself.
+        TileAttributes tileCloneAttributes = tileClone.GetComponent<TileAttributes>();
+        tileCloneAttributes.SetContainer(container);
+        tileCloneAttributes.SetMap(gameObject); // The map is this gameObject.
+        tileCloneAttributes.SetCords(x, y);
+
+        // Add the tile to the map's (this gameObject) grid. 
         this.tileMap[y, x] = tileClone;
 
         return true;
@@ -260,33 +368,11 @@ public class GenerateTiles : MonoBehaviour {
     }
 
     /// <summary>
-    /// A function designed to return the tiledata associated with real coordinates of objects.
-    /// </summary>
-    /// <param name="x">X coordinate in world.</param>
-    /// <param name="y">Y coordinate in world.</param>
-    /// <returns>The tile at that location. If there is no such tile, returns null.</returns>
-    public GameObject getTile(float x, float y)
-    {
-        // Dummy check.
-        if (x < 0 || y < 0)
-            return null;
-
-        // Calculate tile based on offset.
-        int realX = (int)Math.Floor(x / tileOffset);
-        int realY = (int)Math.Floor(y / tileOffset);
-
-        // Dummy check 2.
-        if (!validTileSpace(realX, realY))
-            return null;
-
-        // Return tile data.
-        return this.tileMap[realY, realX];
-    }
-
-    /// <summary>
     /// Checks if a coordinate is one that exists within the boundaries of the map/
     /// </summary>
-    private bool validTileSpace(int x, int y)
+    /// TODO: this belongs in a seperate script as it is not directly tied to the
+    ///       concept of GeneratingTiles
+    private bool ValidTileSpace(int x, int y)
     {
         return (x >= 0 && y >= 0 && x < width && y < height);
     }
