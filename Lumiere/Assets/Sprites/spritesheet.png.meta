@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 965c7c2dcb3598c4198a935951e2e9ce
-timeCreated: 1518501619
+timeCreated: 1518539261
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -13,9 +13,9 @@ TextureImporter:
     21300012: spritesheet_6
     21300014: spritesheet_7
     21300016: spritesheet_8
-    21300018: spritesheet_9
+    21300018: dirt_1
     21300020: spritesheet_10
-    21300022: spritesheet_11
+    21300022: sand
     21300024: wall_0
     21300026: spritesheet_13
     21300028: spritesheet_14
@@ -24,9 +24,9 @@ TextureImporter:
     21300034: spritesheet_17
     21300036: spritesheet_18
     21300038: spritesheet_19
-    21300040: spritesheet_20
+    21300040: dirt_0
     21300042: spritesheet_21
-    21300044: spritesheet_22
+    21300044: wall_1
     21300046: spritesheet_23
     21300048: spritesheet_24
     21300050: spritesheet_25
@@ -146,7 +146,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -306,7 +306,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet_9
+      name: dirt_1
       rect:
         serializedVersion: 2
         x: 288
@@ -334,7 +334,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet_11
+      name: sand
       rect:
         serializedVersion: 2
         x: 32
@@ -460,7 +460,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet_20
+      name: dirt_0
       rect:
         serializedVersion: 2
         x: 0
@@ -488,7 +488,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet_22
+      name: wall_1
       rect:
         serializedVersion: 2
         x: 64
