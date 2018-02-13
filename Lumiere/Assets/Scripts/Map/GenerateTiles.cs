@@ -15,10 +15,11 @@ public class GenerateTiles : MonoBehaviour {
     [Header("GenAlgo Simple")]
     public int roomAttempts = 30;
     public int pathAttempts = 30;
+    public int pathDirectionChangeLikelihood = 10; // Larger means less likely to change directions.
 
     [Header("GenAlgo Constraints")]
-    public int smallestRoomDim = 5; //inclusive
-    public int largestRoomDim = 15; //inclusive
+    public int smallestRoomDim = 5; // inclusive
+    public int largestRoomDim = 15; // inclusive
 
     [Header("Sizing")]
     public int width = 100;
@@ -104,40 +105,68 @@ public class GenerateTiles : MonoBehaviour {
         // Obtain a random direction to start creating a path in. This direction will also be the
         // side of the room that the path starts generating from (ex: North = start making a path 
         // from the North side of a room)
-        Utilities.Directions startingDirection = GetRandomEnumValue<Utilities.Directions>();
+        Utilities.Direction startingDirection = GetRandomEnumValue<Utilities.Direction>();
 
         // Based on the startingDirection choose a startingTile.
         switch(startingDirection)
         {
-            case Utilities.Directions.NORTH:
+            case Utilities.Direction.NORTH:
 
                 // We want to choose a tile that is not in a corner and that is on the
                 // north wall of the room.
                 startingTile = GetTile(random.Next(left + 1, left + width - 1), top);
                 break;
 
-            case Utilities.Directions.SOUTH:
+            case Utilities.Direction.SOUTH:
                 startingTile = GetTile(random.Next(left + 1, left + width - 1), top + height - 1);
                 break;
 
-            case Utilities.Directions.WEST:
+            case Utilities.Direction.WEST:
                 startingTile = GetTile(left, random.Next(top + 1, top + height - 1));
                 break;
 
-            case Utilities.Directions.EAST:
+            case Utilities.Direction.EAST:
                 startingTile = GetTile(left + width - 1, random.Next(top + 1, top + height - 1));
                 break;
         }
 
+
         AttemptGenRandomPathStep(startingTile, startingDirection, currPathContainer);
     }
 
-    private void AttemptGenRandomPathStep(GameObject tile, Utilities.Directions direction, GameObject currPathContainer)
+    private void AttemptGenRandomPathStep(GameObject tile, Utilities.Direction direction, GameObject currPathContainer)
     {
+        // If the tile is null (this is possible when a path is being generated and 
+        // ends up past an edge of the map), stop creating the path.
+        if (tile == null)
+            return;
+
         TileAttributes tileAttributes = tile.GetComponent<TileAttributes>();
+
+        // Once the path has found a floor, stop creating the path.
+        if (tileAttributes.tileType == TileAttributes.TileType.FLOOR)
+            return;
 
         // Overwrite passed in tile with floor
         SetTile(tileAttributes.GetX(), tileAttributes.GetY(), floorTile, currPathContainer);
+
+        // Test if a random direction change should occur. A 0 will lead to a left
+        // left direction change; 1 will lead to a right direction change, all else
+        // will lead to going the same direction. This can be refactored into assigning
+        // 0 and 1 to an enum or constants.
+        int directionChangeVal = random.Next(0, pathDirectionChangeLikelihood);
+        if(directionChangeVal == 0)
+        {
+            direction = Utilities.LeftOf(direction);
+        }
+        else if(directionChangeVal == 1)
+        {
+            direction = Utilities.RightOf(direction);
+        }
+
+        // Take another step in creating the path.
+        AttemptGenRandomPathStep(tileAttributes.GetNeighbor(direction), direction, currPathContainer);
+        
     }
 
     // refactor: Should be made public static in a public utility class.

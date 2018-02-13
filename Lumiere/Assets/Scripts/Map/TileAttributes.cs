@@ -45,20 +45,20 @@ public class TileAttributes : MonoBehaviour {
     }
 
     // Refactor suggestion: Adding a function like this makes the name TileAttributes not as applicable anymore.
-    public GameObject GetNeighbor(Utilities.Directions direction)
+    public GameObject GetNeighbor(Utilities.Direction direction)
     {
         switch (direction)
         {
-            case Utilities.Directions.NORTH:
+            case Utilities.Direction.NORTH:
                 return map.GetComponent<GenerateTiles>().GetTile(x, y - 1);
 
-            case Utilities.Directions.SOUTH:
+            case Utilities.Direction.SOUTH:
                 return map.GetComponent<GenerateTiles>().GetTile(x, y + 1);
 
-            case Utilities.Directions.WEST:
+            case Utilities.Direction.WEST:
                 return map.GetComponent<GenerateTiles>().GetTile(x - 1, y);
 
-            case Utilities.Directions.EAST:
+            case Utilities.Direction.EAST:
                 return map.GetComponent<GenerateTiles>().GetTile(x + 1, y);
 
         }
