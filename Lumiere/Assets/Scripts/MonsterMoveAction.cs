@@ -6,7 +6,7 @@ public abstract class MonsterMoveAction : Action
 {
 	public float speed;
 
-	public override bool validate (GameObject obj)
+	public override bool Validate (GameObject obj)
 	{
 		return true;
 	}

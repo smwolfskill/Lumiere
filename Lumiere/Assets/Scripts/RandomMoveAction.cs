@@ -14,7 +14,7 @@ public class RandomMoveAction : MonsterMoveAction
 		initialized = true;
 	}
 
-	public override bool validate (GameObject obj)
+	public override bool Validate (GameObject obj)
 	{
 		if (!initialized) 
 		{
@@ -31,7 +31,8 @@ public class RandomMoveAction : MonsterMoveAction
 		timer += Time.deltaTime;
 		return false;
 	}
-	public override bool execute (GameObject obj)
+
+	public override bool Execute (GameObject obj)
 	{
 		Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D> ();
 		if (rigidbody == null) 

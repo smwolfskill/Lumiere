@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Action : ScriptableObject 
 {
-	public abstract bool validate (GameObject obj);
-	public abstract bool execute(GameObject obj);
+	public abstract bool Validate (GameObject obj);
+	public abstract bool Execute(GameObject obj);
 
 }

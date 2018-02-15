@@ -8,7 +8,8 @@ public class EntityActionManager : MonoBehaviour {
 	public Action action;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		
 	}
 	
@@ -20,10 +21,10 @@ public class EntityActionManager : MonoBehaviour {
 			return;
 		}
 
-		if (action.validate (this.gameObject)) 
+		if (action.Validate (this.gameObject)) 
 		{
 			
-			action.execute (this.gameObject);
+			action.Execute (this.gameObject);
 		}
 	}
 }

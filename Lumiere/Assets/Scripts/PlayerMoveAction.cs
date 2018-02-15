@@ -7,12 +7,12 @@ public class PlayerMoveAction : Action
 {
 	public float speed = 1f;
 
-	public override bool validate (GameObject obj)
+	public override bool Validate (GameObject obj)
 	{
 		return true;
 	}
 
-	public override bool execute (GameObject obj)
+	public override bool Execute (GameObject obj)
 	{
 		Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D> ();
 		if (rigidbody == null) 
