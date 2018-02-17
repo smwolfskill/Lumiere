@@ -9,8 +9,10 @@ public class RandomMoveAction : MonsterMoveAction
 	private float timer = 0f;
 	private bool initialized = false;
 
-	public override bool Validate (GameObject obj)
+	public override bool Validate(GameObject obj)
 	{
+        if(!base.Validate(obj)) { return false; }
+
 		if (!initialized) 
 		{
             initialized = true;
@@ -27,7 +29,7 @@ public class RandomMoveAction : MonsterMoveAction
 		return false;
 	}
 
-	public override bool Execute (GameObject obj)
+	public override bool Execute(GameObject obj)
 	{
 		Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D> ();
 		if (rigidbody == null) 
