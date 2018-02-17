@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityActionManager : MonoBehaviour {
+public class EntityActionManager : MonoBehaviour
+{
 
 	//public Entity entity;
     //Temporary placeholder action, will replace with a complete entity after merge
