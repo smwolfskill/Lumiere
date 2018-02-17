@@ -3,6 +3,9 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 
+/// <summary>
+/// This class contains some basic player movement tests. Testing based on input will need to be done manually.
+/// </summary>
 public class PlayerMovementTest
 {
     GameObject player;
@@ -10,6 +13,9 @@ public class PlayerMovementTest
     EntityActionManager entityActionManager;
     EntityAction playerMove;
 
+    /// <summary>
+    /// Initialize the Player GameObject and its EntityActionManager for use in all the tests.
+    /// </summary>
     [SetUp]
 	public void Init()
     {
@@ -22,6 +28,9 @@ public class PlayerMovementTest
         Assert.IsNotNull(player.GetComponent<BoxCollider2D>());
     }
 
+    /// <summary>
+    /// Clean up everything after each test.
+    /// </summary>
     [TearDown]
     public void Cleanup()
     {
@@ -38,6 +47,9 @@ public class PlayerMovementTest
         rigidbody = null;
     }
 
+    /// <summary>
+    /// Initialize the player's rigidbody with some defined constraints.
+    /// </summary>
     void InitRigidbody()
     {
         rigidbody = player.AddComponent<Rigidbody2D>();
@@ -49,6 +61,9 @@ public class PlayerMovementTest
         rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
+    /// <summary>
+    /// Tests whether the PlayerMoveAction is valid. Should always return true for now.
+    /// </summary>
     [Test]
     public void TestValidate()
     {
@@ -56,6 +71,10 @@ public class PlayerMovementTest
         Assert.AreEqual(true, canMove);
     }
 
+
+    /// <summary>
+    /// Tests whether the PlayerMoveAction fails when there is no rigidbody.
+    /// </summary>
     [Test]
     public void TestFailMove()
     {
@@ -63,6 +82,9 @@ public class PlayerMovementTest
         Assert.AreEqual(false, executed);
     }
 
+    /// <summary>
+    /// Tests whether the PlayerMoveAction succeeds when there is a rigidbody.
+    /// </summary>
     [Test]
     public void TestSuccessMove()
     {
@@ -71,6 +93,10 @@ public class PlayerMovementTest
         Assert.AreEqual(true, executed);
     }
 
+    /// <summary>
+    /// Tests whether the player doesn't move after a frame when there is no input.
+    /// </summary>
+    /// <returns></returns>
     [UnityTest]
     public IEnumerator TestNoInput()
     {

@@ -3,6 +3,9 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 
+/// <summary>
+/// This class contains some basic Monster movement tests.
+/// </summary>
 public class MonsterMovementTest
 {
     GameObject monster;
@@ -10,6 +13,9 @@ public class MonsterMovementTest
     EntityActionManager entityActionManager;
     EntityAction randomMove;
 
+    /// <summary>
+    /// Initialize the Monster GameObject and its EntityActionManager for use in all the tests.
+    /// </summary>
     [SetUp]
     public void Init()
     {
@@ -23,6 +29,9 @@ public class MonsterMovementTest
         Assert.IsNotNull(monster.GetComponent<BoxCollider2D>());
     }
 
+    /// <summary>
+    /// Clean up everything after each test.
+    /// </summary>
     [TearDown]
     public void Cleanup()
     {
@@ -39,6 +48,9 @@ public class MonsterMovementTest
         rigidbody = null;
     }
 
+    /// <summary>
+    /// Initialize the Monster's rigidbody with some defined constraints.
+    /// </summary>
     void InitRigidbody()
     {
         rigidbody = monster.AddComponent<Rigidbody2D>();
@@ -50,6 +62,10 @@ public class MonsterMovementTest
         rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
+    /// <summary>
+    /// Checks if the RandomMoveAction validates correctly.
+    /// </summary>
+    /// <returns></returns>
     [UnityTest]
     public IEnumerator TestValidate()
     {
@@ -63,6 +79,9 @@ public class MonsterMovementTest
 
     }
 
+    /// <summary>
+    /// Tests whether the RandomMoveAction fails when there is no rigidbody.
+    /// </summary>
     [Test]
     public void TestFailMove()
     {
@@ -71,6 +90,9 @@ public class MonsterMovementTest
         Assert.AreEqual(false, executed);
     }
 
+    /// <summary>
+    /// Tests whether the RandomMoveAction succeeds when there is a rigidbody.
+    /// </summary>
     [Test]
     public void TestSuccessMove()
     {
@@ -80,6 +102,10 @@ public class MonsterMovementTest
         Assert.AreEqual(true, executed);
     }
 
+    /// <summary>
+    /// Tests whether the Monster's rigidbody changes position and velocity after the move is executed.
+    /// </summary>
+    /// <returns></returns>
     [UnityTest]
     public IEnumerator TestChangePosition()
     {
