@@ -6,20 +6,15 @@ using UnityEngine;
 public class RandomMoveAction : MonsterMoveAction 
 {
 	public float directionChangeTimer = 5f;
-	float timer = 0f;
-	bool initialized = false;
-
-	protected void Initialize()
-	{
-		initialized = true;
-	}
+	private float timer = 0f;
+	private bool initialized = false;
 
 	public override bool Validate (GameObject obj)
 	{
 		if (!initialized) 
 		{
-			Initialize ();
-			return true;
+            initialized = true;
+            return true;
 		}
 		
 		if (timer >= directionChangeTimer) 
