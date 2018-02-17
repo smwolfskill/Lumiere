@@ -5,29 +5,29 @@ using UnityEngine;
 public class EntityActionManager : MonoBehaviour {
 
 	//public Entity entity;
-	public Action action;
+	public EntityAction entityAction;
 
     // Update is called once per frame
     void Update ()
     {
-        Action[] actions = new Action[] { action };
+        EntityAction[] actions = new EntityAction[] { entityAction };
         ExecuteValidActions(actions);
 	}
 
-    public bool ExecuteValidActions(Action[] actions)
+    public bool ExecuteValidActions(EntityAction[] entityActions)
     {
         if (this.gameObject == null)
         {
             return false;
         }
 
-        foreach (Action action in actions) 
+        foreach (EntityAction entityAction in entityActions) 
         {
 
-            if (action.Validate(this.gameObject))
+            if (entityAction.Validate(this.gameObject))
             {
 
-                action.Execute(this.gameObject);
+                entityAction.Execute(this.gameObject);
             }
         }
 

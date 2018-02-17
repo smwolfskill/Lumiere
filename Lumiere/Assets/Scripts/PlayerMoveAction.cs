@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu (menuName = "Lumiere/Actions/PlayerMoveAction")]
-public class PlayerMoveAction : Action 
+[CreateAssetMenu (menuName = "Lumiere/Actions/EntityActions/PlayerMoveAction")]
+public class PlayerMoveAction : EntityAction
 {
 	public float speed = 1f;
 

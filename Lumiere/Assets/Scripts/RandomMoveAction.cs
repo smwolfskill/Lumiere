@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Lumiere/Actions/RandomMoveAction")]
+[CreateAssetMenu(menuName = "Lumiere/Actions/EntityActions/RandomMoveAction")]
 public class RandomMoveAction : MonsterMoveAction 
 {
 	public float directionChangeTimer = 5f;
