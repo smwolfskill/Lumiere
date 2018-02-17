@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateTiles : MonoBehaviour {
+/// <summary>
+/// Generator class for handling tile generation.
+/// </summary>
+public class GenerateTiles : MonoBehaviour
+{
 
     public enum GenerationAlgorithm
     {
@@ -305,7 +309,6 @@ public class GenerateTiles : MonoBehaviour {
 
         return this.tileMap[y, x];
     }
-
 
     /// <summary>
     /// Applies a GameObject to a coordinate in the tileMap as well as adding that tile
