@@ -12,7 +12,6 @@ public class GameMap
     public int width;
     public int height;
 
-
     private GameTile[,] tileMap;
 
     /// <summary>
@@ -25,30 +24,27 @@ public class GameMap
         this.width = width;
         this.height = height;
 
-        buildMap();
+        BuildMap();
     }
 
     /// <summary>
     /// Creates the actual map data, filling tile slots with required information.
     /// </summary>
-    private void buildMap()
+    private void BuildMap()
     {
         this.tileMap = new GameTile[height, width];
 
         // Call one of many different map creation algorithms
-        buildMapSimpleMap();
+        BuildMapSimpleMap();
     }
 
     /// <summary>
     /// A map creation algorithm.
     /// </summary>
-    private void buildMapSimpleMap()
+    private void BuildMapSimpleMap()
     {
-
         // Initially cover the map in Wall
-        setTileArea(0, 0, width, height, new WallTile());
-
-
+        SetTileArea(0, 0, width, height, new WallTile());
     }
 
     /// <summary>
@@ -58,9 +54,9 @@ public class GameMap
     /// True if the tile was placed correctly, false otherwise (such as when the tile
     /// cannot be placed in the specified coordinate due to the coordinate being invalid)
     /// </returns>
-    private bool setTile(int x, int y, GameTile gameTile)
+    private bool SetTile(int x, int y, GameTile gameTile)
     {
-        if (!validTileSpace(x, y))
+        if (!ValidTileSpace(x, y))
             return false;
 
         this.tileMap[y, x] = gameTile;
@@ -72,13 +68,18 @@ public class GameMap
     /// Sets an area of the map (from left,top to left+width,top+height) all to a 
     /// specified gameTile.
     /// </summary>
-    private void setTileArea(int left, int top, int width, int height, GameTile gameTile)
+    /// <param name="left">Left side value. (What tile to start at)</param>
+    /// <param name="top">Top side value. (What tile to start at)</param>
+    /// <param name="width">How far to build tiles left/right.</param>
+    /// <param name="height">How high to build tiles up/down.</param>
+    /// <param name="gameTile">The tile in question we are using.</param>
+    private void SetTileArea(int left, int top, int width, int height, GameTile gameTile)
     {
         for (int x = left; x < left + width; x++)
         {
             for (int y = top; y < top + height; y++)
             {
-                setTile(x, y, gameTile);
+                SetTile(x, y, gameTile);
             }
         }
     }
@@ -87,7 +88,7 @@ public class GameMap
     /// Basic getter function for the map's height.
     /// </summary>
     /// <returns>The map's height in tiles.</returns>
-    public int getHeight()
+    public int GetHeight()
     {
         return this.height;
     }
@@ -96,7 +97,7 @@ public class GameMap
     /// Basic getter function for the map's width.
     /// </summary>
     /// <returns>The map's width in tiles.</returns>
-    public int getWidth()
+    public int GetWidth()
     {
         return this.width;
     }
@@ -107,7 +108,7 @@ public class GameMap
     /// <param name="x">X coordinate in world.</param>
     /// <param name="y">Y coordinate in world.</param>
     /// <returns>The tile at that location. If there is no such tile, returns null.</returns>
-    public GameTile getTile(double x, double y)
+    public GameTile GetTile(double x, double y)
     {
         // Dummy check.
         if (x < 0 || y < 0)
@@ -118,7 +119,7 @@ public class GameMap
         int realY = (int)Math.Floor(y / tileOffset);
 
         // Dummy check 2.
-        if (!validTileSpace(realX, realY))
+        if (!ValidTileSpace(realX, realY))
             return null;
         
         // Return tile data.
@@ -127,8 +128,11 @@ public class GameMap
 
     /// <summary>
     /// Checks if a coordinate is one that exists within the boundaries of the map/
+    /// <param name="x">X coordinate in tilespace.</param>
+    /// <param name="x">Y coordinate in tilespace.</param>
+    /// <returns>True if space is valid in tilespace.</returns>
     /// </summary>
-    private bool validTileSpace(int x, int y)
+    private bool ValidTileSpace(int x, int y)
     {
         return (x >= 0 && y >= 0 && x < width && y < height);
     }
