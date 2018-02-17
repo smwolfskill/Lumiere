@@ -8,6 +8,7 @@ public abstract class MonsterMoveAction : EntityAction
 
 	public override bool Validate(GameObject obj)
 	{
+        //TODO: Replace this in future iterations when AI is implemented
 		return true;
 	}
 }
