@@ -5,9 +5,9 @@ using UnityEngine;
 public class EntityActionManager : MonoBehaviour
 {
 
-	//public Entity entity;
+    //public Entity entity;
     //Temporary placeholder action, will replace with a complete entity after merge
-	public EntityAction entityAction;
+    public EntityAction entityAction;
 
     // Update is called once per frame
     void Update ()

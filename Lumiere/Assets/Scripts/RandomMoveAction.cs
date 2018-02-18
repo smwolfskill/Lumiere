@@ -11,11 +11,11 @@ public class RandomMoveAction : MonsterMoveAction
 
 	public override bool Validate(GameObject obj)
 	{
-        if(!base.Validate(obj)) { return false; }
+        if (!base.Validate(obj)) { return false; }
 
         //If monster is requesting to move for the first time, then allow the move.
-		if (!initialized) 
-		{
+        if (!initialized)
+        {
             initialized = true;
             //We have validated once, set the timer to what it should be after one validation
             timer = Time.deltaTime;
@@ -40,10 +40,10 @@ public class RandomMoveAction : MonsterMoveAction
 		Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D> ();
 
         //Safety check for rigidbody
-		if (rigidbody == null) 
-		{
-			return false;
-		}
+        if (rigidbody == null)
+        {
+            return false;
+        }
 
         //Choose a random axis to move along (either the horizontal or the vertical)
 		bool isHorizontal = Random.Range (-1.0f, 1.0f) >= 0.0f;
