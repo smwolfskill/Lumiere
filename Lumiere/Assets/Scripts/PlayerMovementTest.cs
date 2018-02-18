@@ -17,7 +17,7 @@ public class PlayerMovementTest
     /// Initialize the Player GameObject and its EntityActionManager for use in all the tests.
     /// </summary>
     [SetUp]
-	public void Init()
+    public void Init()
     {
         player = new GameObject("Player", typeof(BoxCollider2D));
         entityActionManager = player.AddComponent<EntityActionManager>();
