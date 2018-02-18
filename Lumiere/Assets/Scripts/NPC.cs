@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class NPC : Entity {
+public abstract class NPC : Entity 
+{
 	
 }
