@@ -14,7 +14,7 @@ public class EntityActionManager : MonoBehaviour
     {
         EntityAction[] actions = new EntityAction[] { entityAction };
         ExecuteValidActions(actions);
-	}
+    }
 
     /// <summary>
     /// Executes all valid EntityActions given an array of EntityAction

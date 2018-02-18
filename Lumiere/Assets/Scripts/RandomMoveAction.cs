@@ -10,7 +10,7 @@ public class RandomMoveAction : MonsterMoveAction
 	private bool initialized = false;
 
 	public override bool Validate(GameObject obj)
-	{
+    {
         if (!base.Validate(obj)) { return false; }
 
         //If monster is requesting to move for the first time, then allow the move.
