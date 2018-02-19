@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-<<<<<<< Lumiere/Assets/Scripts/Action.cs
+
 public abstract class Action : ScriptableObject 
 {
     /// <summary>
