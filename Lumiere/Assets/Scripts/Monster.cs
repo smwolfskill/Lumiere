@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Monster : NPC {
-	
+[CreateAssetMenu (menuName = "Lumiere/Entity/NPC/Monster")]
+public class Monster : NPC
+{
+
 }
