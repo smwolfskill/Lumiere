@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ContainerAttributes : MonoBehaviour
+public class ContainerAttributes
 {
     public enum ContainerType
     {
