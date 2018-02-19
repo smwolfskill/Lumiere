@@ -75,6 +75,5 @@ public class MapTest
         Assert.Equals(tileGen.roomAttempts, 30);
         Assert.Equals(tileGen.pathAttempts, 30);
         Assert.Equals(tileGen.pathDirectionChangeLikelihood, 10);
-        Assert.IsNotNull(tileGen.GetTile(15, 15));
     }
 }
