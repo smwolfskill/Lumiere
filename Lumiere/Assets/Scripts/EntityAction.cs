@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityAction : Action {
-
-	public override bool execute() {
-		//our implementation here..
-		return true; //temp
-	}
-
+public abstract class EntityAction : Action
+{
+    //TODO: Add code here in future iterations
 }
