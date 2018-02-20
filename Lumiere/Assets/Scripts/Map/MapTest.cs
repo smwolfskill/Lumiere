@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using System.ComponentModel;
 
 /// <summary>
 /// Test class for map functionality.
@@ -11,6 +12,7 @@ public class MapTest
 {
     GameMap map;
     GameObject gameMap;
+	GameObject containerTestObject; //for testing class ContainerAttributes
     GenerateTiles tileGen;
     ContainerAttributes attrib;
 
@@ -20,8 +22,11 @@ public class MapTest
     [SetUp]
     public void Init()
     {
-        map = new GameMap(10, 12);
-        attrib = new ContainerAttributes();
+		map = new GameMap(10, 12);
+		gameMap = new GameObject("testMap", typeof(GenerateTiles));
+		containerTestObject = new GameObject("containerAttributesTestObject", typeof(ContainerAttributes));
+		tileGen = gameMap.GetComponent<GenerateTiles>();
+		attrib = containerTestObject.GetComponent<ContainerAttributes>();
     }
 
     /// <summary>
