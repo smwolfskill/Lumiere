@@ -27,15 +27,8 @@ public class PlayerMoveAction : EntityAction
         float h = Input.GetAxis ("Horizontal");
         float v = Input.GetAxis ("Vertical");
 
-        //Move only along the axis of the 'stronger' input to prevent diagonal movement
-        if (Mathf.Abs(h) >= Mathf.Abs(v))
-        {
-            rigidbody.velocity = new Vector2 (h, 0f);
-        }
-        else
-        {
-            rigidbody.velocity = new Vector2 (0f, v);
-        }
+        //Allow diagonal movement
+        rigidbody.velocity = new Vector2(speed * h, speed * v);
 
         return true;
     }
