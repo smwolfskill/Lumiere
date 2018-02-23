@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 /// <summary>
 /// Representation of a generic item in the game.
@@ -84,6 +85,24 @@ public class GameItem
             this.quantity = 1;
         else
             this.quantity = itemQuantity;
+    }
+
+    /// <summary>
+    /// An equals method for comparing this item to other items. Auto generated.
+    /// </summary>
+    /// <param name="obj">Object being compared</param>
+    /// <returns>True if the item is equal and False otherwise.</returns>
+    public override bool Equals(object obj)
+    {
+        var item = obj as GameItem;
+        return item != null &&
+               EqualityComparer<Sprite>.Default.Equals(guiSprite, item.guiSprite) &&
+               EqualityComparer<Sprite>.Default.Equals(groundSprite, item.groundSprite) &&
+               value == item.value &&
+               name == item.name &&
+               description == item.description &&
+               rarity == item.rarity &&
+               maxStacks == item.maxStacks;
     }
 
     #region Getters And Setters
@@ -223,4 +242,6 @@ public class GameItem
         }
     }
     #endregion
+
+
 }
