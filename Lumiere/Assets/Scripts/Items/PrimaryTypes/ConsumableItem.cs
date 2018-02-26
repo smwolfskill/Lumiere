@@ -4,7 +4,7 @@ using UnityEditor;
 /// <summary>
 /// Representation of an item that can be consumed.
 /// </summary>
-public class ConsumableItem
+public class ConsumableItem : GameItem
 {
     // TODO: Implement consumable functionality, likely in IT4.
     // Note for this to be fully functional Player and Monster need to be abstracted from an object that has generic stats (such as HP)

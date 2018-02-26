@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 /// <summary>
 /// Representation of an inventory grid.
@@ -22,7 +23,7 @@ public class Inventory
         this.width = nWidth;
         this.height = nHeight;
 
-        this.items = new GameItem[height, width];
+        this.items = new GameItem[width, height];
     }
 
     #region Getters And Setters
@@ -63,7 +64,24 @@ public class Inventory
     /// <returns>The item at the given point.</returns>
     public GameItem GetItem(int x, int y)
     {
-        return this.items[y, x];
+        GameItem currItem = this.items[x, y];
+        if (currItem == null)
+        {
+            this.items [x, y] = GameItem.UNSET_ITEM;
+            currItem = this.items[x, y];
+        }
+        return currItem;
+    }
+
+    /// <summary>
+    /// Fetches information in regards to a specific item in the grid.
+    /// </summary>
+    /// <param name="x">X coordinate in grid of item.</param>
+    /// <param name="y">Y coordinate in grid of item.</param>
+    /// <param name="item">The item to set this grid item to.</param>
+    private void SetItem(int x, int y, GameItem item)
+    {
+        this.items [x, y] = item;
     }
 
     /// <summary>
@@ -113,55 +131,188 @@ public class Inventory
          * -> Reduce quantity of old stack.
          */
     }
-
+        
     /// <summary>
     /// Removes however many of the item at the given grid location from the inventory.
     /// </summary>
     /// <param name="x">Location of the item (x).</param>
     /// <param name="y">Location of the item (y).</param>
     /// <param name="quantity">Quantity of items to remove.</param>
-    public void RemoveItem(int x, int y, int quantity)
+    public bool RemoveItem(int x, int y, int quantity)
     {
-        // TODO: Implement this function
-        // It should work similar to the below:
-        // Remember to implement idiot checks as neccessary.
+        GameItem itemInSlot = GetItem (x, y);
+        if (!itemInSlot.SetYet())
+        {
+            return false;
+        }
 
-        /* 
-         * If item exists at location
-         * -> Check if quantity of items can be removed.
-         * ---> If so, remove x amount of items.
-         * ---> If item slot is now empty (removed equal to or more than existing)
-         * -----> Remove item from grid by setting this slot to null.
-         * -> Item cannot be removed for some reason
-         * ---> Handle this error (either by returning or something else).
-         * If item does not exist a location (null location)
-         * -> Handle this error somehow (either by returning or something else).
-         */
-        
+        if (quantity > itemInSlot.Quantity)
+        {
+            return false;
+        }
+
+        if (quantity == itemInSlot.Quantity)
+        {
+            SetItem (x, y, GameItem.UNSET_ITEM);
+            return true;
+        }
+
+        if (quantity < itemInSlot.Quantity)
+        {
+            itemInSlot.Quantity = itemInSlot.Quantity - quantity;
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Removes however many of the item at the given grid location from the inventory.
+    /// </summary>
+    /// <param name="item">Item to remove. Includes quantity of items to remove.</param>
+    /// <param name="item">(Optional)quantity of items to remove, if not set correctly inside the item.</param>
+    /// <returns>If there are enough items in the inventory to remove this many items from the inventory.</returns>
+    public bool RemoveItem(GameItem item, int quantity = -1)
+    {
+        int currItemID = item.ItemID;
+        if (currItemID == GameItem.UNSET_ITEM.ItemID)
+        {
+            return false;
+        }
+
+        int quantityLeft = quantity;
+        if (quantity == -1)
+        {
+            quantityLeft = item.Quantity;
+        }
+        int currXPos = 0, currYPos = 0;
+
+        List<int[]> itemsToReset = new List<int[]> ();
+
+        while (quantityLeft > 0)
+        {
+            int[] tmpItemLoc = findItem (currItemID, true, currXPos, currYPos);
+            if (tmpItemLoc == null)
+            {
+                return false;
+            }
+            GameItem tmpItem = GetItem(tmpItemLoc [0], tmpItemLoc [1]);
+            if (tmpItem.Quantity > quantityLeft)
+            {
+                tmpItem.Quantity -= quantityLeft;
+                quantityLeft = 0;
+            }
+            else if (tmpItem.Quantity == quantityLeft)
+            {
+                tmpItem = GameItem.UNSET_ITEM;
+                quantityLeft = 0;
+            }
+            else
+            {
+                itemsToReset.Add (tmpItemLoc);
+                quantityLeft -= tmpItem.Quantity;
+            }
+        }
+        foreach (int[] resetItemLoc in itemsToReset)
+        {
+            SetItem(resetItemLoc[0], resetItemLoc[1], GameItem.UNSET_ITEM);
+        }
+        return true;
     }
 
     /// <summary>
     /// Adds an item into the inventory
     /// </summary>
-    /// <param name="item"></param>
-    public void AddItem(GameItem item)
+    /// <param name="item">The item to add.</param>
+    public bool AddItem(GameItem item)
     {
-        // TODO: Implement this function
-        // It should work similar to the below:
-        // Remember to implement idiot checks as neccessary.
 
-        /* 
-         * If item is stackable
-         * -> Search array for existing stacks.
-         * -> If existing stack is found.
-         * ---> See if item can be added to stack.
-         * ---> If not, keep looking.
-         * ---> If so, increment stack size of existing item.
-         * -> If existing stack is not found.
-         * ---> Add item to top left most empty slot.
-         * If item is not stackable
-         * -> Add item to top left most empty slot.
-         */
+        int currItemID = item.ItemID;
+        if (currItemID == GameItem.UNSET_ITEM.ItemID)
+        {
+            return false;
+        }
+
+        int quantityLeft = item.Quantity;
+        int currXPos = 0, currYPos = 0;
+
+        if (item.MaxStacks > 1)
+        {
+            while (quantityLeft > 0)
+            {
+                //Try to find an item that is already in the inventory and whose stack is not full
+                int[] existingItemInfo = findItem (currItemID, false, currXPos, currYPos);
+
+                //If such an item is found, add as many items as needed or possible to the existing item's quantity
+                if (existingItemInfo != null)
+                {
+                    currXPos = existingItemInfo [0];
+                    currYPos = existingItemInfo [1];
+                    int maxAvailable = existingItemInfo [2];
+                    GameItem foundItem = GetItem (currXPos, currYPos);
+                    int amountToPut = Mathf.Min (maxAvailable, quantityLeft);
+                    foundItem.Quantity = foundItem.Quantity + amountToPut;
+                    quantityLeft -= amountToPut;
+                }
+                else
+                {
+                    int[] emptySlot = findItem (GameItem.UNSET_ITEM.ItemID);
+                    if (emptySlot == null)
+                    {
+                        return false;
+                    }
+                    SetItem (emptySlot [0], emptySlot [1], item);
+                }
+            }
+        }
+        else
+        {
+            int[] emptySlot = findItem (GameItem.UNSET_ITEM.ItemID);
+            if (emptySlot == null)
+            {
+                return false;
+            }
+            SetItem (emptySlot [0], emptySlot [1], item);
+        }
+        return true;
+    }
+
+
+    /// <summary>
+    /// Finds an item already in the inventory
+    /// </summary>
+    /// <param name="itemID">The ID of the item to search for.</param>
+    /// <param name="includeFull">Whether or not to include items which are full stacks. If this is false, returns the amount of free space left in the item's stack.</param>
+    /// <param name="startX">The X position from where to start searching.</param>
+    /// <param name="startY">The Y position from where to start searching.</param>
+    /// <returns>An integer array containing [xPos, yPos, (conditionally)emptySlots] of the item slot found.</returns>
+    private int[] findItem(int itemID, bool includeFull = true, int startX = 0, int startY= 0)
+    {
+        for (int xPos = startX; xPos < this.width; xPos++)
+        {
+            for (int yPos = startY; yPos < this.height; yPos++)
+            {
+                GameItem currItem = GetItem (xPos, yPos);
+                if (currItem.ItemID == itemID)
+                {
+                    if (!includeFull)
+                    {
+                        int freeSlots = currItem.MaxStacks - currItem.Quantity;
+                        if (freeSlots != 0)
+                        {
+                            int[] itemInfo = { xPos, yPos, freeSlots };
+                            return itemInfo;
+                        }
+                    }
+                    else
+                    {
+                        int[] itemInfo = { xPos, yPos };
+                        return itemInfo;
+                    }
+                }
+            }
+        }
+        return null;
+
     }
     #endregion
 }

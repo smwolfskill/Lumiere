@@ -7,16 +7,17 @@ using System.Collections.Generic;
 /// </summary>
 public class GameItem
 {
-    private Sprite guiSprite;       // Item in GUI.
-    private Sprite groundSprite;    // Item on ground.
+    public static GameItem UNSET_ITEM = new GameItem ();
+    protected Sprite guiSprite;       // Item in GUI.
+    protected Sprite groundSprite;    // Item on ground.
 
-    private double value;           // Arbitrary value of item, to be used for trading
-    private string name;            // Item name.
-    private string description;     // Item description.
-    private ItemRarity rarity;      // Item rarity.
-    private int maxStacks;          // Maximum stack quantity.
-    private int quantity;           // Amount of items.
-
+    protected double value;           // Arbitrary value of item, to be used for trading
+    protected string name;            // Item name.
+    protected string description;     // Item description.
+    protected ItemRarity rarity;      // Item rarity.
+    protected int maxStacks;          // Maximum stack quantity.
+    protected int quantity;           // Amount of items.
+    protected int itemID;            // The ID of the item, each item needs a unique ID.
     /// <summary>
     /// Represents rarity of the item, probably for item color purposes.
     /// </summary>
@@ -48,9 +49,10 @@ public class GameItem
     /// <param name="rareness">Rarity of the item for rareness systems.</param>
     /// <param name="newMaxStack">Maximum times the item can stack in an inventory slot.</param>
     /// <param name="itemQuantity">Amount of items in this stack.</param>
-    public GameItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1)
+    /// <param name="itemID">The ID of the item.</param>
+    public GameItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1)
     {
-        this.FillData(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack);
+        this.FillData(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID);
     }
 
     /// <summary>
@@ -64,7 +66,8 @@ public class GameItem
     /// <param name="rareness">Rarity of the item for rareness systems.</param>
     /// <param name="newMaxStack">Maximum times the item can stack in an inventory slot.</param>
     /// <param name="itemQuantity">Amount of items in this stack.</param>
-    private void FillData(Sprite gui = null, Sprite ground = null, string newName = "Unknown", string newDesc = "ERROR: An unknown item.", double val = 0.0, ItemRarity rareness = ItemRarity.COMMON, int itemQuantity = 1, int newMaxStack = 1)
+    /// <param name="itemID">The ID of the item.</param>
+    private void FillData(Sprite gui = null, Sprite ground = null, string newName = "Unknown", string newDesc = "ERROR: An unknown item.", double val = 0.0, ItemRarity rareness = ItemRarity.COMMON, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1)
     {
         this.guiSprite = gui;
         this.groundSprite = ground;
@@ -72,19 +75,30 @@ public class GameItem
         this.description = newDesc;
         this.rarity = rareness;
         this.value = val;
+        this.itemID = itemID;
 
         // Idiot proofing.
         if (newMaxStack < 1)
+        {
             this.maxStacks = 1;
+        }
         else
+        {
             this.maxStacks = newMaxStack;
+        }
 
         if (itemQuantity > newMaxStack)
+        {
             this.quantity = newMaxStack;
+        }
         else if (itemQuantity < 1)
+        {
             this.quantity = 1;
+        }
         else
+        {
             this.quantity = itemQuantity;
+        }
     }
 
     /// <summary>
@@ -102,7 +116,17 @@ public class GameItem
                name == item.name &&
                description == item.description &&
                rarity == item.rarity &&
-               maxStacks == item.maxStacks;
+               maxStacks == item.maxStacks &&
+               itemID == item.itemID;
+    }
+
+    public bool SetYet()
+    {
+        if(Object.ReferenceEquals(this, UNSET_ITEM))
+        {
+            return false;
+        }
+        return true;
     }
 
     #region Getters And Setters
@@ -215,9 +239,13 @@ public class GameItem
         set
         {
             if (value < 1)
+            {
                 maxStacks = 1;
+            }
             else
+            {
                 maxStacks = value;
+            }
         }
     }
 
@@ -234,11 +262,28 @@ public class GameItem
         set
         {
             if (value > this.maxStacks)
+            {
                 quantity = maxStacks;
+            }
             else if (value < 1)
+            {
                 quantity = 1;
+            }
             else
+            {
                 quantity = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Getter for item ID.
+    /// </summary>
+    public int ItemID
+    {
+        get
+        {
+            return itemID;
         }
     }
     #endregion
