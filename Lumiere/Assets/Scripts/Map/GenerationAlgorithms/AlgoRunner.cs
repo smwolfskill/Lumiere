@@ -27,7 +27,7 @@ public class AlgoRunner : MonoBehaviour {
     void Start ()
     {
 
-        map = new Map(new Vector2Int(width, height), tileOffset);
+        map = new Map(new Vector2Int(width, height), tileOffset, gameObject);
 
         switch (generationAlgorithm)
         {
@@ -42,7 +42,7 @@ public class AlgoRunner : MonoBehaviour {
         }
 
 
-        genAlgo.GenerateMap(gameObject);
+        genAlgo.GenerateMap(map);
 	}
 
 }

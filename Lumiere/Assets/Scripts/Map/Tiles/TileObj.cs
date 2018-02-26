@@ -2,26 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class TileObj : BaseObject
+public abstract class TileObj
 {
-    private GameObject gameObject;
+
+    public GameObject gameObject;
     private Map map;
     private RoomObj roomObj;
-    private TileType tileType;
     public Vector2Int x_y;
 
+    public TileObj()
+    {
+        PopulateGameObject();
+    }
 
-    public TileObj(Vector2Int x_y, Map map)
+    public void SetX_Y(Vector2Int x_y)
     {
         this.x_y = x_y;
+    }
+
+    public void SetRoom(RoomObj roomObj)
+    {
+        this.roomObj = roomObj;
+    }
+
+    public void SetMap(Map map)
+    {
         this.map = map;
     }
 
-    virtual public GameObject PopulateGameObject()
+    virtual protected GameObject PopulateGameObject()
     {
         GameObject gameObject = new GameObject();
         SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-        sr.sprite = sprite;
+        EntitySpriteManager esm = gameObject.AddComponent<EntitySpriteManager>();
         gameObject.transform.SetPositionAndRotation(
             new Vector3(x_y.x * map.tileOffset, x_y.y * map.tileOffset),
             Quaternion.identity
@@ -32,14 +45,27 @@ public abstract class TileObj : BaseObject
         return gameObject;
     }
 
-    public void Destory()
+    public void Remove()
     {
         Object.Destroy(gameObject);
+        this.roomObj.RemoveTile(this);
     }
 
-    public void SetRoom(RoomObj roomObj)
+    public enum TileObjType
     {
-        this.roomObj = roomObj;
+        EarthTileObj,
     }
-  
+
+    public static TileObj InstantiateTileObj(
+        TileObjType tileObjType
+    )
+    {
+        switch(tileObjType)
+        {
+            case TileObjType.EarthTileObj:
+                return new EarthTileObj();
+        }
+
+        return null;
+    }
 }

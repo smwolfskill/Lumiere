@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Lumiere/Tile/EarthTile")]
 public class EarthTileObj : TileObj
 {
 
-    public EarthTileObj(Vector2Int x_y, Map map) : base(x_y, map)
+    public EarthTileObj() : base()
     {
 
     }
 
-    override public GameObject PopulateGameObject()
+    override protected GameObject PopulateGameObject()
     {
         GameObject gameObject = base.PopulateGameObject();
+
+        gameObject.GetComponent<EntitySpriteManager>().entity = Object.FindObjectOfType<EarthTileType>();
 
         gameObject.AddComponent<BoxCollider2D>();
 

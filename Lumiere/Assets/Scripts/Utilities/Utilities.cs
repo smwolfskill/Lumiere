@@ -45,4 +45,10 @@ public class Utilities : MonoBehaviour
 
         return Direction.NORTH;
     }
+
+    public static int RandomIntInRange(int minInclusive, int maxExclusive)
+    {
+        System.Random random = new System.Random();
+        return random.Next(minInclusive, maxExclusive);
+    }
 }

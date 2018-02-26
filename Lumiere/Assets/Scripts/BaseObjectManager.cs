@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Lumiere/Room/BedRoom")]
-public class BedRoom : RoomType
+public class BaseObjectManager : MonoBehaviour
 {
-
+    public BaseObject baseObject;
 }

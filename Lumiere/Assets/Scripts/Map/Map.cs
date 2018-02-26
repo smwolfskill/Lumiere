@@ -8,11 +8,13 @@ public class Map
     private TileObj[,] tileObjMatrix;
     private List<RoomObj> rooms;
 
-    private Vector2Int w_h;
+    public Vector2Int w_h;
     public int tileOffset;
+    public GameObject gameObject;
 
-    public Map(Vector2Int w_h, int tileOffset)
+    public Map(Vector2Int w_h, int tileOffset, GameObject gameObject)
     {
+        this.gameObject = gameObject;
         this.w_h = w_h;
         this.tileOffset = tileOffset;
         this.tileObjMatrix = new TileObj[w_h.y, w_h.x];
@@ -38,14 +40,20 @@ public class Map
 
         TileObj preExistingTile = GetTile(x_y);
         if (preExistingTile != null)
-            preExistingTile.Destory();
+            preExistingTile.Remove();
 
         this.tileObjMatrix[x_y.y, x_y.x] = tileObj;
+
+        tileObj.SetX_Y(x_y);
+        tileObj.SetRoom(roomObj);
+        tileObj.SetMap(this);
+
+        roomObj.AddTile(tileObj);
 
         return tileObj;
     }
 
-    public void FillArea(Vector2Int x_y, Vector2Int w_h, TileType tileType, RoomObj roomObj)
+    public void FillArea(Vector2Int x_y, Vector2Int w_h, TileObj.TileObjType tileObjType, RoomObj roomObj)
     {
         // Force top and left of rectangle to be inside the map.
         if (x_y.x < 0)
@@ -63,7 +71,11 @@ public class Map
         {
             for (int y = x_y.y; y < x_y.y + w_h.y; y++)
             {
-                //SetTile(x_y, , roomObj);
+                SetTile(
+                    new Vector2Int(x, y),
+                    TileObj.InstantiateTileObj(tileObjType),
+                    roomObj
+                );
             }
         }
     }
@@ -76,6 +88,15 @@ public class Map
         return tileObjMatrix[x_y.y, x_y.x];
     }
 
+    public RoomObj GenRoom(RoomObj.RoomObjType roomObjType)
+    {
+        return RoomObj.InstantiateRoomObj(roomObjType, this);
+    }
+
+    public void AddRoom(RoomObj roomObj)
+    {
+        this.rooms.Add(roomObj);
+    }
 
     /// TODO: this description was from legacy code, change it to fit this (somewhat
     ///       similar) code

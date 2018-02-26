@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomType : ScriptableObject
+public abstract class RoomType : BaseObject
 {
-
     public int minWidth;
     public int maxWidth;
     public int minHeight;
     public int maxHeight;
 
-}   
+}
