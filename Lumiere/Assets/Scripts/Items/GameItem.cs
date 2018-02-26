@@ -2,22 +2,43 @@
 using UnityEditor;
 using System.Collections.Generic;
 
+
 /// <summary>
 /// Representation of a generic item in the game.
 /// </summary>
+[System.Serializable]
 public class GameItem
 {
+    [SerializeField]
     public static GameItem UNSET_ITEM = new GameItem ();
+
+    [SerializeField]
     protected Sprite guiSprite;       // Item in GUI.
+
+    [SerializeField]
     protected Sprite groundSprite;    // Item on ground.
 
+    [SerializeField]
     protected double value;           // Arbitrary value of item, to be used for trading
+
+    [SerializeField]
     protected string name;            // Item name.
+
+    [SerializeField]
     protected string description;     // Item description.
+
+    [SerializeField]
     protected ItemRarity rarity;      // Item rarity.
+
+    [SerializeField]
     protected int maxStacks;          // Maximum stack quantity.
+
+    [SerializeField]
     protected int quantity;           // Amount of items.
+
+    [SerializeField]
     protected int itemID;            // The ID of the item, each item needs a unique ID.
+
     /// <summary>
     /// Represents rarity of the item, probably for item color purposes.
     /// </summary>
@@ -109,9 +130,31 @@ public class GameItem
     public override bool Equals(object obj)
     {
         var item = obj as GameItem;
+        bool guiSpritesEqual = false;
+        bool groundSpritesEqual = false;
+        if (guiSprite == null && item.guiSprite == null)
+        {
+            guiSpritesEqual = true;
+        }
+        else
+        {
+            guiSpritesEqual = 
+                EqualityComparer<Sprite>.Default.Equals (guiSprite, item.guiSprite);
+        }
+
+        if (groundSprite == null && item.groundSprite == null)
+        {
+            groundSpritesEqual = true;
+        }
+        else
+        {
+            groundSpritesEqual = 
+                EqualityComparer<Sprite>.Default.Equals (groundSprite, item.groundSprite);
+        }
+
         return item != null &&
-               EqualityComparer<Sprite>.Default.Equals(guiSprite, item.guiSprite) &&
-               EqualityComparer<Sprite>.Default.Equals(groundSprite, item.groundSprite) &&
+               guiSpritesEqual &&
+               groundSpritesEqual &&
                value == item.value &&
                name == item.name &&
                description == item.description &&
@@ -122,7 +165,7 @@ public class GameItem
 
     public bool SetYet()
     {
-        if(Object.ReferenceEquals(this, UNSET_ITEM))
+        if(itemID == UNSET_ITEM.itemID)
         {
             return false;
         }
