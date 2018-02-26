@@ -37,6 +37,9 @@ public class ItemLoaderTest
         }
     }
 
+    /// <summary>
+    /// Test if ItemLoader correctly saves and loads back testItem from the disk.
+    /// </summary>
     [Test]
     public void SaveAndLoadTest()
     {
