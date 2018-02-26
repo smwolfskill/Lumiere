@@ -9,8 +9,10 @@ public class FloorTile : GameTile
     /// Constructor for a wall tile. Walls are impassable.
     /// </summary>
     /// <param name="spritedata">The wall's sprite data.</param>
+    /*
     public FloorTile(Sprite spritedata) : base(spritedata)
     {
         // Nothing to see here, move along.
     }
+    */
 }

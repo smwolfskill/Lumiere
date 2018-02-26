@@ -11,8 +11,4 @@ public abstract class BaseObject : ScriptableObject
 		return sprite;
 	}
 
-	public void SetSprite(Sprite sprite) 
-	{
-		this.sprite = sprite;
-	}
 }

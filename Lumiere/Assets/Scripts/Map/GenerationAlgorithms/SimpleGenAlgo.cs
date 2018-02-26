@@ -5,10 +5,28 @@ using UnityEngine;
 public class SimpleGenAlgo : GenAlgo
 {
 
+    private Vector2Int w_h;
+    private int roomAttempts;
+    private int pathAttempts;
+    private int pathDirectionChangeLikelihood;
+
+    public SimpleGenAlgo(
+        Map map,
+        int roomAttempts,
+        int pathAttempts,
+        int pathDirectionChangeLikelihood
+    ) : base(map)
+    {
+        this.roomAttempts = roomAttempts;
+        this.pathAttempts = pathAttempts;
+        this.pathDirectionChangeLikelihood = pathDirectionChangeLikelihood;
+    }
+
     public override void GenerateMap(GameObject map)
     {
-        throw new System.NotImplementedException();
+
     }
+
 
     /*
 

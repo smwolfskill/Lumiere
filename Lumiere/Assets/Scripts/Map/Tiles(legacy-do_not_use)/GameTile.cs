@@ -11,9 +11,9 @@ public abstract class GameTile : BaseObject
 	/// Base constructor for an ultra generic gametile.
 	/// </summary>
 	/// <param name="spritedata">Contains the image information in regards to this tile.</param>
-	public GameTile(Sprite sprite)
-	{
-		this.sprite = sprite;
-	}
+	/// public GameTile(Sprite sprite)
+	/// {
+	///     this.sprite = sprite;
+	/// }
 }
 
