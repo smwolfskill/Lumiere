@@ -8,16 +8,17 @@ public class Map
     private TileObj[,] tileObjMatrix;
     private List<RoomObj> rooms;
 
-    public Vector2Int w_h;
+    public int w, h;
     public int tileOffset;
     public GameObject gameObject;
 
-    public Map(Vector2Int w_h, int tileOffset, GameObject gameObject)
+    public Map(int w, int h, int tileOffset, GameObject gameObject)
     {
         this.gameObject = gameObject;
-        this.w_h = w_h;
+        this.w = w;
+        this.h = h;
         this.tileOffset = tileOffset;
-        this.tileObjMatrix = new TileObj[w_h.y, w_h.x];
+        this.tileObjMatrix = new TileObj[h, w];
         this.rooms = new List<RoomObj>();
     }
 
@@ -33,18 +34,18 @@ public class Map
     /// True if the tile was placed correctly, false otherwise (such as when the tile
     /// cannot be placed in the specified coordinate due to the coordinate being invalid)
     /// </returns>
-    public TileObj SetTile(Vector2Int x_y, TileObj tileObj, RoomObj roomObj)
+    public TileObj SetTile(int x, int y, TileObj tileObj, RoomObj roomObj)
     {
-        if (!ValidTileSpace(x_y))
+        if (!ValidTileSpace(x, y))
             return null;
 
-        TileObj preExistingTile = GetTile(x_y);
+        TileObj preExistingTile = GetTile(x, y);
         if (preExistingTile != null)
             preExistingTile.Remove();
 
-        this.tileObjMatrix[x_y.y, x_y.x] = tileObj;
+        this.tileObjMatrix[y, x] = tileObj;
 
-        tileObj.SetX_Y(x_y);
+        tileObj.SetX_Y(x, y);
         tileObj.SetRoom(roomObj);
         tileObj.SetMap(this);
 
@@ -53,39 +54,39 @@ public class Map
         return tileObj;
     }
 
-    public void FillArea(Vector2Int x_y, Vector2Int w_h, TileObj.TileObjType tileObjType, RoomObj roomObj)
+    public void FillArea(int x, int y, int w, int h, TileObj.TileObjType tileObjType, RoomObj roomObj)
     {
         // Force top and left of rectangle to be inside the map.
-        if (x_y.x < 0)
-            x_y.x = 0;
-        if (x_y.y < 0)
-            x_y.y = 0;
+        if (x < 0)
+            x = 0;
+        if (y < 0)
+            y = 0;
 
         // Force width and height of rectangle to not be outside the map.
-        if (x_y.x + w_h.x > this.w_h.x)
-            w_h.x = this.w_h.x - x_y.x;
-        if (x_y.y + w_h.y > this.w_h.y)
-            w_h.y = this.w_h.y - x_y.y;
+        if (x + w > this.w)
+            w = this.w - x;
+        if (y + h > this.h)
+            h = this.h - y;
 
-        for (int x = x_y.x; x < x_y.x + w_h.x; x++)
+        for (int currX = x; currX < x + h; currX++)
         {
-            for (int y = x_y.y; y < x_y.y + w_h.y; y++)
+            for (int currY = y; currY < y + h; currY++)
             {
                 SetTile(
-                    new Vector2Int(x, y),
-                    TileObj.InstantiateTileObj(tileObjType),
+                    currX, currY,
+                    TileObj.InstantiateTileObj(currX, currY, this, tileObjType),
                     roomObj
                 );
             }
         }
     }
 
-    public TileObj GetTile(Vector2Int x_y)
+    public TileObj GetTile(int x, int y)
     {
-        if (!ValidTileSpace(x_y))
+        if (!ValidTileSpace(x, y))
             return null;
 
-        return tileObjMatrix[x_y.y, x_y.x];
+        return tileObjMatrix[y, x];
     }
 
     public RoomObj GenRoom(RoomObj.RoomObjType roomObjType)
@@ -106,9 +107,9 @@ public class Map
     /// </summary>
     /// TODO: this belongs in a seperate script as it is not directly tied to the
     ///       concept of GeneratingTiles
-    private bool ValidTileSpace(Vector2Int x_y)
+    private bool ValidTileSpace(int x, int y)
     {
-        return (x_y.x >= 0 && x_y.y >= 0 && x_y.x < w_h.x && x_y.y < w_h.y);
+        return (x >= 0 && y >= 0 && x < h && y < h);
     }
 
 }

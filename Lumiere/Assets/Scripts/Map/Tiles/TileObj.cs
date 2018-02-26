@@ -8,16 +8,19 @@ public abstract class TileObj
     public GameObject gameObject;
     private Map map;
     private RoomObj roomObj;
-    public Vector2Int x_y;
+    public int x, y;
 
-    public TileObj()
+    public TileObj(int x, int y, Map map)
     {
+        this.x = x; this.y = y;
+        this.map = map;
+
         PopulateGameObject();
     }
 
-    public void SetX_Y(Vector2Int x_y)
+    public void SetX_Y(int x, int y)
     {
-        this.x_y = x_y;
+        this.x = x; this.y = y;
     }
 
     public void SetRoom(RoomObj roomObj)
@@ -32,11 +35,11 @@ public abstract class TileObj
 
     virtual protected GameObject PopulateGameObject()
     {
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new GameObject("TileObj");
         SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-        EntitySpriteManager esm = gameObject.AddComponent<EntitySpriteManager>();
+        BaseObjectManager baseObjectManager = gameObject.AddComponent<BaseObjectManager>();
         gameObject.transform.SetPositionAndRotation(
-            new Vector3(x_y.x * map.tileOffset, x_y.y * map.tileOffset),
+            new Vector3(x * map.tileOffset, y * map.tileOffset),
             Quaternion.identity
         );
 
@@ -57,13 +60,15 @@ public abstract class TileObj
     }
 
     public static TileObj InstantiateTileObj(
+        int x, int y,
+        Map map,
         TileObjType tileObjType
     )
     {
         switch(tileObjType)
         {
             case TileObjType.EarthTileObj:
-                return new EarthTileObj();
+                return new EarthTileObj(x, y, map);
         }
 
         return null;

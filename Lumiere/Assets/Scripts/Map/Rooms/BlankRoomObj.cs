@@ -4,9 +4,20 @@ using UnityEngine;
 
 public class BlankRoomObj : RoomObj
 {
-    public BlankRoomObj(Vector2Int x_y, Vector2Int w_h, Map map) : base(map)
+    public BlankRoomObj(int x, int y, int w, int h, Map map) : base(map)
     {
-        this.x_y = x_y;
-        this.w_h = w_h;
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
+
+    override protected GameObject PopulateGameObject()
+    {
+        GameObject gameObject = base.PopulateGameObject();
+
+        gameObject.name = "BlankRoomObj";
+
+        return gameObject;
     }
 }

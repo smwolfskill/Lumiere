@@ -6,8 +6,8 @@ public abstract class RoomObj
 {
 
 
-    public Vector2Int x_y;
-    public Vector2Int w_h;
+    public int x, y;
+    public int w, h;
 
     public GameObject gameObject;
     protected Map map;
@@ -26,7 +26,7 @@ public abstract class RoomObj
 
     virtual protected GameObject PopulateGameObject()
     {
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new GameObject("RoomObj");
         this.gameObject = gameObject;
         this.gameObject.AddComponent<BaseObjectManager>();
         return gameObject;

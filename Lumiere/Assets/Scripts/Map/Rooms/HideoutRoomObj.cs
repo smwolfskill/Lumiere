@@ -7,21 +7,20 @@ public class HideoutRoomObj : RoomObj
     public HideoutRoomObj(Map map) : base(map)
     {
         HideoutRoomType hrt = (HideoutRoomType)gameObject.GetComponent<BaseObjectManager>().baseObject;
-        this.x_y = new Vector2Int(
-            Utilities.RandomIntInRange(0, map.w_h.x),
-            Utilities.RandomIntInRange(0, map.w_h.y)
-        );
-        this.w_h = new Vector2Int(
-            Utilities.RandomIntInRange(hrt.minWidth, hrt.maxWidth),
-            Utilities.RandomIntInRange(hrt.minHeight, hrt.maxHeight)
-        );
+        this.x = Utilities.RandomIntInRange(0, map.w);
+        this.y = Utilities.RandomIntInRange(0, map.h);
+        this.w = Utilities.RandomIntInRange(hrt.minWidth, hrt.maxWidth);
+        this.h = Utilities.RandomIntInRange(hrt.minHeight, hrt.maxHeight);
     }
 
     override protected GameObject PopulateGameObject()
     {
+        // Must call parent function first!
         GameObject gameObject = base.PopulateGameObject();
 
         gameObject.GetComponent<BaseObjectManager>().baseObject = Object.FindObjectOfType<HideoutRoomType>();
+
+        gameObject.name = "HideoutRoomObj";
 
         return gameObject;
     }

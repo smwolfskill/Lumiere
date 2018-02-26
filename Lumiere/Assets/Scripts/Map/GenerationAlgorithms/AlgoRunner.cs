@@ -27,7 +27,7 @@ public class AlgoRunner : MonoBehaviour {
     void Start ()
     {
 
-        map = new Map(new Vector2Int(width, height), tileOffset, gameObject);
+        map = new Map(width, height, tileOffset, gameObject);
 
         switch (generationAlgorithm)
         {
