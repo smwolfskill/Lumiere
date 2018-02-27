@@ -68,7 +68,7 @@ public class Map
         if (y + h > this.h)
             h = this.h - y;
 
-        for (int currX = x; currX < x + h; currX++)
+        for (int currX = x; currX < x + w; currX++)
         {
             for (int currY = y; currY < y + h; currY++)
             {
@@ -112,16 +112,25 @@ public class Map
         this.rooms.Add(roomObj);
     }
 
-    public bool IsRoomValid(RoomObj roomObj, TileObj.TileObjType[] avoidTiles)
+    public bool IsRoomAreaValid(RoomObj roomObj, TileObj.TileObjType[] avoidTiles)
     {
-        foreach(TileObj tileObj in roomObj.tileObjs)
+        for (int currX = roomObj.x; currX < roomObj.x + roomObj.h; currX++)
         {
-            foreach(TileObj.TileObjType avoidTile in avoidTiles)
+            for (int currY = roomObj.y; currY < roomObj.y + roomObj.h; currY++)
             {
-                if (avoidTile == tileObj.tileObjType)
-                    return false;
+                TileObj currTileObj = GetTile(currX, currY);
+
+                if (currTileObj != null)
+                {
+                    foreach (TileObj.TileObjType avoidTile in avoidTiles)
+                    {
+                        if (avoidTile == currTileObj.tileObjType)
+                            return false;
+                    }
+                }
             }
         }
+
         return true;
     }
 

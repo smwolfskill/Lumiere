@@ -20,4 +20,9 @@ public class BlankRoomObj : RoomObj
 
         return gameObject;
     }
+
+    public override void GenRoom()
+    {
+        
+    }
 }

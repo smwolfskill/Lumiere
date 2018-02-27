@@ -24,6 +24,8 @@ public abstract class RoomObj
         gameObject.transform.parent = this.map.gameObject.transform;
     }
 
+    public abstract void GenRoom();
+
     virtual protected GameObject PopulateGameObject()
     {
         GameObject gameObject = new GameObject("RoomObj");
@@ -62,5 +64,11 @@ public abstract class RoomObj
         }
 
         return null;
+    }
+
+    public void RefineSize()
+    {
+        if (w + x > map.w) w = map.w - x;
+        if (h + y > map.h) h = map.h - y;
     }
 }

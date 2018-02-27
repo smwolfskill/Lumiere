@@ -55,13 +55,15 @@ public class SimpleGenAlgo : GenAlgo
 
         RoomObj roomObj = map.GenRandomRoom();
 
-        if (!map.IsRoomValid(
+        if (!map.IsRoomAreaValid(
                 roomObj,
                 new TileObj.TileObjType[] { TileObj.TileObjType.FloorTileObj, TileObj.TileObjType.WallTileObj })
         )
         {
             return false;
         }
+
+        roomObj.GenRoom();
 
         return true;
     }

@@ -12,7 +12,7 @@ public class HideoutRoomObj : RoomObj
         this.w = Utilities.RandomIntInRange(hrt.minWidth, hrt.maxWidth);
         this.h = Utilities.RandomIntInRange(hrt.minHeight, hrt.maxHeight);
 
-        map.FillArea(x, y, w, h, TileObj.TileObjType.FloorTileObj, this);
+        RefineSize();
     }
 
     override protected GameObject PopulateGameObject()
@@ -25,5 +25,10 @@ public class HideoutRoomObj : RoomObj
         gameObject.name = "HideoutRoomObj";
 
         return gameObject;
+    }
+
+    public override void GenRoom()
+    {
+        map.FillArea(x, y, w, h, TileObj.TileObjType.FloorTileObj, this);
     }
 }
