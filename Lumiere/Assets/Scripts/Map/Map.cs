@@ -137,7 +137,7 @@ public class Map
 
     public bool IsRoomAreaValid(RoomObj roomObj, TileObj.TileObjType[] avoidTiles)
     {
-        for (int currX = roomObj.x; currX < roomObj.x + roomObj.h; currX++)
+        for (int currX = roomObj.x; currX < roomObj.x + roomObj.w; currX++)
         {
             for (int currY = roomObj.y; currY < roomObj.y + roomObj.h; currY++)
             {
