@@ -6,6 +6,7 @@ public class EntityRoomObj : RoomObj
 {
     EntityRoomType entityRoomType;
     int numEntities;
+    int entitiesSpawned;
 
     public EntityRoomObj(Map map) : base(map)
     {
@@ -15,6 +16,7 @@ public class EntityRoomObj : RoomObj
         this.y = Utilities.RandomIntInRange(0, map.h);
         this.w = Utilities.RandomIntInRange(entityRoomType.minWidth, entityRoomType.maxWidth);
         this.h = Utilities.RandomIntInRange(entityRoomType.minHeight, entityRoomType.maxHeight);
+        entitiesSpawned = 0;
 
         RefineSize();
     }
@@ -37,7 +39,7 @@ public class EntityRoomObj : RoomObj
         List<TileObj> walkableTiles = GetWalkableTiles ();
         List<Vector2> spawnLocations = new List<Vector2> ();
         Entity[] entities = entityRoomType.entities;
-        int entitiesSpawned = 0;
+
 
         while (entitiesSpawned < numEntities) 
         {
@@ -56,6 +58,11 @@ public class EntityRoomObj : RoomObj
             }
         }
 
+    }
+
+    public int GetEntitiesSpawned()
+    {
+        return entitiesSpawned;
     }
 
     public override void GenRoom()
