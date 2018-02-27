@@ -169,7 +169,7 @@ public class Inventory
     /// Removes however many of the item at the given grid location from the inventory.
     /// </summary>
     /// <param name="item">Item to remove. Includes quantity of items to remove.</param>
-    /// <param name="item">(Optional)quantity of items to remove, if not set correctly inside the item.</param>
+    /// <param name="quantity">(Optional)quantity of items to remove, if not set correctly inside the item.</param>
     /// <returns>If there are enough items in the inventory to remove this many items from the inventory.</returns>
     public bool RemoveItem(GameItem item, int quantity = -1)
     {
@@ -190,7 +190,7 @@ public class Inventory
 
         while (quantityLeft > 0)
         {
-            int[] tmpItemLoc = findItem (currItemID, true, currXPos, currYPos);
+            int[] tmpItemLoc = FindItem (currItemID, true, currXPos, currYPos);
             if (tmpItemLoc == null)
             {
                 return false;
@@ -240,7 +240,7 @@ public class Inventory
             while (quantityLeft > 0)
             {
                 //Try to find an item that is already in the inventory and whose stack is not full
-                int[] existingItemInfo = findItem (currItemID, false, currXPos, currYPos);
+                int[] existingItemInfo = FindItem (currItemID, false, currXPos, currYPos);
 
                 //If such an item is found, add as many items as needed or possible to the existing item's quantity
                 if (existingItemInfo != null)
@@ -255,7 +255,7 @@ public class Inventory
                 }
                 else
                 {
-                    int[] emptySlot = findItem (GameItem.UNSET_ITEM.ItemID);
+                    int[] emptySlot = FindItem (GameItem.UNSET_ITEM.ItemID);
                     if (emptySlot == null)
                     {
                         return false;
@@ -266,7 +266,7 @@ public class Inventory
         }
         else
         {
-            int[] emptySlot = findItem (GameItem.UNSET_ITEM.ItemID);
+            int[] emptySlot = FindItem (GameItem.UNSET_ITEM.ItemID);
             if (emptySlot == null)
             {
                 return false;
@@ -285,7 +285,7 @@ public class Inventory
     /// <param name="startX">The X position from where to start searching.</param>
     /// <param name="startY">The Y position from where to start searching.</param>
     /// <returns>An integer array containing [xPos, yPos, (conditionally)emptySlots] of the item slot found.</returns>
-    private int[] findItem(int itemID, bool includeFull = true, int startX = 0, int startY= 0)
+    private int[] FindItem(int itemID, bool includeFull = true, int startX = 0, int startY= 0)
     {
         for (int xPos = startX; xPos < this.width; xPos++)
         {
