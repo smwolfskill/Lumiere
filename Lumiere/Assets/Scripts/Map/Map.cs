@@ -54,10 +54,8 @@ public class Map
         return tileObj;
     }
 
-    public List<TileObj> FillArea(int x, int y, int w, int h, TileObj.TileObjType tileObjType, RoomObj roomObj)
+    public void FillArea(int x, int y, int w, int h, TileObj.TileObjType tileObjType, RoomObj roomObj)
     {
-        List<TileObj> addedTiles = new List<TileObj> ();
-
         // Force top and left of rectangle to be inside the map.
         if (x < 0)
             x = 0;
@@ -74,18 +72,14 @@ public class Map
         {
             for (int currY = y; currY < y + h; currY++)
             {
-                TileObj tileToAdd = TileObj.InstantiateTileObj (currX, currY, this, tileObjType);
+                TileObj tileToAdd = 
                 SetTile(
                     currX, currY,
-                    tileToAdd,
+                    TileObj.InstantiateTileObj (currX, currY, this, tileObjType),
                     roomObj
                 );
-
-                addedTiles.Add (tileToAdd);
             }
         }
-
-        return addedTiles;
     }
 
     public TileObj GetTile(int x, int y)

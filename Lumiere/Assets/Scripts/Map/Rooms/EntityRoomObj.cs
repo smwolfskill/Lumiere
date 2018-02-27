@@ -60,8 +60,8 @@ public class EntityRoomObj : RoomObj
 
     public override void GenRoom()
     {
-        List<TileObj> addedTiles = map.FillArea(x, y, w, h, TileObj.TileObjType.FloorTileObj, this);
-        tileObjs.AddRange (addedTiles);
+        map.FillArea(x, y, w, h, TileObj.TileObjType.FloorTileObj, this);
+        //tileObjs.AddRange (addedTiles);
         SpawnEntities ();
     }
 
