@@ -9,6 +9,7 @@ public abstract class TileObj
     private Map map;
     private RoomObj roomObj;
     public int x, y;
+    public TileObjType tileObjType;
 
     public TileObj(int x, int y, Map map)
     {
@@ -57,6 +58,8 @@ public abstract class TileObj
     public enum TileObjType
     {
         EarthTileObj,
+        WallTileObj,
+        FloorTileObj
     }
 
     public static TileObj InstantiateTileObj(
@@ -69,6 +72,10 @@ public abstract class TileObj
         {
             case TileObjType.EarthTileObj:
                 return new EarthTileObj(x, y, map);
+            case TileObjType.WallTileObj:
+                return new WallTileObj(x, y, map);
+            case TileObjType.FloorTileObj:
+                return new FloorTileObj(x, y, map);
         }
 
         return null;

@@ -5,7 +5,6 @@ using UnityEngine;
 public class SimpleGenAlgo : GenAlgo
 {
 
-    private int w, h;
     private int roomAttempts;
     private int pathAttempts;
     private int pathDirectionChangeLikelihood;
@@ -24,19 +23,17 @@ public class SimpleGenAlgo : GenAlgo
 
     public override void GenerateMap(Map map)
     {
-        BlankRoomObj baseRoom = new BlankRoomObj(0, 0, 0, 0, map);
+        BlankRoomObj baseRoom = new BlankRoomObj(0, 0, map.w, map.h, map);
         map.AddRoom(baseRoom);
-
         map.FillArea(baseRoom.x, baseRoom.y, baseRoom.w, baseRoom.h, TileObj.TileObjType.EarthTileObj, baseRoom);
 
-        //EarthTileObj eto = new EarthTileObj(new Vector2Int(1,2), map);
-       // map.SetTile(new Vector2Int(1, 1), eto, baseRoom);
 
-       /* for (int roomAttempt = 0; roomAttempt < roomAttempts; roomAttempt++)
+        for (int roomAttempt = 0; roomAttempt < roomAttempts; roomAttempt++)
         {
             AttemptGenRandomRoom();
         }
 
+        /*
         for (int pathAttempt = 0; pathAttempt < pathAttempts; pathAttempt++)
         {
             AttemptGenRandomPath();
@@ -55,6 +52,16 @@ public class SimpleGenAlgo : GenAlgo
     /// </returns>
     private bool AttemptGenRandomRoom()
     {
+
+        RoomObj roomObj = map.GenRandomRoom();
+
+        if (!map.IsRoomValid(
+                roomObj,
+                new TileObj.TileObjType[] { TileObj.TileObjType.FloorTileObj, TileObj.TileObjType.WallTileObj })
+        )
+        {
+            return false;
+        }
 
         return true;
     }

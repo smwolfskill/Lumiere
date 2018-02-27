@@ -12,7 +12,7 @@ public abstract class RoomObj
     public GameObject gameObject;
     protected Map map;
 
-    private List<TileObj> tileObjs;
+    public List<TileObj> tileObjs;
 
     public RoomObj(Map map)
     {

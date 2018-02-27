@@ -7,7 +7,7 @@ public class EarthTileObj : TileObj
 
     public EarthTileObj(int x, int y, Map map) : base(x, y, map)
     {
-
+        this.tileObjType = TileObj.TileObjType.EarthTileObj;
     }
 
     override protected GameObject PopulateGameObject()

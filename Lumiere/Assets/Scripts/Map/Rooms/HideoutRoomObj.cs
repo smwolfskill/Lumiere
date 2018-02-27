@@ -11,6 +11,8 @@ public class HideoutRoomObj : RoomObj
         this.y = Utilities.RandomIntInRange(0, map.h);
         this.w = Utilities.RandomIntInRange(hrt.minWidth, hrt.maxWidth);
         this.h = Utilities.RandomIntInRange(hrt.minHeight, hrt.maxHeight);
+
+        map.FillArea(x, y, w, h, TileObj.TileObjType.FloorTileObj, this);
     }
 
     override protected GameObject PopulateGameObject()
@@ -18,7 +20,7 @@ public class HideoutRoomObj : RoomObj
         // Must call parent function first!
         GameObject gameObject = base.PopulateGameObject();
 
-        gameObject.GetComponent<BaseObjectManager>().baseObject = Object.FindObjectOfType<HideoutRoomType>();
+        gameObject.GetComponent<BaseObjectManager>().baseObject = Resources.Load<HideoutRoomType>("Rooms/Hideout");
 
         gameObject.name = "HideoutRoomObj";
 

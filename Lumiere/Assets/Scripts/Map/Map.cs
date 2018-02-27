@@ -94,9 +94,35 @@ public class Map
         return RoomObj.InstantiateRoomObj(roomObjType, this);
     }
 
+    public RoomObj GenRandomRoom()
+    {
+        RoomObj roomObj;
+        do
+        {
+            RoomObj.RoomObjType roomObjType = Utilities.RandomEnumValue<RoomObj.RoomObjType>();
+            roomObj = GenRoom(roomObjType);
+        }
+        while (roomObj == null);
+
+        return roomObj;
+    }
+
     public void AddRoom(RoomObj roomObj)
     {
         this.rooms.Add(roomObj);
+    }
+
+    public bool IsRoomValid(RoomObj roomObj, TileObj.TileObjType[] avoidTiles)
+    {
+        foreach(TileObj tileObj in roomObj.tileObjs)
+        {
+            foreach(TileObj.TileObjType avoidTile in avoidTiles)
+            {
+                if (avoidTile == tileObj.tileObjType)
+                    return false;
+            }
+        }
+        return true;
     }
 
     /// TODO: this description was from legacy code, change it to fit this (somewhat

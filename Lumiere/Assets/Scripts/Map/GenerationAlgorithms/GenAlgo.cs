@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class GenAlgo
 {
-    private Map map;
+    protected Map map;
 
     public GenAlgo(Map map)
     {

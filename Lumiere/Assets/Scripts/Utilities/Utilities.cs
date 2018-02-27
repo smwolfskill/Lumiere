@@ -51,4 +51,11 @@ public class Utilities : MonoBehaviour
         System.Random random = new System.Random();
         return random.Next(minInclusive, maxExclusive);
     }
+
+    public static T RandomEnumValue<T>()
+    {
+        var v = System.Enum.GetValues(typeof(T));
+        return (T)v.GetValue(new System.Random().Next(v.Length));
+    }
+
 }
