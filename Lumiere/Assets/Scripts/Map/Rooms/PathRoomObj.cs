@@ -2,29 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlankRoomObj : RoomObj
+public class PathRoomObj : RoomObj
 {
-    public BlankRoomObj(int x, int y, int w, int h, Map map) : base(map)
-    {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
 
-        roomObjType = RoomObjType.Blank;
+    public PathRoomObj(Map map) : base(map)
+    {
+        roomObjType = RoomObjType.Path;
     }
 
     override public GameObject PopulateGameObject()
     {
+        // Must call parent function first!
         GameObject gameObject = base.PopulateGameObject();
 
-        gameObject.name = "BlankRoomObj";
+        gameObject.name = "PathRoomObj";
 
         return gameObject;
     }
 
     public override void GenRoom()
     {
-        
     }
 }

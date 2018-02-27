@@ -4,14 +4,19 @@ using UnityEngine;
 
 public abstract class RoomObj
 {
-
+    public enum RoomObjType
+    {
+        Hideout,
+        Path,
+        Blank
+    }
 
     public int x, y;
     public int w, h;
 
     public GameObject gameObject;
     protected Map map;
-
+    public RoomObjType roomObjType;
     public List<TileObj> tileObjs;
 
     public RoomObj(Map map)
@@ -21,12 +26,11 @@ public abstract class RoomObj
         tileObjs = new List<TileObj>();
 
         PopulateGameObject();
-        gameObject.transform.parent = this.map.gameObject.transform;
     }
 
     public abstract void GenRoom();
 
-    virtual protected GameObject PopulateGameObject()
+    virtual public GameObject PopulateGameObject()
     {
         GameObject gameObject = new GameObject("RoomObj");
         this.gameObject = gameObject;
@@ -46,12 +50,6 @@ public abstract class RoomObj
         tileObjs.Remove(tileObj);
     }
 
-    public enum RoomObjType
-    {
-        Hideout,
-        Blank
-    }
-
     public static RoomObj InstantiateRoomObj(
         RoomObjType roomObjType,
         Map map
@@ -64,6 +62,12 @@ public abstract class RoomObj
         }
 
         return null;
+    }
+
+    public void Remove()
+    {
+        map.RemoveRoom(this);
+        Object.Destroy(gameObject);
     }
 
     public void RefineSize()

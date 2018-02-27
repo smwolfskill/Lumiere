@@ -4,6 +4,12 @@ using UnityEngine;
 
 public abstract class TileObj
 {
+    public enum TileObjType
+    {
+        EarthTileObj,
+        WallTileObj,
+        FloorTileObj
+    }
 
     public GameObject gameObject;
     private Map map;
@@ -55,13 +61,6 @@ public abstract class TileObj
         this.roomObj.RemoveTile(this);
     }
 
-    public enum TileObjType
-    {
-        EarthTileObj,
-        WallTileObj,
-        FloorTileObj
-    }
-
     public static TileObj InstantiateTileObj(
         int x, int y,
         Map map,
@@ -78,6 +77,25 @@ public abstract class TileObj
                 return new FloorTileObj(x, y, map);
         }
 
+        return null;
+    }
+
+    public TileObj GetNeighbor(Utilities.Direction direction)
+    {
+        switch (direction)
+        {
+            case Utilities.Direction.NORTH:
+                return map.GetTile(x, y - 1);
+
+            case Utilities.Direction.SOUTH:
+                return map.GetTile(x, y + 1);
+
+            case Utilities.Direction.WEST:
+                return map.GetTile(x - 1, y);
+
+            case Utilities.Direction.EAST:
+                return map.GetTile(x + 1, y);
+        }
         return null;
     }
 }

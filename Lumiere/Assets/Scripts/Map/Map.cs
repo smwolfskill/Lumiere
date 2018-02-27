@@ -81,6 +81,28 @@ public class Map
         }
     }
 
+    public void FillLine(int x, int y, int length, Utilities.Direction direction, TileObj.TileObjType tileObjType, RoomObj roomObj)
+    {
+        switch (direction)
+        {
+            case Utilities.Direction.NORTH:
+                FillArea(x, y - length, 1, length, tileObjType, roomObj);
+                break;
+
+            case Utilities.Direction.SOUTH:
+                FillArea(x, y, 1, length, tileObjType, roomObj);
+                break;
+
+            case Utilities.Direction.WEST:
+                FillArea(x - length, y, length, 1, tileObjType, roomObj);
+                break;
+
+            case Utilities.Direction.EAST:
+                FillArea(x, y, length, 1, tileObjType, roomObj);
+                break;
+        }
+    }
+
     public TileObj GetTile(int x, int y)
     {
         if (!ValidTileSpace(x, y))
@@ -110,6 +132,7 @@ public class Map
     public void AddRoom(RoomObj roomObj)
     {
         this.rooms.Add(roomObj);
+        roomObj.gameObject.transform.parent = this.gameObject.transform;
     }
 
     public bool IsRoomAreaValid(RoomObj roomObj, TileObj.TileObjType[] avoidTiles)
@@ -145,6 +168,30 @@ public class Map
     private bool ValidTileSpace(int x, int y)
     {
         return (x >= 0 && y >= 0 && x < h && y < h);
+    }
+
+    public RoomObj GetRanRoom(RoomObj.RoomObjType[] ignoreRoomObjTypes)
+    {
+        RoomObj roomObj;
+        bool isInIgnoreRoomObjTypes = false;
+        do
+        {
+            isInIgnoreRoomObjTypes = false;
+            roomObj = this.rooms[Utilities.RandomIntInRange(0, rooms.Count)];
+
+            foreach (RoomObj.RoomObjType roomObjType in ignoreRoomObjTypes)
+            {
+                if (roomObjType == roomObj.roomObjType) isInIgnoreRoomObjTypes = true;
+            }
+        }
+        while (isInIgnoreRoomObjTypes);
+
+        return roomObj;
+    }
+
+    public void RemoveRoom(RoomObj roomObj)
+    {
+        this.rooms.Remove(roomObj);
     }
 
 }
