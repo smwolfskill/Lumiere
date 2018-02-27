@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Basic room object to represent a room that contains entities
+/// </summary>
 public class EntityRoomObj : RoomObj 
 {
     EntityRoomType entityRoomType;
@@ -33,7 +36,9 @@ public class EntityRoomObj : RoomObj
         return gameObject;
     }
 
-
+    /// <summary>
+    /// Spawns the entities.
+    /// </summary>
     protected void SpawnEntities()
     {
         List<TileObj> walkableTiles = GetWalkableTiles ();
@@ -51,6 +56,7 @@ public class EntityRoomObj : RoomObj
 
             if (!spawnLocations.Contains (tileLocation)) 
             {
+                // Multiply location by tile offset to account for tile spacing or tile sizes
                 Vector2 locationToSpawn = new Vector2 (tileLocation.x * map.tileOffset, tileLocation.y * map.tileOffset);
                 entityToSpawn.Spawn (locationToSpawn);
                 spawnLocations.Add (tileLocation);
@@ -60,6 +66,10 @@ public class EntityRoomObj : RoomObj
 
     }
 
+    /// <summary>
+    /// Gets the number of entities currently spawned in this room.
+    /// </summary>
+    /// <returns>The number of entities currently spawned in this room.</returns>
     public int GetEntitiesSpawned()
     {
         return entitiesSpawned;
