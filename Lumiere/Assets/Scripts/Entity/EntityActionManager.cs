@@ -5,15 +5,12 @@ using UnityEngine;
 public class EntityActionManager : MonoBehaviour
 {
 
-    //public Entity entity;
-    //Temporary placeholder action, will replace with a complete entity after merge
-    public EntityAction entityAction;
+    public Entity entity;
 
     // Update is called once per frame
     void Update ()
     {
-        EntityAction[] actions = new EntityAction[] { entityAction };
-        ExecuteValidActions(actions);
+        ExecuteValidActions(entity.actions);
     }
 
     /// <summary>

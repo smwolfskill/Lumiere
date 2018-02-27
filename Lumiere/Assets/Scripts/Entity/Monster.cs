@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu (menuName = "Lumiere/Entity/NPC/Monster")]
 public class Monster : NPC
 {
-
+  
 }
