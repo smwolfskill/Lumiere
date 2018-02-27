@@ -39,4 +39,9 @@ public class EarthTileObj : TileObj
 
         return gameObject;
     }
+
+    public override bool IsWalkable ()
+    {
+        return false;
+    }
 }

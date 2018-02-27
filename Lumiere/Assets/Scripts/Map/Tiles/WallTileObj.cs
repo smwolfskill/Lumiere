@@ -26,4 +26,9 @@ public class WallTileObj : TileObj
 
         return gameObject;
     }
+
+    public override bool IsWalkable ()
+    {
+        return false;
+    }
 }

@@ -34,6 +34,8 @@ public abstract class TileObj
         this.map = map;
     }
 
+    public abstract bool IsWalkable();
+
     virtual protected GameObject PopulateGameObject()
     {
         GameObject gameObject = new GameObject("TileObj");
