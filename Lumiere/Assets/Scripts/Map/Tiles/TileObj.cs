@@ -8,7 +8,8 @@ public abstract class TileObj
     {
         EarthTileObj,
         WallTileObj,
-        FloorTileObj
+        FloorTileObj,
+        SandTileObj
     }
 
     public GameObject gameObject;
@@ -75,6 +76,8 @@ public abstract class TileObj
                 return new WallTileObj(x, y, map);
             case TileObjType.FloorTileObj:
                 return new FloorTileObj(x, y, map);
+            case TileObjType.SandTileObj:
+                return new SandTileObj(x, y, map);
         }
 
         return null;

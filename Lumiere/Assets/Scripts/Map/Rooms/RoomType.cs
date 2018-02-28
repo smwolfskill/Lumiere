@@ -4,9 +4,5 @@ using UnityEngine;
 
 public abstract class RoomType : BaseObject
 {
-    public int minWidth;
-    public int maxWidth;
-    public int minHeight;
-    public int maxHeight;
 
 }

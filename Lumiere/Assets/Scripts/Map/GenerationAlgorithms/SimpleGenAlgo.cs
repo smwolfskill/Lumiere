@@ -52,17 +52,28 @@ public class SimpleGenAlgo : GenAlgo
     /// </returns>
     private bool AttemptGenRandomRoom()
     {
+        // Gen a random room. If you do not see your room appearing, look into RoomObj.InstantiateRoomObj()
         RoomObj roomObj = map.GenRandomRoom();
 
+        // Must check if we can place this new room into the map.
         if (!map.IsRoomAreaValid(
                 roomObj,
-                new TileObj.TileObjType[] { TileObj.TileObjType.FloorTileObj, TileObj.TileObjType.WallTileObj })
+
+                // If the area the room inhabits includes any of these tiles, do not place the room.
+                new TileObj.TileObjType[] {
+                    TileObj.TileObjType.FloorTileObj,
+                    TileObj.TileObjType.WallTileObj,
+                    TileObj.TileObjType.SandTileObj
+                })
         )
         {
+            // If we cant, forget about adding the room and remove it.
             roomObj.Remove();
             return false;
         }
 
+        // If we can, add the room to the map as well as generating the tiles and placing the
+        // tiles on the map.
         map.AddRoom(roomObj);
         roomObj.GenRoom();
 
@@ -119,7 +130,9 @@ public class SimpleGenAlgo : GenAlgo
 
     private void AttemptGenRandomPathStep(TileObj tile, Utilities.Direction direction, PathRoomObj pathRoomObj)
     {
-        if (tile == null || tile.tileObjType == TileObj.TileObjType.FloorTileObj)
+        if (tile == null ||
+            tile.tileObjType == TileObj.TileObjType.FloorTileObj ||
+            tile.tileObjType == TileObj.TileObjType.SandTileObj)
             return;
 
         tile = new FloorTileObj(tile.x, tile.y, map);

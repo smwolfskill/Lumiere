@@ -8,7 +8,8 @@ public abstract class RoomObj
     {
         Hideout,
         Path,
-        Blank
+        Blank,
+        Secret
     }
 
     public int x, y;
@@ -59,6 +60,8 @@ public abstract class RoomObj
         {
             case RoomObjType.Hideout:
                 return new HideoutRoomObj(map);
+            case RoomObjType.Secret:
+                return new SecretRoomObj(map);
         }
 
         return null;
