@@ -27,11 +27,12 @@ public class ItemTest
     [Test]
     public void ItemStoresData()
     {
-        Assert.AreEqual(stackableItem.Value, 10);
-        Assert.AreEqual(stackableItem.MaxStacks, 10);
-        Assert.AreEqual(stackableItem.Quantity, 5);
+        Assert.AreEqual(10, stackableItem.Value);
+        Assert.AreEqual(10, stackableItem.MaxStacks);
+        Assert.AreEqual(5, stackableItem.Quantity);
+        Assert.AreEqual(2, stackableItem.ItemID);
         stackableItem.Quantity += 3;
-        Assert.AreEqual(stackableItem.Quantity, 8);
+        Assert.AreEqual(8, stackableItem.Quantity);
     }
 
     /// <summary>
@@ -42,5 +43,33 @@ public class ItemTest
     {
         Assert.IsTrue(stackableItem.Equals(sameItem));
         Assert.IsFalse(stackableItem.Equals(diffItem));
+        Assert.IsFalse(stackableItem.Equals(GameItem.UNSET_ITEM));
+    }
+
+    /// <summary>
+    /// Test if SetYet functionality works, which returns false if a GameItem has the same ItemID as the UNSET_ITEM.
+    /// </summary>
+    [Test]
+    public void SetYetTest()
+    {
+        //1. Assert UNSET_ITEM is not Set Yet.
+        Assert.IsFalse(GameItem.UNSET_ITEM.SetYet());
+
+        //2. Assert newly created default GameItem is not Set Yet.
+        GameItem unset = new GameItem();
+        Assert.IsFalse(unset.SetYet());
+
+        //3. Assert custom created GameItem is Set Yet.
+        Assert.IsTrue(stackableItem.SetYet());
+    }
+
+    /// <summary>
+    /// Test if copying a GameItem works by preserving equality.
+    /// </summary>
+    [Test]
+    public void ItemCopyTest()
+    {
+        GameItem stackableItem_copy = new GameItem(stackableItem);
+        Assert.IsTrue(stackableItem_copy.Equals(stackableItem));
     }
 }

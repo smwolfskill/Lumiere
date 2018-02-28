@@ -77,6 +77,15 @@ public class GameItem
     }
 
     /// <summary>
+    /// Create a new copy of an item.
+    /// </summary>
+    /// <param name="copy">Copy.</param>
+    public GameItem(GameItem copy)
+    {
+        this.FillData(copy);
+    }
+
+    /// <summary>
     /// Fills out the class data for constructors.
     /// </summary>
     /// <param name="gui">Sprite representing the item in the inventory interface.</param>
@@ -120,6 +129,17 @@ public class GameItem
         {
             this.quantity = itemQuantity;
         }
+    }
+
+    /// <summary>
+    /// Fills out the class data as an exact copy of another GameItem.
+    /// </summary>
+    /// <param name="copy">Copy.</param>
+    private void FillData(GameItem copy)
+    {
+        FillData(copy.guiSprite, copy.groundSprite, copy.name, 
+                 copy.description, copy.value, copy.rarity, 
+                 copy.quantity, copy.maxStacks, copy.itemID);
     }
 
     /// <summary>
