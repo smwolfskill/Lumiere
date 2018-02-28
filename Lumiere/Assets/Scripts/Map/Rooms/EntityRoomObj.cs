@@ -42,7 +42,7 @@ public class EntityRoomObj : RoomObj
     protected void SpawnEntities()
     {
         List<TileObj> walkableTiles = GetWalkableTiles ();
-        List<Vector2> spawnLocations = new List<Vector2> ();
+        List<Vector2Int> spawnLocations = new List<Vector2Int> ();
         Entity[] entities = entityRoomType.entities;
 
 
@@ -52,7 +52,7 @@ public class EntityRoomObj : RoomObj
             Debug.Log ("Walkable Tiles: " + walkableTiles.Count);
             TileObj walkableTile = walkableTiles[Utilities.RandomIntInRange (0, walkableTiles.Count)];
             Entity entityToSpawn = entities[Utilities.RandomIntInRange (0, entities.Length)];
-            Vector2 tileLocation = new Vector2 (walkableTile.x, walkableTile.y);
+            Vector2Int tileLocation = new Vector2Int (walkableTile.x, walkableTile.y);
 
             if (!spawnLocations.Contains (tileLocation)) 
             {
