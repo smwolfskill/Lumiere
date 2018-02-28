@@ -43,6 +43,7 @@ public class AlgoRunner : MonoBehaviour {
 
 
         genAlgo.GenerateMap(map);
-	}
+        
+    }
 
 }
