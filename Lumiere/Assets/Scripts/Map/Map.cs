@@ -72,9 +72,10 @@ public class Map
         {
             for (int currY = y; currY < y + h; currY++)
             {
+                TileObj tileToAdd = 
                 SetTile(
                     currX, currY,
-                    TileObj.InstantiateTileObj(currX, currY, this, tileObjType),
+                    TileObj.InstantiateTileObj (currX, currY, this, tileObjType),
                     roomObj
                 );
             }

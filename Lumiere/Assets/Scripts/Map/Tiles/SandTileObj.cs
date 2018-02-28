@@ -25,4 +25,9 @@ public class SandTileObj : TileObj
         return gameObject;
     }
 
+    public override bool IsWalkable ()
+    {
+        return true;
+    }
+
 }

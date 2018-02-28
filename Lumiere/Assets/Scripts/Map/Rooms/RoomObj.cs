@@ -9,7 +9,8 @@ public abstract class RoomObj
         Hideout,
         Path,
         Blank,
-        Secret
+        Secret,
+        Entity
     }
 
     public int x, y;
@@ -50,7 +51,21 @@ public abstract class RoomObj
     {
         tileObjs.Remove(tileObj);
     }
+        
+    protected List<TileObj> GetWalkableTiles()
+    {
+        List<TileObj> walkableTiles = new List<TileObj> ();
+        foreach (TileObj tileObj in tileObjs) 
+        {
+            if (tileObj.IsWalkable ()) 
+            {
+                walkableTiles.Add (tileObj);
+            }
+        }
 
+        return walkableTiles;
+    }
+        
     public static RoomObj InstantiateRoomObj(
         RoomObjType roomObjType,
         Map map
@@ -62,6 +77,8 @@ public abstract class RoomObj
                 return new HideoutRoomObj(map);
             case RoomObjType.Secret:
                 return new SecretRoomObj(map);
+            case RoomObjType.Entity:
+                return new EntityRoomObj (map);
         }
 
         return null;
