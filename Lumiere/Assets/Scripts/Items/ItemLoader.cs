@@ -22,6 +22,12 @@ public static class ItemLoader
         return null;
     }
 
+    /// <summary>
+    /// Convert a GameItem into a pretty print JSON string and write it to a file, overwriting any existing contents.
+    /// </summary>
+    /// <returns><c>true</c>, if item was saved, <c>false</c> otherwise.</returns>
+    /// <param name="item">Item.</param>
+    /// <param name="filename">Filename.</param>
     public static bool SaveItem(GameItem item, string filename)
     {
         string serializedItem = JsonUtility.ToJson(item, true);
