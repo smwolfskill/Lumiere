@@ -48,8 +48,8 @@ public class EntityRoomObj : RoomObj
 
         while (entitiesSpawned < numEntities) 
         {
-            Debug.Log ("Number of tiles: " + tileObjs.Count);
-            Debug.Log ("Walkable Tiles: " + walkableTiles.Count);
+            //Debug.Log ("Number of tiles: " + tileObjs.Count);
+            //Debug.Log ("Walkable Tiles: " + walkableTiles.Count);
             TileObj walkableTile = walkableTiles[Utilities.RandomIntInRange (0, walkableTiles.Count)];
             Entity entityToSpawn = entities[Utilities.RandomIntInRange (0, entities.Length)];
             Vector2Int tileLocation = new Vector2Int (walkableTile.x, walkableTile.y);
