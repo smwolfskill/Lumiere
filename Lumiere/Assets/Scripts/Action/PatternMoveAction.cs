@@ -54,8 +54,8 @@ public class PatternMoveAction : MonsterMoveAction
             InitializePattern ();
         }
 
-        Debug.Log ("Steps: " + numSteps);
-        Debug.Log ("Current Step: " + currentStep);
+        //Debug.Log ("Steps: " + numSteps);
+        //Debug.Log ("Current Step: " + currentStep);
         int nextStep = (currentStep + 1) % numSteps;
         Vector2 speedScale = new Vector2 (speed, -speed);
         Vector2 velocity = (FindStep (nextStep) - FindStep (currentStep));
