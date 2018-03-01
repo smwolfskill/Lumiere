@@ -68,23 +68,6 @@ public class MonsterMovementTest
     }
 
     /// <summary>
-    /// Checks if the RandomMoveAction validates correctly.
-    /// </summary>
-    /// <returns></returns>
-    [UnityTest]
-    public IEnumerator TestValidate()
-    {
-        monster.SetActive(true);
-        yield return new WaitForEndOfFrame();
-        bool canMove = randomMove.Validate(monster);
-        Assert.AreEqual(true, canMove);
-        yield return new WaitForEndOfFrame();
-        canMove = randomMove.Validate(monster);
-        Assert.AreEqual(false, canMove);
-
-    }
-
-    /// <summary>
     /// Tests whether the RandomMoveAction fails when there is no rigidbody.
     /// </summary>
     [Test]
