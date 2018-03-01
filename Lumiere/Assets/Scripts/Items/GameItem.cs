@@ -8,7 +8,6 @@ using System.Collections.Generic;
 [System.Serializable]
 public class GameItem
 {
-    [SerializeField]
     public static GameItem UNSET_ITEM = new GameItem ();
 
     [SerializeField]
