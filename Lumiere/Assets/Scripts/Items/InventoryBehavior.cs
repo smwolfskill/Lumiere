@@ -88,7 +88,7 @@ public class InventoryBehavior : MonoBehaviour {
                         DrawQuad(box, RarityColor(item));
                     }
                     
-                    if (ItemValid(item))
+                    if (item.SetYet())
                     {
                         GUI.Box(new Rect(x, y, blockSize, blockSize),
                                 TextureFromSprite(item.GuiSprite));
@@ -105,15 +105,6 @@ public class InventoryBehavior : MonoBehaviour {
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// Tests whether or not an item is valid
-    /// </summary>
-    /// <param name="item">Item to test.</param>
-    private bool ItemValid(GameItem item)
-    {
-        return item != null && item.ItemID != GameItem.UNSET_ITEM.ItemID;
     }
 
     /// <summary>
