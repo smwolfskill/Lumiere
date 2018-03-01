@@ -1,9 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Lumiere/Actions/ToggleInventory")]
-public class ToggleInventory : EntityAction {
+public class ToggleInventory : EntityAction
+{
     public override bool Validate(GameObject obj)
     {
         //TODO: Replace this in future iterations
