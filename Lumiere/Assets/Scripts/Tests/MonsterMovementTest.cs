@@ -47,7 +47,7 @@ public class MonsterMovementTest
 
         if (monster != null)
         {
-            GameObject.DestroyImmediate(monster);
+            GameObject.Destroy(monster);
         }
 
         rigidbody = null;
@@ -88,5 +88,21 @@ public class MonsterMovementTest
         if (rigidbody == null) { InitRigidbody(); }
         bool executed = randomMove.Execute(monster);
         Assert.AreEqual(true, executed);
+    }
+
+    /// <summary>
+    /// Tests whether the Monster's rigidbody changes position and velocity after the move is executed.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator TestChangePosition()
+    {
+        monster.SetActive(true);
+        if (rigidbody == null) { InitRigidbody(); }
+        Vector2 originalPosition = rigidbody.position;
+        randomMove.Execute(monster);
+        yield return new WaitForFixedUpdate();
+        Assert.AreNotEqual(originalPosition, rigidbody.position);
+        Assert.IsTrue(rigidbody.velocity.magnitude >= float.Epsilon);
     }
 }

@@ -60,7 +60,7 @@ public abstract class TileObj
 
     public void Remove()
     {
-        GameObject.DestroyImmediate(gameObject);
+        Object.Destroy(gameObject);
         this.roomObj.RemoveTile(this);
     }
 

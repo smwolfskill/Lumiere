@@ -44,7 +44,7 @@ public class PlayerMovementTest
 
         if(player != null)
         {
-            GameObject.DestroyImmediate(player);
+            GameObject.Destroy(player);
         }
 
         rigidbody = null;
@@ -94,5 +94,19 @@ public class PlayerMovementTest
         if (rigidbody == null) { InitRigidbody(); }
         bool executed = playerMove.Execute(player);
         Assert.AreEqual(true, executed);
+    }
+
+    /// <summary>
+    /// Tests whether the player doesn't move after a frame when there is no input.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator TestNoInput()
+    {
+        if (rigidbody == null) { InitRigidbody(); }
+        Vector2 originalPosition = rigidbody.position;
+        yield return new WaitForFixedUpdate();
+        Assert.AreEqual(originalPosition, rigidbody.position);
+        Assert.IsTrue(rigidbody.velocity.magnitude <= float.Epsilon);
     }
 }
