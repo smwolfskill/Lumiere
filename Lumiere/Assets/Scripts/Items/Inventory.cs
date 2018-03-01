@@ -222,7 +222,6 @@ public class Inventory
             }
             else     //add to list of slots to clear
             {
-                tmpItem.Quantity = 0;   //cleared completely
                 itemsToReset.Add (tmpItemLoc);
                 currXPos = tmpItemLoc[0] + 1;  //start the search **after** where we left off
                 currYPos = tmpItemLoc[1];   //since the search iterates all X for a given Y, if currXPos 'overflows' it will start the next Y
