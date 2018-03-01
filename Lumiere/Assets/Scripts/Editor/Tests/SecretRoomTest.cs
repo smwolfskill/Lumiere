@@ -5,12 +5,12 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 
 /// <summary>
-/// Basic testing class for hideout room generation.
+/// Basic testing class for secret room generation.
 /// </summary>
-public class HideoutRoomTest 
+public class SecretRoomTest 
 {
-    HideoutRoomType hideoutRoomType;
-    HideoutRoomObj hideoutRoomObj;
+    SecretRoomType secretRoomType;
+    SecretRoomObj secretRoomObj;
     Map map;
     GameObject mapGameObject;
 
@@ -19,28 +19,28 @@ public class HideoutRoomTest
     {
         mapGameObject = new GameObject ("Map");
         Map map = new Map (50, 50, 1, mapGameObject);
-        hideoutRoomObj = new HideoutRoomObj (map);
-        hideoutRoomType = Resources.Load<HideoutRoomType> ("Rooms/Hideout");
+        secretRoomObj = new SecretRoomObj (map);
+        secretRoomType = Resources.Load<SecretRoomType> ("Rooms/Secret");
         Assert.IsNotNull (map);
-        Assert.IsNotNull (hideoutRoomObj);
-        Assert.IsNotNull (hideoutRoomType);
+        Assert.IsNotNull (secretRoomObj);
+        Assert.IsNotNull (secretRoomType);
     }
 
     [TearDown]
     public void Cleanup()
     {
-        if (hideoutRoomType != null) 
+        if (secretRoomType != null) 
         {
-            Resources.UnloadAsset (hideoutRoomType);
+            Resources.UnloadAsset (secretRoomType);
         }
 
         if (mapGameObject != null) 
         {
-            GameObject.Destroy (mapGameObject);
+            GameObject.DestroyImmediate (mapGameObject);
         }
 
         map = null;
-        hideoutRoomObj = null;
+        secretRoomObj = null;
     }
 
     /// <summary>
@@ -49,8 +49,8 @@ public class HideoutRoomTest
     [Test]
     public void TestTilesSpawned()
     {
-        hideoutRoomObj.GenRoom ();
-        Assert.IsTrue (hideoutRoomObj.tileObjs.Count > 0);
+        secretRoomObj.GenRoom ();
+        Assert.IsTrue (secretRoomObj.tileObjs.Count > 0);
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class HideoutRoomTest
     [Test]
     public void TestRoomInGame()
     {
-        GameObject room = GameObject.Find ("HideoutRoomObj");
+        GameObject room = GameObject.Find ("SecretRoomObj");
         Assert.IsNotNull (room);
     }
 

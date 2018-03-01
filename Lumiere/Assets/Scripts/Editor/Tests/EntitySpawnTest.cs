@@ -44,7 +44,7 @@ public class EntitySpawnTest
 
         if (mapGameObject != null) 
         {
-            GameObject.Destroy (mapGameObject);
+            GameObject.DestroyImmediate (mapGameObject);
         }
 
         map = null;
@@ -118,8 +118,8 @@ public class EntitySpawnTest
         GameObject entity3 = entityToSpawn.Spawn (location3);
         Assert.AreEqual (location3, (Vector2) entity3.transform.position);
 
-        GameObject.Destroy (entity1);
-        GameObject.Destroy (entity2);
-        GameObject.Destroy (entity3);
+        GameObject.DestroyImmediate (entity1);
+        GameObject.DestroyImmediate (entity2);
+        GameObject.DestroyImmediate (entity3);
     }
 }
