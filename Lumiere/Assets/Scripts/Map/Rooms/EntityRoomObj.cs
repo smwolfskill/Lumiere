@@ -7,14 +7,14 @@ using UnityEngine;
 /// </summary>
 public class EntityRoomObj : RoomObj 
 {
-    EntityRoomType entityRoomType;
-    int numEntities;
-    int entitiesSpawned;
+    private EntityRoomType entityRoomType;
+    private int numEntities;
+    private int entitiesSpawned;
 
     public EntityRoomObj(Map map) : base(map)
     {
-        entityRoomType = (EntityRoomType) gameObject.GetComponent<BaseObjectManager>().baseObject;
-        numEntities = Utilities.RandomIntInRange (entityRoomType.minimumEntities, entityRoomType.maximumEntities);
+        this.entityRoomType = (EntityRoomType) gameObject.GetComponent<BaseObjectManager>().baseObject;
+        this.numEntities = Utilities.RandomIntInRange (entityRoomType.minimumEntities, entityRoomType.maximumEntities);
         this.x = Utilities.RandomIntInRange(0, map.w);
         this.y = Utilities.RandomIntInRange(0, map.h);
         this.w = Utilities.RandomIntInRange(entityRoomType.minWidth, entityRoomType.maxWidth);
