@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 
 /// <summary>
 /// Representation of an item that can neither be equipped or used somehow (crafting, collectables, money, etc)

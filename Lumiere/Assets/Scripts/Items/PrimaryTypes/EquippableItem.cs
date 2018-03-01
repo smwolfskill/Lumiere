@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 
 /// <summary>
 /// Representation of an item that can be Equipped by the player (at some point)

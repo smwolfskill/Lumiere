@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
 
 /// <summary>
@@ -24,6 +23,26 @@ public class Inventory
         this.height = nHeight;
 
         this.items = new GameItem[width, height];
+    }
+
+    /// <summary>
+    /// Copy constructor for an inventory.
+    /// </summary>
+    /// <param name="inv">Inventory to copy.</param>
+    public Inventory(Inventory inv)
+    {
+        this.width = inv.width;
+        this.height = inv.height;
+
+        this.items = new GameItem[width, height];
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                this.items[i, j] = inv.items[i, j];
+            }
+        }
     }
 
     #region Getters And Setters
@@ -225,7 +244,6 @@ public class Inventory
     /// <param name="item">The item to add.</param>
     public bool AddItem(GameItem item)
     {
-
         int currItemID = item.ItemID;
         if (currItemID == GameItem.UNSET_ITEM.ItemID)
         {
