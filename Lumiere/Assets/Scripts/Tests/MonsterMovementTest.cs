@@ -11,6 +11,7 @@ public class MonsterMovementTest
     GameObject monster;
     Rigidbody2D rigidbody;
     EntityActionManager entityActionManager;
+    Monster monsterObject;
     EntityAction randomMove;
 
     /// <summary>
@@ -23,7 +24,11 @@ public class MonsterMovementTest
         entityActionManager = monster.AddComponent<EntityActionManager>();
         randomMove = Resources.Load<EntityAction>("RandomMove");
         rigidbody = null;
-        entityActionManager.entityAction = randomMove;
+
+        monsterObject = Monster.CreateInstance<Monster> ();
+        monsterObject.actions = new EntityAction[] { randomMove };
+        entityActionManager.entity = monsterObject;
+
         monster.SetActive(false);
         Assert.IsNotNull(randomMove);
         Assert.IsNotNull(monster.GetComponent<BoxCollider2D>());

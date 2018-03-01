@@ -9,6 +9,7 @@ using System.Collections;
 public class PlayerMovementTest
 {
     GameObject player;
+    Player playerObj;
     Rigidbody2D rigidbody;
     EntityActionManager entityActionManager;
     EntityAction playerMove;
@@ -23,7 +24,9 @@ public class PlayerMovementTest
         entityActionManager = player.AddComponent<EntityActionManager>();
         playerMove = Resources.Load<EntityAction>("PlayerMove");
         rigidbody = null;
-        entityActionManager.entityAction = playerMove;
+        playerObj = Player.CreateInstance<Player> ();
+        playerObj.actions = new EntityAction[] { playerMove };
+        entityActionManager.entity = playerObj;
         Assert.IsNotNull(playerMove);
         Assert.IsNotNull(player.GetComponent<BoxCollider2D>());
     }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Utilities : MonoBehaviour
 {
+    public static System.Random random = new System.Random();
+
     public enum Direction
     {
         NORTH,
@@ -45,4 +47,16 @@ public class Utilities : MonoBehaviour
 
         return Direction.NORTH;
     }
+
+    public static int RandomIntInRange(int minInclusive, int maxExclusive)
+    {
+        return random.Next(minInclusive, maxExclusive);
+    }
+
+    public static T RandomEnumValue<T>()
+    {
+        var v = System.Enum.GetValues(typeof(T));
+        return (T)v.GetValue(new System.Random().Next(v.Length));
+    }
+
 }
