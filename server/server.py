@@ -5,11 +5,13 @@ import os.path
 
 from flask import *
 
+log_path = "/home/gitlab-runner/build_logs/"
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    path = "/root/build_logs/"
+    path = log_path
     files = sorted([f[:-4] for f in os.listdir(path) if os.path.isfile(path + f)])
     return render_template("index.html", files=files)
 
@@ -17,7 +19,7 @@ def index():
 def find_log(log):
     k = log.rfind('/')
     log = log[k + 1:]
-    with open("/root/build_logs/" + log + ".xml") as ff:
+    with open(log_path + log + ".xml") as ff:
         data = ff.read()
     resp = Response(data)
     resp.headers['Content-Type'] = "text/plain"
