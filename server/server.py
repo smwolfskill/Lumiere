@@ -4,6 +4,7 @@ import os
 import os.path
 
 from flask import *
+from gevent.wsgi import WSGIServer
 
 log_path = "/home/gitlab-runner/build_logs/"
 
@@ -33,6 +34,6 @@ def page_not_found(e):
     return "you failed", 404
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    WSGIServer(('', 80), app).serve_forever()
 
 # vim: ts=4:sts=4:sw=4:et
