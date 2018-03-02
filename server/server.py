@@ -19,8 +19,11 @@ def index():
 def find_log(log):
     k = log.rfind('/')
     log = log[k + 1:]
-    with open(log_path + log + ".xml") as ff:
-        data = ff.read()
+    try:
+        with open(log_path + log + ".xml") as ff:
+            data = ff.read()
+    except:
+        return abort(404)
     resp = Response(data)
     resp.headers['Content-Type'] = "text/plain"
     return resp
