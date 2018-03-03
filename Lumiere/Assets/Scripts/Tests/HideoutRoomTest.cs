@@ -10,25 +10,33 @@ using NUnit.Framework;
 public class HideoutRoomTest 
 {
     HideoutRoomType hideoutRoomType;
-    HideoutRoomObj hideoutRoomObj;
+    Room hideoutRoom;
     Map map;
     GameObject mapGameObject;
+    RoomProperties roomProperties;
 
     [SetUp]
     public void Init()
     {
         mapGameObject = new GameObject ("Map");
-        Map map = new Map (50, 50, 1, mapGameObject);
-        hideoutRoomObj = new HideoutRoomObj (map);
-        hideoutRoomType = Resources.Load<HideoutRoomType> ("Rooms/Hideout");
+        roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
+        Map map = new Map (50, 50, 1, mapGameObject, roomProperties);
+        hideoutRoomType = Resources.Load<HideoutRoomType> ("Rooms/HideoutRoom");
+        hideoutRoom = new Room (map, 0, 0, 30, 30, hideoutRoomType);
         Assert.IsNotNull (map);
-        Assert.IsNotNull (hideoutRoomObj);
+        Assert.IsNotNull (hideoutRoom);
         Assert.IsNotNull (hideoutRoomType);
     }
 
     [TearDown]
     public void Cleanup()
     {
+        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject> ();
+        foreach (GameObject gameObject in gameObjects) 
+        {
+            GameObject.Destroy (gameObject);
+        }
+
         if (hideoutRoomType != null) 
         {
             Resources.UnloadAsset (hideoutRoomType);
@@ -40,7 +48,7 @@ public class HideoutRoomTest
         }
 
         map = null;
-        hideoutRoomObj = null;
+        hideoutRoom = null;
     }
 
     /// <summary>
@@ -49,8 +57,8 @@ public class HideoutRoomTest
     [Test]
     public void TestTilesSpawned()
     {
-        hideoutRoomObj.GenRoom ();
-        Assert.IsTrue (hideoutRoomObj.tileObjs.Count > 0);
+        hideoutRoom.GenRoom ();
+        Assert.IsTrue (hideoutRoom.tiles.Count > 0);
     }
 
     /// <summary>
@@ -59,7 +67,7 @@ public class HideoutRoomTest
     [Test]
     public void TestRoomInGame()
     {
-        GameObject room = GameObject.Find ("HideoutRoomObj");
+        GameObject room = GameObject.Find ("HideoutRoom");
         Assert.IsNotNull (room);
     }
 

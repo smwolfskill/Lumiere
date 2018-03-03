@@ -2,41 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Lumiere/Generation Algorithms/Simple Generation Algorithm")]
 public class SimpleGenAlgo : GenAlgo
 {
 
-    private int roomAttempts;
-    private int pathAttempts;
-    private int pathDirectionChangeLikelihood;
-
-    public SimpleGenAlgo(
-        Map map,
-        int roomAttempts,
-        int pathAttempts,
-        int pathDirectionChangeLikelihood
-    ) : base(map)
-    {
-        this.roomAttempts = roomAttempts;
-        this.pathAttempts = pathAttempts;
-        this.pathDirectionChangeLikelihood = pathDirectionChangeLikelihood;
-    }
+    public int roomAttempts;
+    public int pathAttempts;
+    public int pathDirectionChangeLikelihood;
+    public TileType[] walkableTileTypes;
+    public TileType earthTileType;
+    public TileType floorTileType;
+    public RoomType blankRoomType;
+    public RoomType pathRoomType;
 
     public override void GenerateMap(Map map)
     {
-        BlankRoomObj baseRoom = new BlankRoomObj(0, 0, map.w, map.h, map);
+        Room baseRoom = new Room(map, 0, 0, map.w, map.h, blankRoomType);
         map.AddRoom(baseRoom);
-        map.FillArea(baseRoom.x, baseRoom.y, baseRoom.w, baseRoom.h, TileObj.TileObjType.EarthTileObj, baseRoom);
+        map.FillArea(baseRoom.x, baseRoom.y, baseRoom.w, baseRoom.h, earthTileType, baseRoom);
 
 
         for (int roomAttempt = 0; roomAttempt < roomAttempts; roomAttempt++)
         {
-            AttemptGenRandomRoom();
+            AttemptGenRandomRoom(map);
         }
 
         
         for (int pathAttempt = 0; pathAttempt < pathAttempts; pathAttempt++)
         {
-            AttemptGenRandomPath();
+            AttemptGenRandomPath(map);
         }
         
     }
@@ -50,46 +44,37 @@ public class SimpleGenAlgo : GenAlgo
     /// <returns>
     /// False when a room is not created, True otherwise
     /// </returns>
-    private bool AttemptGenRandomRoom()
+    private bool AttemptGenRandomRoom(Map map)
     {
         // Gen a random room. If you do not see your room appearing, look into RoomObj.InstantiateRoomObj()
-        RoomObj roomObj = map.GenRandomRoom();
+        Room room = map.GenRandomRoom();
 
         // Must check if we can place this new room into the map.
-        if (!map.IsRoomAreaValid(
-                roomObj,
-
-                // If the area the room inhabits includes any of these tiles, do not place the room.
-                new TileObj.TileObjType[] {
-                    TileObj.TileObjType.FloorTileObj,
-                    TileObj.TileObjType.WallTileObj,
-                    TileObj.TileObjType.SandTileObj
-                })
-        )
+        if (!map.IsRoomAreaValid(room, walkableTileTypes))
         {
             // If we cant, forget about adding the room and remove it.
-            roomObj.Remove();
+            room.Remove();
             return false;
         }
 
         // If we can, add the room to the map as well as generating the tiles and placing the
         // tiles on the map.
-        map.AddRoom(roomObj);
-        roomObj.GenRoom();
+        map.AddRoom(room);
+        room.GenRoom();
 
         return true;
     }
 
-    private void AttemptGenRandomPath()
+    private void AttemptGenRandomPath(Map map)
     {
-        PathRoomObj pathRoomObj = new PathRoomObj(map);
-        map.AddRoom(pathRoomObj);
+        Room pathRoom = map.GenRoom (pathRoomType);
+        map.AddRoom(pathRoom);
 
         Utilities.Direction startingDirection = Utilities.RandomEnumValue<Utilities.Direction>();
 
-        RoomObj startingRoom = map.GetRanRoom(new RoomObj.RoomObjType[] { RoomObj.RoomObjType.Blank, RoomObj.RoomObjType.Path });
+        Room startingRoom = map.GetRanRoom(new RoomType[] { blankRoomType, pathRoomType });
 
-        TileObj startingTile = null;
+        Tile startingTile = null;
 
         switch (startingDirection)
         {
@@ -125,19 +110,17 @@ public class SimpleGenAlgo : GenAlgo
                 break;
         }
 
-        AttemptGenRandomPathStep(startingTile, startingDirection, pathRoomObj);
+        AttemptGenRandomPathStep(map, startingTile, startingDirection, pathRoom);
     }
 
-    private void AttemptGenRandomPathStep(TileObj tile, Utilities.Direction direction, PathRoomObj pathRoomObj)
+    private void AttemptGenRandomPathStep(Map map, Tile tile, Utilities.Direction direction, Room pathRoom)
     {
-        if (tile == null ||
-            tile.tileObjType == TileObj.TileObjType.FloorTileObj ||
-            tile.tileObjType == TileObj.TileObjType.SandTileObj)
+        if (tile == null || tile.IsWalkable())
             return;
 
-        tile = new FloorTileObj(tile.x, tile.y, map);
+        tile = new Tile(tile.x, tile.y, map, floorTileType);
 
-        map.SetTile(tile.x, tile.y, tile, pathRoomObj);
+        map.SetTile(tile.x, tile.y, tile, pathRoom);
 
         int directionChangeVal = Utilities.RandomIntInRange(0, pathDirectionChangeLikelihood);
         if (directionChangeVal == 0)
@@ -150,7 +133,7 @@ public class SimpleGenAlgo : GenAlgo
         }
 
         // Take another step in creating the path.
-        AttemptGenRandomPathStep(tile.GetNeighbor(direction), direction, pathRoomObj);
+        AttemptGenRandomPathStep(map, tile.GetNeighbor(direction), direction, pathRoom);
 
     }
 

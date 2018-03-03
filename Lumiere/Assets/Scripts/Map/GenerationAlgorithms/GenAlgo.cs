@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class GenAlgo
+public abstract class GenAlgo : ScriptableObject
 {
-    protected Map map;
-
-    public GenAlgo(Map map)
-    {
-        this.map = map;
-    }
+    [HideInInspector]
+    public Map map;
 
     public abstract void GenerateMap(Map map);
 
