@@ -7,13 +7,18 @@ public abstract class Entity : BaseObject
 	public EntityAction[] actions; 	//will hold all actions that this entity can perform
     public Vector2 colliderSize; // the size of the entity's collider
 
+    protected float maxHealth;
+    protected float currHealth;
+
     /// <summary>
     /// Spawn the entity at the specified location.
     /// </summary>
     /// <param name="location">Location to spawn this entity.</param>
     /// <returns>Returns the GameObject representing this entity.</returns>
-    public virtual GameObject Spawn (Vector2 location)
+    virtual public GameObject Spawn (Vector2 location, float maxHealth = 1.0f)
     {
+        this.maxHealth = this.currHealth = maxHealth;
+
         GameObject entity = new GameObject (this.name);
         entity.transform.position = location;
 
@@ -35,5 +40,17 @@ public abstract class Entity : BaseObject
         entityActionManager.entity = this;
 
         return entity;
+    }
+
+    virtual public void InflictDamage(float damageAmount)
+    {
+        this.currHealth -= damageAmount;
+        if (currHealth <= 0)
+            this.Die();
+    }
+
+    virtual protected void Die()
+    {
+
     }
 }
