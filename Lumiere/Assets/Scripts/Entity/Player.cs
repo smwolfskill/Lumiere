@@ -11,16 +11,17 @@ public class Player : Entity
 	 */
     //public Inventory inventory;
 
+    override public GameObject Spawn(Vector2 location, float maxHealth = 100.0f)
+    {
+        return base.Spawn(location, maxHealth);
+    }
+
+    /*
     private GameObject panelHealthBarFill;
 
     public Player() : base()
     {
         panelHealthBarFill = GameObject.Find("PanelHealthBarFill");
-    }
-
-    override public GameObject Spawn(Vector2 location, float maxHealth = 100.0f)
-    {
-        return base.Spawn(location, maxHealth);
     }
 
     public override void InflictDamage(float damageAmount)
@@ -32,7 +33,6 @@ public class Player : Entity
     private void UpdateHealthBar()
     {
         panelHealthBarFill.GetComponent<HealthBarManager>().SetHealth(currHealth / maxHealth);
-
     }
-
+    */
 }

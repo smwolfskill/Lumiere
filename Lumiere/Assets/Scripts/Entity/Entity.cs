@@ -39,9 +39,12 @@ public abstract class Entity : BaseObject
         EntityActionManager entityActionManager = entity.AddComponent<EntityActionManager> ();
         entityActionManager.entity = this;
 
+        // TODO: create class that holds info
+
         return entity;
     }
 
+    /*
     virtual public void InflictDamage(float damageAmount)
     {
         this.currHealth -= damageAmount;
@@ -53,4 +56,5 @@ public abstract class Entity : BaseObject
     {
 
     }
+    */
 }
