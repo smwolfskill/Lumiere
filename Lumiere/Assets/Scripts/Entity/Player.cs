@@ -6,33 +6,20 @@ using UnityEngine;
 public class Player : Entity 
 {
     /* TODO in future iteration: 
-	 + add inventory
-	 + add currently equipped items
-	 */
+     + add inventory
+     + add currently equipped items
+     */
     //public Inventory inventory;
 
     override public GameObject Spawn(Vector2 location, float maxHealth = 100.0f)
     {
-        return base.Spawn(location, maxHealth);
-    }
+        //Spawn the player GameObject, then set its tag
+        GameObject playerGameObject = base.Spawn(location, maxHealth);
+        playerGameObject.tag = "Player";
 
-    /*
-    private GameObject panelHealthBarFill;
-
-    public Player() : base()
-    {
-        panelHealthBarFill = GameObject.Find("PanelHealthBarFill");
+        //Tell the camera object that the player has been spawned
+        Camera.main.GetComponent<CameraFollow> ().findPlayerTransform ();
+        PlayerObject entityObj = new PlayerObject(playerGameObject, maxHealth);   
+        return playerGameObject;
     }
-
-    public override void InflictDamage(float damageAmount)
-    {
-        base.InflictDamage(damageAmount);
-        UpdateHealthBar();
-    }
-
-    private void UpdateHealthBar()
-    {
-        panelHealthBarFill.GetComponent<HealthBarManager>().SetHealth(currHealth / maxHealth);
-    }
-    */
 }

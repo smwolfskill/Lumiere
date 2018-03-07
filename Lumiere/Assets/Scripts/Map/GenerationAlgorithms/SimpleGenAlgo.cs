@@ -38,7 +38,10 @@ public class SimpleGenAlgo : GenAlgo
         {
             AttemptGenRandomPath();
         }
-        
+
+        //Determine a HideoutRoom to put the player in
+        HideoutRoomObj playerRoom = map.GetHideoutRoom();
+        playerRoom.SpawnPlayer ();
     }
 
     /// TODO: this is an old description of a very similar function, should be rewritten
