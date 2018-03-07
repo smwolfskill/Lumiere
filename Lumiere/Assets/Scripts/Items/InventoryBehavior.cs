@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InventoryBehavior : MonoBehaviour {
+    public Entity entity;
+
     [Header("General Settings")]
     public bool visible;
     public int blockSize;
@@ -39,6 +41,7 @@ public class InventoryBehavior : MonoBehaviour {
 
     void Start () {
         inv = new Inventory(nWidth, nHeight);
+        entity.inventory = inv;
         inv.AddItem(new GameItem(item1, item1, "item 1", "item 1", 50,
                     GameItem.ItemRarity.COMMON, 5, 64, 1));
         inv.AddItem(new GameItem(item2, item2, "item 2", "item 2", 40,

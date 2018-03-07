@@ -6,6 +6,8 @@ public abstract class Entity : BaseObject
 {
 	public EntityAction[] actions; 	//will hold all actions that this entity can perform
     public Vector2 colliderSize; // the size of the entity's collider
+    public Inventory inventory;
+    public LinkedList<GameObject> nearbyItems = new LinkedList<GameObject>(); //list of items that this entity could pickup if desired. Will be used by AI mainly
 
     /// <summary>
     /// Spawn the entity at the specified location.

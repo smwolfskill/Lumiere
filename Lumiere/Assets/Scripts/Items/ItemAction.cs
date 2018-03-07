@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EntityAction : Action
+public abstract class ItemAction : EntityAction 
 {
-    public Entity target;
+    
 }
