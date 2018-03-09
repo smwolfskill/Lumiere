@@ -54,7 +54,8 @@ public class State : ScriptableObject
     {
         for (int i = 0; i < transitions.Length; i++) 
         {
-            if (transitions [i].decision.Decide (stateController)) {
+            if (transitions [i].decision.Decide (stateController)) 
+            {
                 stateController.TransitionToState (transitions [i].trueState);
             } 
             else 
