@@ -30,7 +30,19 @@ public class State : ScriptableObject
     /// <param name="stateController">The state controller of the AI.</param>
     private void DoActions (StateController stateController)
     {
-        //TODO: implement
+        GameObject gameObject = stateController.gameObject;
+        if (gameObject == null) 
+        {
+            throw new MissingReferenceException ();
+        }
+
+        foreach (Action action in actions) 
+        {
+            if (action.Validate (gameObject)) 
+            {
+                action.Execute (gameObject);
+            }
+        }
     }
 
     /// <summary>
@@ -40,7 +52,16 @@ public class State : ScriptableObject
     /// <param name="stateController">The state controller of the AI.</param>
     private void CheckTransitions(StateController stateController)
     {
-        //TODO: implement
+        for (int i = 0; i < transitions.Length; i++) 
+        {
+            if (transitions [i].decision.Decide (stateController)) {
+                stateController.TransitionToState (transitions [i].trueState);
+            } 
+            else 
+            {
+                stateController.TransitionToState (transitions [i].falseState);
+            }
+        }
     }
 
 
