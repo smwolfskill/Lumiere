@@ -32,7 +32,7 @@ class AIBehaviorTest
 
         chaseState = Resources.Load<State>("States/ChaseTest");
         attackState = Resources.Load<State>("States/AttackTest");
-        idleState = Resources.Load<State>("States/IdleTest");
+        idleState = Resources.Load<State> ("States/IdleTest");
 
         Assert.IsNotNull(player);
         Assert.IsNotNull(monster);
@@ -79,13 +79,13 @@ class AIBehaviorTest
     public void TestChaseDecision()
     {
         // 1. False, player is not close enough to chase.
-        player.transform.position.Set(5, 10, 0);
-        monster.transform.position.Set(5, 20, 0);
+        player.transform.position = new Vector2(5, 10);
+        monster.transform.position = new Vector2(5, 20);
         Assert.IsFalse(testChase.Decide(handler));
 
         // 2. True, player is close enough to chase.
-        player.transform.position.Set(5, 10, 0);
-        monster.transform.position.Set(5, 14, 0);
+        player.transform.position = new Vector2(5, 10);
+        monster.transform.position = new Vector2(5, 14);
         Assert.IsTrue(testChase.Decide(handler));
     }
 
@@ -96,13 +96,13 @@ class AIBehaviorTest
     public void TestAttackDecision()
     {
         // 1. False, player is not close enough to attack.
-        player.transform.position.Set(5, 10, 0);
-        monster.transform.position.Set(5, 14, 0);
+        player.transform.position = new Vector2(5, 10);
+        monster.transform.position = new Vector2(5, 14);
         Assert.IsFalse(testAttack.Decide(handler));
 
         // 2. True, player is close enough to attack.
-        player.transform.position.Set(5, 10, 0);
-        monster.transform.position.Set(5, 11, 0);
+        player.transform.position = new Vector2(5, 10);
+        monster.transform.position = new Vector2(5, 11);
         Assert.IsTrue(testAttack.Decide(handler));
     }
 
@@ -113,8 +113,8 @@ class AIBehaviorTest
     public void TestStateControlFlow()
     {
         // 1. Starts Idle, does not transition. (Chase Decision Fails)
-        player.transform.position.Set(5, 10, 0);
-        monster.transform.position.Set(5, 20, 0);
+        player.transform.position = new Vector2(5, 10);
+        monster.transform.position = new Vector2(5, 20);
 
         handler.currentState = idleState;
         handler.currentState.UpdateState(handler);
@@ -122,7 +122,7 @@ class AIBehaviorTest
         Assert.AreSame(idleState, handler.currentState);
 
         // 2. Chase Decision succeeds, is in Chase state.
-        monster.transform.position.Set(5, 14, 0);
+        monster.transform.position = new Vector2(5, 14);
 
         handler.currentState.UpdateState(handler);
 
@@ -133,15 +133,16 @@ class AIBehaviorTest
         Assert.AreSame(chaseState, handler.currentState);
 
         // 4. Chase Decision Fails, returns to Idle state.
-        monster.transform.position.Set(5, 16, 0);
+        monster.transform.position = new Vector2(5, 16);
 
         handler.currentState.UpdateState(handler);
 
         Assert.AreSame(idleState, handler.currentState);
 
         // 5. Is returned to chase state. Attack decision succeeds. Is now in attack state.
-        monster.transform.position.Set(5, 11, 0);
+        monster.transform.position = new Vector2(5, 14);
         handler.currentState.UpdateState(handler);
+        monster.transform.position = new Vector2 (5, 11);
         handler.currentState.UpdateState(handler);
 
         Assert.AreSame(attackState, handler.currentState);
