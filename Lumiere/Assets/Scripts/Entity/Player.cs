@@ -18,7 +18,7 @@ public class Player : Entity
         playerGameObject.tag = "Player";
 
         //Tell the camera object that the player has been spawned
-        Camera.main.GetComponent<CameraFollow> ().findPlayerTransform ();
+        Camera.main.GetComponent<CameraFollow>().FindPlayerTransform();
         PlayerObject entityObj = new PlayerObject(playerGameObject, maxHealth);   
         return playerGameObject;
     }
