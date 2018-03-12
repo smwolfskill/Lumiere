@@ -49,7 +49,7 @@ public class Pathfinding
                         openSet.Add(neighbor);
                     }
 
-                    int tentativeGScore = gScores[current] + GetHeuristicCost(current, neighbor);
+                    int tentativeGScore = gScores[current] + GetDistance(current, neighbor);
                     if(tentativeGScore < gScores[neighbor])
                     {
                         cameFrom[neighbor] = current;
@@ -102,6 +102,15 @@ public class Pathfinding
         Vector2 start = new Vector2(startTile.x * map.tileOffset, startTile.y * map.tileOffset);
         Vector2 end = new Vector2(endTile.x * map.tileOffset, endTile.y * map.tileOffset);
         return (int) Vector2.Distance(start, end);
+    }
+
+    private int GetDistance(TileObj startTile, TileObj endTile)
+    {
+        if (!endTile.IsWalkable ()) 
+        {
+            return int.MaxValue;
+        }
+        return GetHeuristicCost(startTile, endTile);
     }
 
     private List<TileObj> GetNeighbors(TileObj current)

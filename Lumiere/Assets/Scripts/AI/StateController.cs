@@ -9,6 +9,7 @@ using UnityEngine;
 public class StateController : MonoBehaviour 
 {
     public State currentState;
+    public Map map;
 
 	// Use this for initialization
 	void Start () 

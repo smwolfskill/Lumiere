@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Lumiere/AI/Decisions/Chase Decision")]
 public class ChaseDecision : Decision 
 {
     /// <summary>

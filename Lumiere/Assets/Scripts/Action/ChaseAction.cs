@@ -13,6 +13,9 @@ public class ChaseAction : MonsterMoveAction
     private Vector2 ourPosition;
     private Vector2 targetPosition;
     private Vector2 oldTargetPosition = new Vector2(int.MaxValue, int.MaxValue);
+    private Pathfinding pathfinding = null;
+    private List<TileObj> path = new List<TileObj> ();
+    private int currentPathIndex = 1;
 
     /// <summary>
     /// Checks whether this action should be executed or not for the specified GameObject.
@@ -21,7 +24,18 @@ public class ChaseAction : MonsterMoveAction
     /// <returns>Returns true if this action should be executed, false otherwise.</returns>
     public override bool Validate (GameObject obj)
     {
-        throw new System.NotImplementedException ();
+        StateController stateController = obj.GetComponent<StateController>();
+        if(stateController == null)
+        {
+            return false;
+        }
+
+        if(pathfinding == null)
+        {
+            pathfinding = new Pathfinding(stateController.map);
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -35,11 +49,27 @@ public class ChaseAction : MonsterMoveAction
         GameObject target = GameObject.FindGameObjectWithTag("Player");
         targetPosition = target.transform.position;
         float oldTargetDistance = Vector2.Distance(targetPosition, oldTargetPosition);
+        Rigidbody2D rb = obj.GetComponent<Rigidbody2D> ();
+        if (rb == null) 
+        {
+            return false;
+        }
+
+        if (path != null && Vector2.Distance (ourPosition, targetPosition) < Vector2.Distance (new Vector2(path [currentPathIndex].x, path[currentPathIndex].y), targetPosition)) 
+        {
+            currentPathIndex++;
+        }
+
         if(oldTargetDistance > pathfindingThreshold)
         {
             //Do pathfinding
-            return true;
+            path = pathfinding.GetPath(ourPosition, targetPosition);
+            currentPathIndex = 1;
         }
+
+        Vector2 direction = new Vector2 (path [currentPathIndex].x - ourPosition.x, path [currentPathIndex].y - ourPosition.y);
+        direction.Normalize ();
+        rb.AddForce (direction * speed);
 
         return true;
 
