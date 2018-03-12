@@ -58,7 +58,7 @@ public class EntityRoomObj : RoomObj
             {
                 // Multiply location by tile offset to account for tile spacing or tile sizes
                 Vector2 locationToSpawn = new Vector2 (tileLocation.x * map.tileOffset, tileLocation.y * map.tileOffset);
-                entityToSpawn.Spawn (locationToSpawn);
+                entityToSpawn.Spawn (map, locationToSpawn);
                 spawnLocations.Add (tileLocation);
                 entitiesSpawned++;
             }

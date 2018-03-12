@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu (menuName = "Lumiere/Actions/EntityActions/MonsterMoveActions/ChaseAction")]
 public class ChaseAction : MonsterMoveAction 
 {
     /// <summary>
@@ -55,12 +56,19 @@ public class ChaseAction : MonsterMoveAction
             return false;
         }
 
-        if (path != null && Vector2.Distance (ourPosition, targetPosition) < Vector2.Distance (new Vector2(path [currentPathIndex].x, path[currentPathIndex].y), targetPosition)) 
+        if (Vector2.Distance (ourPosition, targetPosition) <= stoppingDistance) 
+        {
+            rb.velocity = Vector2.zero;
+            currentPathIndex = 1;
+            return false;
+        }
+
+        if (path.Count > 1 && Vector2.Distance (ourPosition, targetPosition) < Vector2.Distance (new Vector2(path [currentPathIndex].x, path[currentPathIndex].y), targetPosition)) 
         {
             currentPathIndex++;
         }
 
-        if(oldTargetDistance > pathfindingThreshold)
+        if(path.Count == 0 || currentPathIndex > path.Count - 1 || oldTargetDistance > pathfindingThreshold)
         {
             //Do pathfinding
             path = pathfinding.GetPath(ourPosition, targetPosition);
@@ -69,7 +77,8 @@ public class ChaseAction : MonsterMoveAction
 
         Vector2 direction = new Vector2 (path [currentPathIndex].x - ourPosition.x, path [currentPathIndex].y - ourPosition.y);
         direction.Normalize ();
-        rb.AddForce (direction * speed);
+        rb.velocity = direction * speed;
+        oldTargetPosition = targetPosition;
 
         return true;
 

@@ -94,7 +94,7 @@ public class Pathfinding
 
     private TileObj GetNearestTile(Vector2 location)
     {
-        return map.GetTile(Mathf.RoundToInt(location.x/map.tileOffset), Mathf.RoundToInt(location.y/map.tileOffset));
+        return map.GetTile((int)(location.x/map.tileOffset), (int)(location.y/map.tileOffset));
     }
 
     private int GetHeuristicCost(TileObj startTile, TileObj endTile)
@@ -118,7 +118,12 @@ public class Pathfinding
         List<TileObj> neighbors = new List<TileObj>();
         foreach(Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
         {
-            neighbors.Add(current.GetNeighbor(direction));
+            TileObj neighbor = current.GetNeighbor (direction);
+            if (neighbor != null) 
+            {
+                neighbors.Add(neighbor);
+            }
+
         }
 
         return neighbors;

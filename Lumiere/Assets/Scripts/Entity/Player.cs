@@ -10,5 +10,11 @@ public class Player : Entity
 	 + add currently equipped items
 	 */ 
 	//public Inventory inventory;
-
+    public override GameObject Spawn (Map map, Vector2 location)
+    {
+        GameObject player = base.Spawn (map, location);
+        EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
+        actionManager.entity = this;
+        return player;
+    }
 }

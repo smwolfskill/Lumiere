@@ -12,7 +12,7 @@ public abstract class Entity : BaseObject
     /// </summary>
     /// <param name="location">Location to spawn this entity.</param>
     /// <returns>Returns the GameObject representing this entity.</returns>
-    public virtual GameObject Spawn (Vector2 location)
+    public virtual GameObject Spawn (Map map, Vector2 location)
     {
         GameObject entity = new GameObject (this.name);
         entity.transform.position = location;
@@ -30,9 +30,6 @@ public abstract class Entity : BaseObject
         rigidbody.gravityScale = 0f;
         rigidbody.angularDrag = 0f;
         rigidbody.freezeRotation = true;
-
-        EntityActionManager entityActionManager = entity.AddComponent<EntityActionManager> ();
-        entityActionManager.entity = this;
 
         return entity;
     }
