@@ -8,6 +8,11 @@ public class ChaseAction : MonsterMoveAction
     /// The distance to stop chasing the target.
     /// </summary>
     public float stoppingDistance;
+    public float pathfindingThreshold = 3f;
+
+    private Vector2 ourPosition;
+    private Vector2 targetPosition;
+    private Vector2 oldTargetPosition = new Vector2(int.MaxValue, int.MaxValue);
 
     /// <summary>
     /// Checks whether this action should be executed or not for the specified GameObject.
@@ -26,6 +31,17 @@ public class ChaseAction : MonsterMoveAction
     /// <returns>Returns true if this action is executed successfully, false otherwise.</returns>
     public override bool Execute (GameObject obj)
     {
-        throw new System.NotImplementedException ();
+        ourPosition = obj.transform.position;
+        GameObject target = GameObject.FindGameObjectWithTag("Player");
+        targetPosition = target.transform.position;
+        float oldTargetDistance = Vector2.Distance(targetPosition, oldTargetPosition);
+        if(oldTargetDistance > pathfindingThreshold)
+        {
+            //Do pathfinding
+            return true;
+        }
+
+        return true;
+
     }
 }

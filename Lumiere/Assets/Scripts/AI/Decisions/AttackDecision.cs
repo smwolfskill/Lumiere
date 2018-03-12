@@ -17,6 +17,23 @@ public class AttackDecision : Decision
     public override bool Decide (StateController stateController)
     {
         //TODO: implement
-        throw new System.NotImplementedException ();
+        //TODO: implement
+        GameObject entity = stateController.gameObject;
+        if(entity == null)
+        {
+            return false;
+        }
+        Vector2 position = entity.transform.position;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if(player == null)
+        {
+            return false;
+        }
+
+        Vector2 playerPosition = player.transform.position;
+        // change in unity
+        float distance = Vector2.Distance(position, playerPosition);
+
+        return distance <= attackRange;
     }
 }

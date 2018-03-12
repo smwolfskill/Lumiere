@@ -9,6 +9,8 @@ public class ChaseDecision : Decision
     /// </summary>
     public float chaseDistance = 5f;
 
+    public float attackRange = 1f;
+
     /// <summary>
     /// The entity scans for the target. If the target is within the specified distance, return true. If the target is not found or not within the specified distance, return false.
     /// </summary>
@@ -16,7 +18,23 @@ public class ChaseDecision : Decision
     public override bool Decide (StateController stateController)
     {
         //TODO: implement
-        throw new System.NotImplementedException ();
+        GameObject entity = stateController.gameObject;
+        if(entity == null)
+        {
+            return false;
+        }
+        Vector2 position = entity.transform.position;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if(player == null)
+        {
+            return false;
+        }
+
+        Vector2 playerPosition = player.transform.position;
+        // change in unity
+        float distance = Vector2.Distance(position, playerPosition);
+
+        return distance <= chaseDistance && distance > attackRange;
     }
-        
+
 }
