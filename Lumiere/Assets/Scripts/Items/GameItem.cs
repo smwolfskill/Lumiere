@@ -326,9 +326,9 @@ public class GameItem
             {
                 quantity = maxStacks;
             }
-            else if (value < 1)
+            else if (value < 0)
             {
-                quantity = 1;
+                quantity = 0;
             }
             else
             {

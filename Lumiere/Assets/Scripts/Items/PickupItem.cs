@@ -65,11 +65,12 @@ public class PickupItem : EntityAction
     public override bool Execute(GameObject obj)
     {
         Debug.Log("Picking up item '" + toPickup.Name + "'");
-        bool success = target.inventory.AddItem(toPickup);
+        GameItem itemsLeft = target.inventory.AddItem(toPickup);
 
-        // Up for debate: Remove item GameObject from world, or set something so it is not rendered and cannot be picked up again.
-        // Since inventories can be quite large and assume player won't drop most items, would probably be best to delete itemObj.
-        Object.Destroy(itemObj);
-        return success;
+        if (itemsLeft == null) //remove item from physical world if picked up entire quantity
+        {
+            Object.Destroy(itemObj);
+        }
+        return true;
     }
 }

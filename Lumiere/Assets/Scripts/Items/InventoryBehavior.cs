@@ -32,14 +32,48 @@ public class InventoryBehavior : MonoBehaviour {
     public Sprite item4;
     public Sprite item5;
 
-    [Header("Input Parameters")]
-    public int mouseX;
-    public int mouseY;
+    //mouse input
+    private int mouseX;
+    private int mouseY;
+    private int selectedX;
+    private int selectedY;
 
     // Privately managed inventory
     private Inventory inv;
 
-    void Start () {
+    #region Getters & Setters
+    public Inventory ManagedInventory
+    {
+        get
+        {
+            return inv;
+        }
+    }
+
+    public int SelectedX {
+        get
+        {
+            return selectedX;
+        }
+    }
+
+    public int SelectedY {
+        get
+        {
+            return selectedY;
+        }
+    }
+
+    public bool Visible {
+        get
+        {
+            return visible;
+        }
+    }
+    #endregion
+
+    void Start ()
+    {
         inv = new Inventory(nWidth, nHeight);
         entity.inventory = inv;
         inv.AddItem(new GameItem(item1, item1, "item 1", "item 1", 50,
@@ -52,6 +86,13 @@ public class InventoryBehavior : MonoBehaviour {
                     GameItem.ItemRarity.EPIC, 2, 64, 4));
         inv.AddItem(new GameItem(item5, item5, "item 5", "item 5", 10,
                     GameItem.ItemRarity.LEGENDARY, 1, 64, 5));
+    }
+
+    void Update()
+    {
+        Vector3 mouse = Input.mousePosition;
+        mouseX = (int)mouse.x;
+        mouseY = Screen.height - (int)mouse.y;
     }
 
     /// <summary>
@@ -84,6 +125,8 @@ public class InventoryBehavior : MonoBehaviour {
                     {
                         // We are hovering over the item
                         DrawQuad(box, selected);
+                        selectedX = i;
+                        selectedY = j;
                     }
                     else
                     {
@@ -107,6 +150,17 @@ public class InventoryBehavior : MonoBehaviour {
                     }
                 }
             }
+        }
+    }
+
+    public GameItem GetSelectedItem()
+    {
+        if (visible == false) {
+            return null;
+        }
+        else
+        {
+            return inv.GetItem(selectedX, selectedY);            
         }
     }
 

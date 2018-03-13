@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour 
 {
-    public static float PICKUP_RADIUS = 0.2f; //radius outward from the gameobject within which the item can be picked up
+    public static float PICKUP_RADIUS = 0.5f; //radius outward from the gameobject within which the item can be picked up
 
     public Sprite groundSprite;
     public GameItem item;
