@@ -32,6 +32,11 @@ public abstract class RoomObj
 
     public abstract void GenRoom();
 
+    public virtual void SpawnPlayer ()
+    {
+        //Do nothing by default
+    }
+
     virtual public GameObject PopulateGameObject()
     {
         GameObject gameObject = new GameObject("RoomObj");

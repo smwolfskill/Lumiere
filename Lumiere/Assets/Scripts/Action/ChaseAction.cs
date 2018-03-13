@@ -51,8 +51,16 @@ public class ChaseAction : MonsterMoveAction
         targetPosition = target.transform.position;
         float oldTargetDistance = Vector2.Distance(targetPosition, oldTargetPosition);
         Rigidbody2D rb = obj.GetComponent<Rigidbody2D> ();
+        float targetDistance = Vector2.Distance (targetPosition, ourPosition);
+
         if (rb == null) 
         {
+            return false;
+        }
+
+        if (targetDistance <= stoppingDistance) 
+        {
+            rb.velocity = Vector2.zero;
             return false;
         }
 

@@ -204,6 +204,29 @@ public class Map
         return roomObj;
     }
 
+
+    //TODO maybe merge with getRandRoom?
+    public RoomObj GetHideoutRoom()
+    {
+        RoomObj roomObj;
+        bool isInIgnoreRoomObjTypes = false;
+        do
+        {
+            isInIgnoreRoomObjTypes = false;
+            roomObj = this.rooms[Utilities.RandomIntInRange(0, rooms.Count)];
+
+
+                if (roomObj.roomObjType != RoomObj.RoomObjType.Hideout)
+                {
+                        isInIgnoreRoomObjTypes = true;
+                }
+        }
+        while (isInIgnoreRoomObjTypes);
+
+        return roomObj;
+    }
+
+
     public void RemoveRoom(RoomObj roomObj)
     {
         this.rooms.Remove(roomObj);

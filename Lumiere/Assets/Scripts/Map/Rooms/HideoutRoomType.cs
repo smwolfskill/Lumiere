@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Lumiere/Room/Hideout")]
 public class HideoutRoomType : RoomType
 {
+    public Player player;
     public int minWidth;
     public int maxWidth;
     public int minHeight;

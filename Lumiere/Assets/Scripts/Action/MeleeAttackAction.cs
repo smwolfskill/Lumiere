@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu (menuName = "Lumiere/Actions/EntityActions/MeleeAttackAction")]
 public class MeleeAttackAction : EntityAction 
 {
     /// <summary>
@@ -23,7 +24,15 @@ public class MeleeAttackAction : EntityAction
     /// <returns>Returns true if the entity can attack, based on attackSpeed and lastAttackTime and false otherwise.</returns>
     public override bool Validate (GameObject obj)
     {
-        throw new System.NotImplementedException ();
+        float currentTime = Time.time;
+        float deltaTime = currentTime - lastAttackTime;
+        if (deltaTime >= (1.0f/attackSpeed)) 
+        {
+            return true;
+        }
+
+        return false;
+
     } 
 
     /// <summary>
@@ -33,6 +42,20 @@ public class MeleeAttackAction : EntityAction
     /// <returns>Returns true if this action is executed successfully, false otherwise.</returns>
     public override bool Execute (GameObject obj)
     {
-        throw new System.NotImplementedException ();
+        GameObject player = GameObject.FindGameObjectWithTag ("Player");
+        if (player == null) 
+        {
+            return false;
+        }
+
+        EntityHealthManager healthManager = player.GetComponent<EntityHealthManager> ();
+        if (healthManager == null) 
+        {
+            return false;
+        }
+
+        healthManager.InflictDamage (attackDamage);
+        lastAttackTime = Time.time;
+        return true;
     }
 }
