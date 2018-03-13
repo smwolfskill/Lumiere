@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class RoomType : BaseObject
 {
-
+    public Player player;
 }

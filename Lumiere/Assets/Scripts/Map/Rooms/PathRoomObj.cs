@@ -23,4 +23,9 @@ public class PathRoomObj : RoomObj
     public override void GenRoom()
     {
     }
+
+    protected override RoomType GetRoomType()
+    {
+        throw new System.NotImplementedException();
+    }
 }

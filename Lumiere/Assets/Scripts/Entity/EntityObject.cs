@@ -9,11 +9,12 @@ public abstract class EntityObject
     protected float maxHealth;
     protected float currHealth;
 
-
+    /*
     public EntityObject(float maxHealth)
     {
         //TODO
     }
+    */
 
     public EntityObject(GameObject existingGameObject, float maxHealth)
     {

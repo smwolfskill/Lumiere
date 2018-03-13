@@ -82,4 +82,8 @@ public class EntityRoomObj : RoomObj
         SpawnEntities ();
     }
 
+    protected override RoomType GetRoomType()
+    {
+        return entityRoomType;
+    }
 }

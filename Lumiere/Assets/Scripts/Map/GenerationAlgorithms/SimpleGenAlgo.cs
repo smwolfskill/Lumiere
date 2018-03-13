@@ -40,8 +40,21 @@ public class SimpleGenAlgo : GenAlgo
         }
 
         //Determine a HideoutRoom to put the player in
-        RoomObj playerRoom = map.GetHideoutRoom();
-        playerRoom.SpawnPlayer ();
+        RoomObj playerRoom = map.GetRanRoom(new RoomObj.RoomObjType[]
+        {
+            RoomObj.RoomObjType.Blank,
+            RoomObj.RoomObjType.Path
+        });
+
+        if(playerRoom == null)
+        {
+            Debug.Log("A player could not be spawned due to SimpleGenAlgo not generating" +
+                "a map that has a valid room to spawn a player in");
+        }
+        else
+        {
+            playerRoom.SpawnPlayer();
+        }
     }
 
     /// TODO: this is an old description of a very similar function, should be rewritten

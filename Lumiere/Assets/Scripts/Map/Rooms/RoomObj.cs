@@ -32,15 +32,26 @@ public abstract class RoomObj
 
     public abstract void GenRoom();
 
-    public virtual void SpawnPlayer ()
+    public virtual PlayerObject SpawnPlayer ()
     {
-        //Do nothing by default
+        //find location, spawn player
+        List<TileObj> walkableTiles = GetWalkableTiles();
+        TileObj walkableTile = walkableTiles[Utilities.RandomIntInRange(0, walkableTiles.Count)];
+        Vector2Int tileLocation = new Vector2Int(walkableTile.x, walkableTile.y);
+        Player playerToSpawn = GetRoomType().player;
+
+        // Multiply location by tile offset to account for tile spacing or tile sizes
+        Vector2 locationToSpawn = new Vector2(tileLocation.x * map.tileOffset, tileLocation.y * map.tileOffset);
+        GameObject playerGameObject = playerToSpawn.Spawn(map, locationToSpawn);
+
+        return (PlayerObject)playerGameObject.GetComponent<EntityObjectManager>().entityObject;
     }
+
+    abstract protected RoomType GetRoomType();
 
     virtual public GameObject PopulateGameObject()
     {
-        GameObject gameObject = new GameObject("RoomObj");
-        this.gameObject = gameObject;
+        this.gameObject = new GameObject("RoomObj");
         this.gameObject.AddComponent<BaseObjectManager>();
         return gameObject;
     }
