@@ -15,13 +15,15 @@ public class Player : Entity
     {
         GameObject player = base.Spawn (map, location, maxHealth);
         player.tag = "Player";
-        Camera.main.GetComponent<CameraFollow>().FindPlayerTransform();
+        Camera.main.GetComponent<CameraFollow>().SetTargetTransform(player.transform);
         EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
         InventoryBehavior inventoryBehavior = player.AddComponent<InventoryBehavior> ();
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);  
         EntityHealthManager healthManager = player.AddComponent<EntityHealthManager> ();
         healthManager.entityObj = entityObj;
+        player.AddComponent<EntityObjectManager>().entityObject = entityObj;
+
         return player;
     }
 }

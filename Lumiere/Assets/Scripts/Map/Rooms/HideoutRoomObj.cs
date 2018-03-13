@@ -43,20 +43,18 @@ public class HideoutRoomObj : RoomObj
         map.SetTile(x + w - 1, y + h - 1, new WallTileObj(x+w - 1, y+h - 1, this.map), this);
     }
 
+    protected override RoomType GetRoomType()
+    {
+        return hrt;
+    }
+
     /// <summary>
     /// Spawns the player inside the hideout room.
     /// </summary>
+    /*
     public override void SpawnPlayer()
     {
-        //find location, spawn player
-        List<TileObj> walkableTiles = GetWalkableTiles ();
-        List<Vector2Int> spawnLocations = new List<Vector2Int> ();
-        TileObj walkableTile = walkableTiles[Utilities.RandomIntInRange (0, walkableTiles.Count)];
-        Vector2Int tileLocation = new Vector2Int (walkableTile.x, walkableTile.y);
-        Player playerToSpawn = hrt.player;
 
-        // Multiply location by tile offset to account for tile spacing or tile sizes
-        Vector2 locationToSpawn = new Vector2 (tileLocation.x * map.tileOffset, tileLocation.y * map.tileOffset);
-        playerToSpawn.Spawn (map, locationToSpawn);
     }
+    */
 }

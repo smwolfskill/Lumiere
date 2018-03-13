@@ -40,8 +40,21 @@ public class SimpleGenAlgo : GenAlgo
         }
 
         //Determine a HideoutRoom to put the player in
-        RoomObj playerRoom = map.GetHideoutRoom();
-        playerRoom.SpawnPlayer ();
+        RoomObj playerRoom = map.GetRanRoom(new RoomObj.RoomObjType[]
+        {
+            RoomObj.RoomObjType.Blank,
+            RoomObj.RoomObjType.Path
+        });
+
+        if(playerRoom == null)
+        {
+            Debug.Log("A player could not be spawned due to SimpleGenAlgo not generating" +
+                "a map that has a valid room to spawn a player in");
+        }
+        else
+        {
+            playerRoom.SpawnPlayer();
+        }
     }
 
     /// TODO: this is an old description of a very similar function, should be rewritten
@@ -90,7 +103,15 @@ public class SimpleGenAlgo : GenAlgo
 
         Utilities.Direction startingDirection = Utilities.RandomEnumValue<Utilities.Direction>();
 
-        RoomObj startingRoom = map.GetRanRoom(new RoomObj.RoomObjType[] { RoomObj.RoomObjType.Blank, RoomObj.RoomObjType.Path });
+        RoomObj startingRoom = map.GetRanRoom(new RoomObj.RoomObjType[] {
+            RoomObj.RoomObjType.Blank,
+            RoomObj.RoomObjType.Path
+        });
+
+        if(startingRoom.w < 3 || startingRoom.h < 3)
+        {
+            return;
+        }
 
         TileObj startingTile = null;
 
@@ -100,6 +121,7 @@ public class SimpleGenAlgo : GenAlgo
 
                 // We want to choose a tile that is not in a corner and that is on the
                 // north wall of the room.
+
                 startingTile = map.GetTile(
                     Utilities.RandomIntInRange(startingRoom.x + 1, startingRoom.x + startingRoom.w - 1),
                     startingRoom.y

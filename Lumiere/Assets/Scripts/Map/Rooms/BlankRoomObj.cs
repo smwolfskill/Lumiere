@@ -27,4 +27,9 @@ public class BlankRoomObj : RoomObj
     {
         
     }
+
+    protected override RoomType GetRoomType()
+    {
+        throw new System.NotImplementedException();
+    }
 }

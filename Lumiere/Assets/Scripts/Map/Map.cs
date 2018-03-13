@@ -206,6 +206,7 @@ public class Map
 
 
     //TODO maybe merge with getRandRoom?
+    //TODO this function can get stuck in infinite loops
     public RoomObj GetHideoutRoom()
     {
         RoomObj roomObj;
