@@ -8,15 +8,25 @@ public class CameraFollow : MonoBehaviour
     Vector3 originalPosition;
     // Use this for initialization
     Vector3 offset;
+
     void Start ()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-        offset = transform.position - target.position;
     }
 
     // Update is called once per frame
     void Update ()
     {
-        transform.position = target.position + offset;
-	}
+        if (target != null)
+        {
+            transform.position = target.position + offset;
+        }
+    }
+
+    public void FindPlayerTransform()
+    {
+        target = GameObject.Find("Player").transform;
+        //Set the offset so that the camera can see the player and the map
+        offset = new Vector3(0, 0, -10);
+    }
+
 }
