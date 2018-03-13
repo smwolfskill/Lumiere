@@ -57,11 +57,8 @@ public class State : ScriptableObject
             if (transitions [i].decision.Decide (stateController)) 
             {
                 stateController.TransitionToState (transitions [i].trueState);
+                break;
             } 
-            else 
-            {
-                stateController.TransitionToState (transitions [i].falseState);
-            }
         }
     }
 

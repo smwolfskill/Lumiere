@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Lumiere/AI/Decisions/Attack Decision")]
-public class AttackDecision : Decision 
+[CreateAssetMenu(menuName = "Lumiere/AI/Decisions/Idle Decision")]
+public class IdleDecision : Decision 
 {
     /// <summary>
-    /// The attack range that can be modified in the editor or added as a parameter of the entity to make this decision.
-    /// For ranged entities, this will be a larger number.
+    /// The chase distance that can be modified in the editor or specified as a parameter of the entity to make this decision.
     /// </summary>
-    public float attackRange = 1f;
+    public float chaseDistance = 5f;
 
     /// <summary>
-    /// If this entity is within attack range of the target and can "see" the target, return true. If the target does not exist or it is not within the attack range, then return false.
+    /// The entity scans for the target. If the target is within the specified distance, return false. If the target is within the specified distance, return true.
     /// </summary>
-    /// <param name="stateController">The state controller for the deciding entity.</param>
+    /// <param name="stateController">The state controller of the deciding entity.</param>
     public override bool Decide (StateController stateController)
     {
         GameObject entity = stateController.gameObject;
@@ -30,7 +29,9 @@ public class AttackDecision : Decision
         }
 
         Vector2 playerPosition = player.transform.position;
+
         float distance = Vector2.Distance(position, playerPosition);
-        return distance <= attackRange;
+
+        return distance > chaseDistance;
     }
 }
