@@ -71,6 +71,30 @@ public class InventoryTest
     }
 
     /// <summary>
+    /// Tests that Inventory can be filled to max capacity and return the exact quantity of items that cannot be added.
+    /// </summary>
+    [Test]
+    public void TestInventoryFull()
+    {
+        Inventory smallInv = new Inventory(1, 1);
+        stackableItem.Quantity = 8;
+        stackableItem.MaxStacks = 10;
+        GameItem remaining = smallInv.AddItem(stackableItem);
+        Assert.IsNull(remaining);
+
+        //1. Try adding again to fill up inventory completely, and items that couldn't fit should be returned
+        remaining = smallInv.AddItem(stackableItem);
+        int expectedLeft = stackableItem.Quantity - (stackableItem.MaxStacks - stackableItem.Quantity);
+        Assert.IsNotNull(remaining);
+        Assert.AreEqual(expectedLeft, remaining.Quantity);
+        GameItem fullItem = smallInv.GetItem(0, 0);
+
+        //Ensure inventory is full
+        Assert.IsNotNull(fullItem);
+        Assert.AreEqual(stackableItem.MaxStacks, fullItem.Quantity);
+    }
+
+    /// <summary>
     /// Can items be removed from the inventory at specified slot indices?
     /// (Relies on AddItem functionality)
     /// </summary>
