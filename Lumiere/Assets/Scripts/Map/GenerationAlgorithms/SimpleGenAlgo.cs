@@ -103,7 +103,15 @@ public class SimpleGenAlgo : GenAlgo
 
         Utilities.Direction startingDirection = Utilities.RandomEnumValue<Utilities.Direction>();
 
-        RoomObj startingRoom = map.GetRanRoom(new RoomObj.RoomObjType[] { RoomObj.RoomObjType.Blank, RoomObj.RoomObjType.Path });
+        RoomObj startingRoom = map.GetRanRoom(new RoomObj.RoomObjType[] {
+            RoomObj.RoomObjType.Blank,
+            RoomObj.RoomObjType.Path
+        });
+
+        if(startingRoom.w < 3 || startingRoom.h < 3)
+        {
+            return;
+        }
 
         TileObj startingTile = null;
 
@@ -113,6 +121,7 @@ public class SimpleGenAlgo : GenAlgo
 
                 // We want to choose a tile that is not in a corner and that is on the
                 // north wall of the room.
+
                 startingTile = map.GetTile(
                     Utilities.RandomIntInRange(startingRoom.x + 1, startingRoom.x + startingRoom.w - 1),
                     startingRoom.y

@@ -45,9 +45,14 @@ public class EntityRoomObj : RoomObj
         List<Vector2Int> spawnLocations = new List<Vector2Int> ();
         Entity[] entities = entityRoomType.entities;
 
+        // TODO: quick fix for possible infinite loop:
+        int maxTrys = 1000;
+        int currTry = 0;
 
-        while (entitiesSpawned < numEntities) 
+        while (entitiesSpawned < numEntities && currTry < maxTrys) 
         {
+            currTry++;
+
             //Debug.Log ("Number of tiles: " + tileObjs.Count);
             //Debug.Log ("Walkable Tiles: " + walkableTiles.Count);
             TileObj walkableTile = walkableTiles[Utilities.RandomIntInRange (0, walkableTiles.Count)];
