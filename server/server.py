@@ -4,12 +4,15 @@ import os
 import os.path
 
 from flask import *
+from gevent.wsgi import WSGIServer
+
+log_path = "/home/gitlab-runner/build_logs/"
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    path = "/root/build_logs/"
+    path = log_path
     files = sorted([f[:-4] for f in os.listdir(path) if os.path.isfile(path + f)])
     return render_template("index.html", files=files)
 
@@ -17,8 +20,11 @@ def index():
 def find_log(log):
     k = log.rfind('/')
     log = log[k + 1:]
-    with open("/root/build_logs/" + log + ".xml") as ff:
-        data = ff.read()
+    try:
+        with open(log_path + log + ".xml") as ff:
+            data = ff.read()
+    except:
+        return abort(404)
     resp = Response(data)
     resp.headers['Content-Type'] = "text/plain"
     return resp
@@ -28,6 +34,6 @@ def page_not_found(e):
     return "you failed", 404
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    WSGIServer(('', 80), app).serve_forever()
 
 # vim: ts=4:sts=4:sw=4:et
