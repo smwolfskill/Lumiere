@@ -54,6 +54,20 @@ public class Map
         return tileObj;
     }
 
+    public List<TileObj> GetTiles()
+    {
+        List<TileObj> tiles = new List<TileObj> ();
+        for (int i = 0; i < tileObjMatrix.GetLength(0); i++) 
+        {
+            for (int j = 0; j < tileObjMatrix.GetLength(1); j++) 
+            {
+                tiles.Add (tileObjMatrix [i, j]);    
+            }   
+        }
+
+        return tiles;
+    }
+
     public void FillArea(int x, int y, int w, int h, TileObj.TileObjType tileObjType, RoomObj roomObj)
     {
         // Force top and left of rectangle to be inside the map.
@@ -192,7 +206,8 @@ public class Map
 
 
     //TODO maybe merge with getRandRoom?
-    public HideoutRoomObj GetHideoutRoom()
+    //TODO this function can get stuck in infinite loops
+    public RoomObj GetHideoutRoom()
     {
         RoomObj roomObj;
         bool isInIgnoreRoomObjTypes = false;
@@ -209,7 +224,7 @@ public class Map
         }
         while (isInIgnoreRoomObjTypes);
 
-        return (HideoutRoomObj) roomObj;
+        return roomObj;
     }
 
 

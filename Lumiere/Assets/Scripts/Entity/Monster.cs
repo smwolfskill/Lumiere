@@ -6,9 +6,12 @@ using UnityEngine;
 public class Monster : NPC
 {
 
-    override public GameObject Spawn(Vector2 location, float maxHealth = 10.0f)
+    override public GameObject Spawn(Map map, Vector2 location, float maxHealth = 10.0f)
     {
-        return base.Spawn(location, maxHealth);
+        //TODO: add EntityObjectManager, instantiate a entityObject, attach the entityObject
+        //      to the EntityObjectManager, somewhere else keep track of the entityObject.
+
+        return base.Spawn(map, location, maxHealth);
     }
   
 }

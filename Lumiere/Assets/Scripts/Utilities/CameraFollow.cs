@@ -22,9 +22,9 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
-    public void FindPlayerTransform()
+    public void SetTargetTransform(Transform playerTransform)
     {
-        target = GameObject.Find("Player").transform;
+        target = playerTransform;
         //Set the offset so that the camera can see the player and the map
         offset = new Vector3(0, 0, -10);
     }

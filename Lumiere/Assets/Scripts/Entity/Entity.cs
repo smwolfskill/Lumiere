@@ -14,7 +14,7 @@ public abstract class Entity : BaseObject
     /// </summary>
     /// <param name="location">Location to spawn this entity.</param>
     /// <returns>Returns the GameObject representing this entity.</returns>
-    virtual public GameObject Spawn (Vector2 location, float maxHealth = 1.0f)
+    virtual public GameObject Spawn (Map map, Vector2 location, float maxHealth = 1.0f)
     {
 
         GameObject entity = new GameObject (this.name);
@@ -34,8 +34,6 @@ public abstract class Entity : BaseObject
         rigidbody.angularDrag = 0f;
         rigidbody.freezeRotation = true;
 
-        EntityActionManager entityActionManager = entity.AddComponent<EntityActionManager> ();
-        entityActionManager.entity = this;
 
         //EntityObject entityObj = new EntityObject(entity, maxHealth);
         // TODO: add to map

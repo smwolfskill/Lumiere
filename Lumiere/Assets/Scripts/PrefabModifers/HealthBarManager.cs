@@ -17,7 +17,6 @@ public class HealthBarManager : MonoBehaviour {
 
     private void Update()
     {
-        SetHealth(percent);
     }
 
     public void SetHealth(float percent)

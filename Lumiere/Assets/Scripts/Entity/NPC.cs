@@ -4,11 +4,17 @@ using UnityEngine;
 
 public abstract class NPC : Entity 
 {
-    //TODO in future iteration: add AI selection code
-
-    override public GameObject Spawn(Vector2 location, float maxHealth)
+    public State initialState;
+    
+    override public GameObject Spawn (Map map, Vector2 location, float maxHealth)
     {
-        return base.Spawn(location, maxHealth);
-    }
+        //TODO: add EntityObjectManager, instantiate a entityObject, attach the entityObject
+        //      to the EntityObjectManager, somewhere else keep track of the entityObject.
 
+        GameObject npc = base.Spawn (map, location, maxHealth);
+        StateController stateController = npc.AddComponent<StateController> ();
+        stateController.currentState = this.initialState;
+        stateController.map = map;
+        return npc;
+    }
 }

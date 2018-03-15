@@ -13,6 +13,7 @@ public class PlayerObject : EntityObject
     public override void InflictDamage(float damageAmount)
     {
         base.InflictDamage(damageAmount);
+        //Debug.Log ("Inflicting damage! Health: " + currHealth + " Max Health: " + maxHealth);
         UpdateHealthBar();
     }
 

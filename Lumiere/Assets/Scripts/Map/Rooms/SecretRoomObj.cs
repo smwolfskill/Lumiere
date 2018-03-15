@@ -5,11 +5,13 @@ using UnityEngine;
 public class SecretRoomObj : RoomObj
 {
 
+    private SecretRoomType srt;
+
     public SecretRoomObj(Map map) : base(map)
     {
         roomObjType = RoomObjType.Secret;
 
-        SecretRoomType srt = (SecretRoomType)gameObject.GetComponent<BaseObjectManager>().baseObject;
+        srt = (SecretRoomType)gameObject.GetComponent<BaseObjectManager>().baseObject;
         this.x = Utilities.RandomIntInRange(0, map.w);
         this.y = Utilities.RandomIntInRange(0, map.h);
         this.w = srt.width_height;
@@ -41,4 +43,8 @@ public class SecretRoomObj : RoomObj
         map.SetTile(x + w - 1, y + h - 1, new WallTileObj(x + w - 1, y + h - 1, this.map), this);
     }
 
+    protected override RoomType GetRoomType()
+    {
+        return srt;
+    }
 }
