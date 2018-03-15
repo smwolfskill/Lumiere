@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="30" result="Passed" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="161" engine-version="3.5.0.0" clr-version="2.0.50727.1433" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:48Z" duration="2.854123">
+  <test-suite type="TestSuite" id="1000" name="Lumiere" fullname="Lumiere" runstate="Runnable" testcasecount="30" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:48Z" duration="2.854123" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="161">
+    <test-suite type="Assembly" id="1042" name="Assembly-CSharp.dll" fullname="/var/lib/gitlab-runner/builds/c2e17c84/0/wsong9/lumiere/Lumiere/Library/ScriptAssemblies/Assembly-CSharp.dll" runstate="Runnable" testcasecount="30" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:48Z" duration="2.817498" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="161">
+      <properties>
+        <property name="_PID" value="18061" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+      </properties>
+      <test-suite type="TestFixture" id="1001" name="AIBehaviorTest" fullname="AIBehaviorTest" classname="AIBehaviorTest" runstate="Runnable" testcasecount="3" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.255771" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="33">
+        <test-case id="1003" name="TestAttackDecision" fullname="AIBehaviorTest.TestAttackDecision" methodname="TestAttackDecision" classname="AIBehaviorTest" runstate="Runnable" seed="1675786410" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.057835" asserts="10">
+          <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+NullReferenceException: Object reference not set to an instance of an object
+]]></output>
+        </test-case>
+        <test-case id="1002" name="TestChaseDecision" fullname="AIBehaviorTest.TestChaseDecision" methodname="TestChaseDecision" classname="AIBehaviorTest" runstate="Runnable" seed="1942112047" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.049793" asserts="10">
+          <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+NullReferenceException: Object reference not set to an instance of an object
+]]></output>
+        </test-case>
+        <test-case id="1004" name="TestStateControlFlow" fullname="AIBehaviorTest.TestStateControlFlow" methodname="TestStateControlFlow" classname="AIBehaviorTest" runstate="Runnable" seed="274405661" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.049826" asserts="13">
+          <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1005" name="EntitySpawnTest" fullname="EntitySpawnTest" classname="EntitySpawnTest" runstate="Runnable" testcasecount="5" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.449446" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="28">
+        <test-case id="1009" name="TestEntitiesInGame" fullname="EntitySpawnTest.TestEntitiesInGame" methodname="TestEntitiesInGame" classname="EntitySpawnTest" runstate="Runnable" seed="897326509" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.069290" asserts="5" />
+        <test-case id="1008" name="TestEntitiesSpawned" fullname="EntitySpawnTest.TestEntitiesSpawned" methodname="TestEntitiesSpawned" classname="EntitySpawnTest" runstate="Runnable" seed="1882977772" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.059207" asserts="6" />
+        <test-case id="1010" name="TestEntitySpawnLocation" fullname="EntitySpawnTest.TestEntitySpawnLocation" methodname="TestEntitySpawnLocation" classname="EntitySpawnTest" runstate="Runnable" seed="1649003606" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.050538" asserts="7" />
+        <test-case id="1007" name="TestRoomInGame" fullname="EntitySpawnTest.TestRoomInGame" methodname="TestRoomInGame" classname="EntitySpawnTest" runstate="Runnable" seed="1963195570" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.049655" asserts="5" />
+        <test-case id="1006" name="TestTilesSpawned" fullname="EntitySpawnTest.TestTilesSpawned" methodname="TestTilesSpawned" classname="EntitySpawnTest" runstate="Runnable" seed="2011687698" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:45Z" duration="0.054838" asserts="5" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1011" name="EntitySpriteManagerTest" fullname="EntitySpriteManagerTest" classname="EntitySpriteManagerTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2018-03-14 18:05:45Z" end-time="2018-03-14 18:05:46Z" duration="0.082979" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="3">
+        <test-case id="1012" name="SetSpriteTest" fullname="EntitySpriteManagerTest.SetSpriteTest" methodname="SetSpriteTest" classname="EntitySpriteManagerTest" runstate="Runnable" seed="561040838" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.033758" asserts="3" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1013" name="HideoutRoomTest" fullname="HideoutRoomTest" classname="HideoutRoomTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.180124" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="8">
+        <test-case id="1015" name="TestRoomInGame" fullname="HideoutRoomTest.TestRoomInGame" methodname="TestRoomInGame" classname="HideoutRoomTest" runstate="Runnable" seed="1650058637" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.049679" asserts="4" />
+        <test-case id="1014" name="TestTilesSpawned" fullname="HideoutRoomTest.TestTilesSpawned" methodname="TestTilesSpawned" classname="HideoutRoomTest" runstate="Runnable" seed="76337114" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.064397" asserts="4" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1016" name="InventoryTest" fullname="InventoryTest" classname="InventoryTest" runstate="Runnable" testcasecount="3" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.198813" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="30">
+        <test-case id="1017" name="CanAddItems" fullname="InventoryTest.CanAddItems" methodname="CanAddItems" classname="InventoryTest" runstate="Runnable" seed="259787859" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.036442" asserts="14" />
+        <test-case id="1019" name="CanRemoveItems" fullname="InventoryTest.CanRemoveItems" methodname="CanRemoveItems" classname="InventoryTest" runstate="Runnable" seed="1603085983" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.035722" asserts="8" />
+        <test-case id="1018" name="CanRemoveItemsOnSlot" fullname="InventoryTest.CanRemoveItemsOnSlot" methodname="CanRemoveItemsOnSlot" classname="InventoryTest" runstate="Runnable" seed="1806881591" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.033778" asserts="8" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1020" name="ItemLoaderTest" fullname="ItemLoaderTest" classname="ItemLoaderTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.083420" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="3">
+        <test-case id="1021" name="SaveAndLoadTest" fullname="ItemLoaderTest.SaveAndLoadTest" methodname="SaveAndLoadTest" classname="ItemLoaderTest" runstate="Runnable" seed="378511195" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.038298" asserts="3" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1022" name="ItemTest" fullname="ItemTest" classname="ItemTest" runstate="Runnable" testcasecount="4" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.265056" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="12">
+        <test-case id="1026" name="ItemCopyTest" fullname="ItemTest.ItemCopyTest" methodname="ItemCopyTest" classname="ItemTest" runstate="Runnable" seed="295956600" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.033275" asserts="1" />
+        <test-case id="1024" name="ItemEqualsTest" fullname="ItemTest.ItemEqualsTest" methodname="ItemEqualsTest" classname="ItemTest" runstate="Runnable" seed="827128988" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.033415" asserts="3" />
+        <test-case id="1023" name="ItemStoresData" fullname="ItemTest.ItemStoresData" methodname="ItemStoresData" classname="ItemTest" runstate="Runnable" seed="718416493" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.035166" asserts="5" />
+        <test-case id="1025" name="SetYetTest" fullname="ItemTest.SetYetTest" methodname="SetYetTest" classname="ItemTest" runstate="Runnable" seed="458924188" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:46Z" duration="0.033294" asserts="3" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1027" name="MapTest" fullname="MapTest" classname="MapTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:47Z" duration="0.165748" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="13">
+        <test-case id="1029" name="ContainerAttributeTest" fullname="MapTest.ContainerAttributeTest" methodname="ContainerAttributeTest" classname="MapTest" runstate="Runnable" seed="191839569" result="Passed" start-time="2018-03-14 18:05:46Z" end-time="2018-03-14 18:05:47Z" duration="0.049577" asserts="6">
+          <output><![CDATA[WallTile must be instantiated using the ScriptableObject.CreateInstance method instead of new WallTile.
+ArgumentException: The Object you want to instantiate is null.
+]]></output>
+        </test-case>
+        <test-case id="1028" name="MapStructureTest" fullname="MapTest.MapStructureTest" methodname="MapStructureTest" classname="MapTest" runstate="Runnable" seed="1287906216" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.049744" asserts="7">
+          <output><![CDATA[WallTile must be instantiated using the ScriptableObject.CreateInstance method instead of new WallTile.
+ArgumentException: The Object you want to instantiate is null.
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1030" name="MonsterMovementTest" fullname="MonsterMovementTest" classname="MonsterMovementTest" runstate="Runnable" testcasecount="3" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.265050" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="10">
+        <test-case id="1033" name="TestChangePosition" fullname="MonsterMovementTest.TestChangePosition" methodname="TestChangePosition" classname="MonsterMovementTest" runstate="Runnable" seed="1442699233" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.066658" asserts="4">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1031" name="TestFailMove" fullname="MonsterMovementTest.TestFailMove" methodname="TestFailMove" classname="MonsterMovementTest" runstate="Runnable" seed="2100738226" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.048940" asserts="3" />
+        <test-case id="1032" name="TestSuccessMove" fullname="MonsterMovementTest.TestSuccessMove" methodname="TestSuccessMove" classname="MonsterMovementTest" runstate="Runnable" seed="1027475723" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.049751" asserts="3" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1034" name="PlayerMovementTest" fullname="PlayerMovementTest" classname="PlayerMovementTest" runstate="Runnable" testcasecount="4" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.347835" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="13">
+        <test-case id="1036" name="TestFailMove" fullname="PlayerMovementTest.TestFailMove" methodname="TestFailMove" classname="PlayerMovementTest" runstate="Runnable" seed="440711918" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.049967" asserts="3" />
+        <test-case id="1038" name="TestNoInput" fullname="PlayerMovementTest.TestNoInput" methodname="TestNoInput" classname="PlayerMovementTest" runstate="Runnable" seed="1535792237" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.066115" asserts="4">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1037" name="TestSuccessMove" fullname="PlayerMovementTest.TestSuccessMove" methodname="TestSuccessMove" classname="PlayerMovementTest" runstate="Runnable" seed="1299967210" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.049842" asserts="3" />
+        <test-case id="1035" name="TestValidate" fullname="PlayerMovementTest.TestValidate" methodname="TestValidate" classname="PlayerMovementTest" runstate="Runnable" seed="766494964" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.049785" asserts="3" />
+      </test-suite>
+      <test-suite type="TestFixture" id="1039" name="SecretRoomTest" fullname="SecretRoomTest" classname="SecretRoomTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:48Z" duration="0.165745" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="8">
+        <test-case id="1041" name="TestRoomInGame" fullname="SecretRoomTest.TestRoomInGame" methodname="TestRoomInGame" classname="SecretRoomTest" runstate="Runnable" seed="1707950180" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:47Z" duration="0.049796" asserts="4" />
+        <test-case id="1040" name="TestTilesSpawned" fullname="SecretRoomTest.TestTilesSpawned" methodname="TestTilesSpawned" classname="SecretRoomTest" runstate="Runnable" seed="719805483" result="Passed" start-time="2018-03-14 18:05:47Z" end-time="2018-03-14 18:05:48Z" duration="0.049839" asserts="4" />
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
