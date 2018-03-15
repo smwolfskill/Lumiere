@@ -8,6 +8,7 @@ public abstract class EntityObject
     public GameObject gameObject;
     protected float maxHealth;
     protected float currHealth;
+    protected bool isDead;
 
     /*
     public EntityObject(float maxHealth)
@@ -21,6 +22,7 @@ public abstract class EntityObject
         this.gameObject = existingGameObject;
         this.maxHealth = maxHealth;
         this.currHealth = maxHealth;
+        this.isDead = false;
     }
 
     virtual public void InflictDamage(float damageAmount)
@@ -30,8 +32,33 @@ public abstract class EntityObject
             this.Die();
     }
 
+    virtual public void Heal(float healAmount)
+    {
+        if (!this.isDead)
+        {
+            this.currHealth += healAmount;
+            if (currHealth > maxHealth)
+                this.currHealth = this.maxHealth;
+        }
+    }
+
+    virtual public float GetCurrHealth()
+    {
+        return this.currHealth;
+    }
+
+    virtual public float GetMaxHealth()
+    {
+        return this.maxHealth;
+    }
+
     virtual protected void Die()
     {
+        this.isDead = true;
+    }
 
+    virtual public bool IsDead()
+    {
+        return this.isDead;
     }
 }
