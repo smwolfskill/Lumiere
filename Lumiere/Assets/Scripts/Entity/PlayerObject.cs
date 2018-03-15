@@ -17,6 +17,12 @@ public class PlayerObject : EntityObject
         UpdateHealthBar();
     }
 
+    public override void Heal(float healAmount)
+    {
+        base.Heal(healAmount);
+        UpdateHealthBar();
+    }
+
     private void UpdateHealthBar()
     {
         this.healthBar.GetComponent<HealthBarManager>().SetHealth(currHealth / maxHealth);

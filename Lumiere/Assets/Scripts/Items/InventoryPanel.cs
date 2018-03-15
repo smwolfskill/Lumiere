@@ -120,7 +120,6 @@ public class InventoryPanel : MonoBehaviour
             {
                 GameObject child = (GameObject) GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation)/*,
                                                  gameObject.transform*/);
-                //child.transform.parent = gameObject.transform;
                 child.transform.SetParent(gameObject.transform, false);
                 childScript = child.GetComponent<InventoryItemButton>();
                 childScript.SetGUIReferences(uiBehavior, this);

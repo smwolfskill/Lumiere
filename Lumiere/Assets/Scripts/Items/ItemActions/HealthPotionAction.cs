@@ -18,9 +18,9 @@ public class HealthPotionAction : ItemAction
             return false;
         }
         Entity player = invPanel.entity;
-        //TODO: modify player's PlayerObject health once this it4_items branch is merged with it4_MonsterAI
-        //player.entityObject.ModifyHealth(10.0f);
-        Debug.Log("Health potion used");
+        //TODO: make the heal amount more customizable in the future (for different strength potions)
+        player.entityObject.Heal(10.0f);
+        //Debug.Log("Health potion used");
         return true;
     }
 }
