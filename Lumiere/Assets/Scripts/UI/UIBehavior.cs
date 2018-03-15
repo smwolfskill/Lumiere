@@ -92,7 +92,7 @@ public class UIBehavior : MonoBehaviour
 
     public void HideUI()
     {
-        canvas.enabled = false;
+        //canvas.enabled = false;
         SetAllInactive();
     }
 

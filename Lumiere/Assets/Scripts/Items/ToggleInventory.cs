@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Lumiere/Actions/ToggleInventory")]
 public class ToggleInventory : EntityAction
 {
+    //LEGACY code: toggling inventory is now handled exclusively by UIBehavior in UICanvas,
+    //which (will) handle all UI menu open/close toggles.
     private float lastInput = 0.0f;
 
     public override bool Validate(GameObject obj)

@@ -67,8 +67,8 @@ public class InventoryItemButton : MonoBehaviour, IPointerEnterHandler, IPointer
 
     void TaskOnClick()
     {
-        Debug.Log("You have clicked the button!");
-
+        //TODO: Do anything on item click?
+        Debug.Log("TODO: anything on item click?");
     }
 
     public void OnPointerEnter(PointerEventData eventData)

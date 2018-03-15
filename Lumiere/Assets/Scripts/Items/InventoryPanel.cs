@@ -93,8 +93,8 @@ public class InventoryPanel : MonoBehaviour
             GameItem.ItemRarity.UNCOMMON, 4, 64, 2));
         inv.AddItem(new GameItem(item3, item3, "item 3", "item 3", 30,
             GameItem.ItemRarity.RARE, 3, 64, 3));
-        inv.AddItem(new GameItem(item4, item4, "item 4", "item 4", 20,
-            GameItem.ItemRarity.EPIC, 2, 64, 4));
+        inv.AddItem(new GameItem(item4, item4, "Health Potion", "A health potion.", 1,
+            GameItem.ItemRarity.EPIC, 2, 5, 100, "HealthPotionAction"));
         inv.AddItem(new GameItem(item5, item5, "The God Portal", "The ultimate portal of mysticality and memes.", 10,
             GameItem.ItemRarity.LEGENDARY, 1, 64, 5));
         ResetSelectedItem();
@@ -109,6 +109,7 @@ public class InventoryPanel : MonoBehaviour
         gridLayout.constraintCount = nWidth; //# of columns
         InventoryItemButton[] childrenScripts = GetComponentsInChildren<InventoryItemButton>(); //used to access the children game objects
         //Set or create each GameItem's UI element
+        //TODO: understand how/why duplicate 
         for(int location = 0; location < capacity; location++)
         {
             int[] gridLocation = ItemLocationInGrid(location);
@@ -117,8 +118,10 @@ public class InventoryPanel : MonoBehaviour
             InventoryItemButton childScript;
             if(location >= childrenScripts.Length) //Inventory grew in size; create more UI items.
             {
-                GameObject child = (GameObject) Instantiate(GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation)),
-                                                 gameObject.transform);
+                GameObject child = (GameObject) GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation)/*,
+                                                 gameObject.transform*/);
+                //child.transform.parent = gameObject.transform;
+                child.transform.SetParent(gameObject.transform, false);
                 childScript = child.GetComponent<InventoryItemButton>();
                 childScript.SetGUIReferences(uiBehavior, this);
             }
@@ -127,6 +130,10 @@ public class InventoryPanel : MonoBehaviour
                 childScript = childrenScripts[location];
             }
 
+            if(locX < 0 || locX >= nWidth || locY < 0 || locY >= nHeight)
+            {
+                Debug.Log("Set new item wrong params: (" + locX + "/ " + nWidth + ", " + locY + "/ " + nHeight + ")");
+            }
             childScript.SetNewItem(inv.GetItem(locX, locY), locX, locY);
         }
 

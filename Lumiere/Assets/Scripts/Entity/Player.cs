@@ -23,8 +23,8 @@ public class Player : Entity
         player.tag = "Player";
         Camera.main.GetComponent<CameraFollow>().SetTargetTransform(player.transform);
         EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
-        InventoryBehavior inventoryBehavior = player.AddComponent<InventoryBehavior> ();
-        inventoryBehavior.entity = this;
+        /*InventoryBehavior inventoryBehavior = player.AddComponent<InventoryBehavior> ();
+        inventoryBehavior.entity = this;*/
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);  
         EntityHealthManager healthManager = player.AddComponent<EntityHealthManager> ();
