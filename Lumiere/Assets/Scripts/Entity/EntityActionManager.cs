@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EntityActionManager : MonoBehaviour
 {
-
     public Entity entity;
 
     // Update is called once per frame

@@ -5,25 +5,20 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Lumiere/Actions/ToggleInventory")]
 public class ToggleInventory : EntityAction
 {
+    private float lastInput = 0.0f;
+
     public override bool Validate(GameObject obj)
     {
-        //TODO: Replace this in future iterations
-        return true;
+        float toggleInventory = Input.GetAxis("ToggleInventory");
+        bool result = toggleInventory > 0.0 && toggleInventory != lastInput;
+        lastInput = toggleInventory;
+        return result;
     }
 
     public override bool Execute(GameObject obj)
     {
         InventoryBehavior inv = obj.GetComponent<InventoryBehavior>();
-        
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            inv.visible = !inv.visible;
-        }
-
-        Vector3 mouse = Input.mousePosition;
-        inv.mouseX = (int)mouse.x;
-        inv.mouseY = Screen.height - (int)mouse.y;
-
+        inv.visible = !inv.visible;
         return true;
     }
 }
