@@ -6,7 +6,8 @@ using UnityEngine;
 public class DropItem : EntityAction
 {
     private float lastInput = 0.0f;
-    private InventoryBehavior invBehavior = null;
+    //private InventoryBehavior invBehavior = null;
+    private InventoryPanel invPanel = null;
     private GameItem toDrop = null;
     private int dropX;
     private int dropY;
@@ -23,16 +24,18 @@ public class DropItem : EntityAction
         lastInput = dropItem;
         if(inputChanged)
         {
-            invBehavior = obj.GetComponent<InventoryBehavior>();
-            if(!invBehavior.Visible)
+            GameObject panel = GameObject.FindGameObjectWithTag("InventoryPanel");
+            invPanel = panel.GetComponent<InventoryPanel>();
+            if(!invPanel.Visible)
             {
                 return false;
             }
             else
             {
-                dropX = invBehavior.SelectedX;
-                dropY = invBehavior.SelectedY;
-                toDrop = invBehavior.ManagedInventory.GetItem(dropX, dropY);
+                dropX = invPanel.SelectedX;
+                dropY = invPanel.SelectedY;
+                //toDrop = invPanel.ManagedInventory.GetItem(dropX, dropY);
+                toDrop = invPanel.GetSelectedItem();
                 if (!toDrop.SetYet())
                 {
                     return false;
@@ -63,16 +66,13 @@ public class DropItem : EntityAction
             amountToDrop = toDrop.Quantity;
         }
 
-        GameItem removedItem = invBehavior.ManagedInventory.RemoveItem(dropX, dropY, amountToDrop);
+        GameItem removedItem = invPanel.ManagedInventory.RemoveItem(dropX, dropY, amountToDrop);
         if(removedItem == null)
         {
             return false; //nothing to drop. Inventory bug
         }
 
-        GameObject droppedItem = (GameObject) Instantiate(Resources.Load<GameObject>("Prefabs/Item"));
-        droppedItem.transform.position = obj.transform.position;
-        ItemManager itemManager = droppedItem.GetComponent<ItemManager>();
-        itemManager.item = removedItem;
+        removedItem.CreateGameObject(obj.transform.position);
         return true;
     }
 }

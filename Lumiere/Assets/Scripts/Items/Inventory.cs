@@ -7,6 +7,8 @@ using System.Collections.Generic;
 /// </summary>
 public class Inventory
 {
+    public InventoryPanel uiPanel;
+
     protected int width;          // Width in blocks.
     protected int height;         // Height in blocks.
 
@@ -42,6 +44,25 @@ public class Inventory
             {
                 this.items[i, j] = inv.items[i, j];
             }
+        }
+    }
+
+    /// <summary>
+    /// Signal the UI to update, if present.
+    /// </summary>
+    public void UpdateUI()
+    {
+        if(uiPanel != null)
+        {
+            uiPanel.DrawInventory();
+        }
+    }
+
+    public void UpdateUIQuantityText(int x, int y)
+    {
+        if(uiPanel != null)
+        {
+            uiPanel.UpdateItemQuantityText(x, y);
         }
     }
 
@@ -101,6 +122,7 @@ public class Inventory
     protected void SetItem(int x, int y, GameItem item)
     {
         this.items [x, y] = item;
+        UpdateUI();
     }
 
     /// <summary>
@@ -173,12 +195,14 @@ public class Inventory
         {
             itemInSlot.Quantity = 0;
             SetItem (x, y, GameItem.UNSET_ITEM);
+            UpdateUI();
             return removedItem;
         } 
         else
         {
             removedItem.Quantity = quantity;
             itemInSlot.Quantity -= quantity;
+            UpdateUIQuantityText(x, y);
             return removedItem;
         }
     }
@@ -216,6 +240,7 @@ public class Inventory
             if (tmpItem.Quantity > quantityLeft)
             {
                 tmpItem.Quantity -= quantityLeft;
+                UpdateUIQuantityText(tmpItemLoc[0], tmpItemLoc[1]);
                 quantityLeft = 0;
             }
             else     //add to list of slots to clear
@@ -231,6 +256,10 @@ public class Inventory
         foreach (int[] resetItemLoc in itemsToReset)
         {
             SetItem(resetItemLoc[0], resetItemLoc[1], GameItem.UNSET_ITEM);
+        }
+        if(itemsToReset.Count > 0)
+        {
+            UpdateUI();
         }
         return true;
     }
@@ -267,6 +296,7 @@ public class Inventory
                     int amountToPut = Mathf.Min (maxAvailable, item_cpy.Quantity);
                     foundItem.Quantity = foundItem.Quantity + amountToPut;
                     item_cpy.Quantity -= amountToPut;
+                    UpdateUIQuantityText(currXPos, currYPos);
                 }
                 else
                 {
@@ -294,6 +324,7 @@ public class Inventory
             return toAdd;   //no empty slots found; inventory full!
         }
         SetItem (emptySlot [0], emptySlot [1], toAdd);
+        UpdateUI();
         return null;
     }
 

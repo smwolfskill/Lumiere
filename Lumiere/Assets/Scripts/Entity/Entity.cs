@@ -8,8 +8,7 @@ public abstract class Entity : BaseObject
     public Vector2 colliderSize; // the size of the entity's collider
     public Inventory inventory;
     public LinkedList<GameObject> nearbyItems = new LinkedList<GameObject>(); //list of items that this entity could pickup if desired. Will be used by AI mainly
-
-    protected float maxHealth;
+    public EntityObject entityObject;
 
     /// <summary>
     /// Spawn the entity at the specified location.

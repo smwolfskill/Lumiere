@@ -64,7 +64,7 @@ public class PickupItem : EntityAction
     /// <returns>Returns true if the item was picked up successfully, false otherwise.</returns>
     public override bool Execute(GameObject obj)
     {
-        Debug.Log("Picking up item '" + toPickup.Name + "'");
+        //Debug.Log("Picking up item '" + toPickup.Name + "'");
         GameItem itemsLeft = target.inventory.AddItem(toPickup);
 
         if (itemsLeft == null) //remove item from physical world if picked up entire quantity

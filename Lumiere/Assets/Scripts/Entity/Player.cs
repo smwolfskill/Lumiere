@@ -11,6 +11,12 @@ public class Player : Entity
      */
     //public Inventory inventory;
 
+    /*public Player()
+    {
+        Debug.Log("Default player ctor");
+        Spawn(new Vector2(0, 0));
+    }*/
+
     override public GameObject Spawn(Vector2 location, float maxHealth = 100.0f)
     {
         //Spawn the player GameObject, then set its tag
@@ -19,7 +25,8 @@ public class Player : Entity
 
         //Tell the camera object that the player has been spawned
         Camera.main.GetComponent<CameraFollow>().FindPlayerTransform();
-        PlayerObject entityObj = new PlayerObject(playerGameObject, maxHealth);   
+        PlayerObject entityObj = new PlayerObject(playerGameObject, maxHealth);
+        this.entityObject = entityObj;
         return playerGameObject;
     }
 }

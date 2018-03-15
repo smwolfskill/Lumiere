@@ -14,16 +14,10 @@ public class ItemManager : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        //item = new GameItem(groundSprite, groundSprite, "Test item", "This is a test item", 1.0, GameItem.ItemRarity.COMMON, 2, 5, 6);
         renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = item.GroundSprite;
         collider = GetComponent<BoxCollider2D>();
         collider.edgeRadius = PICKUP_RADIUS;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		//probably don't need
 	}
 
     void OnTriggerEnter2D(Collider2D other)
@@ -33,7 +27,7 @@ public class ItemManager : MonoBehaviour
         {
             collidingEntity.nearbyItems.AddLast(gameObject);
         }
-        Debug.Log(other.tag + "entered pickup area");
+        //Debug.Log(other.tag + "entered pickup area");
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -43,7 +37,7 @@ public class ItemManager : MonoBehaviour
         {
             collidingEntity.nearbyItems.Remove(gameObject);
         }
-        Debug.Log("exit pickup area");
+        //Debug.Log("exit pickup area");
     }
 
     private Entity getCollidingEntity(Collider2D collider)
