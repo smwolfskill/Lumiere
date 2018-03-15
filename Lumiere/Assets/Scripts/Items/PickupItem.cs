@@ -71,6 +71,10 @@ public class PickupItem : EntityAction
         {
             Object.Destroy(itemObj);
         }
+        else //inventory full. Update ground item quantity after adding any we could to inventory.
+        {
+            toPickup.Quantity = itemsLeft.Quantity;
+        }
         return true;
     }
 }
