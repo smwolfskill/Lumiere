@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+using System;
 
 
 /// <summary>
@@ -12,6 +14,7 @@ public class GameItem
 
     [SerializeField]
     protected Sprite guiSprite;       // Item in GUI.
+    protected Texture2D guiTexture;   // Texture for item in GUI.
 
     [SerializeField]
     protected Sprite groundSprite;    // Item on ground.
@@ -36,6 +39,11 @@ public class GameItem
 
     [SerializeField]
     protected int itemID;            // The ID of the item, each item needs a unique ID.
+
+    [SerializeField]
+    public string useAction;         //name of corresponding action asset to load in Resources/Actions/ItemActions/.
+
+    protected ItemAction action;
 
     /// <summary>
     /// Represents rarity of the item, probably for item color purposes.
@@ -69,9 +77,9 @@ public class GameItem
     /// <param name="newMaxStack">Maximum times the item can stack in an inventory slot.</param>
     /// <param name="itemQuantity">Amount of items in this stack.</param>
     /// <param name="itemID">The ID of the item.</param>
-    public GameItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1)
+    public GameItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null)
     {
-        this.FillData(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID);
+        this.FillData(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction);
     }
 
     /// <summary>
@@ -95,7 +103,7 @@ public class GameItem
     /// <param name="newMaxStack">Maximum times the item can stack in an inventory slot.</param>
     /// <param name="itemQuantity">Amount of items in this stack.</param>
     /// <param name="itemID">The ID of the item.</param>
-    private void FillData(Sprite gui = null, Sprite ground = null, string newName = "Unknown", string newDesc = "ERROR: An unknown item.", double val = 0.0, ItemRarity rareness = ItemRarity.COMMON, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1)
+    private void FillData(Sprite gui = null, Sprite ground = null, string newName = "Unknown", string newDesc = "ERROR: An unknown item.", double val = 0.0, ItemRarity rareness = ItemRarity.COMMON, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null)
     {
         this.guiSprite = gui;
         this.groundSprite = ground;
@@ -104,6 +112,8 @@ public class GameItem
         this.rarity = rareness;
         this.value = val;
         this.itemID = itemID;
+
+        SetGuiTexture();
 
         // Idiot proofing.
         if (newMaxStack < 1)
@@ -119,13 +129,20 @@ public class GameItem
         {
             this.quantity = newMaxStack;
         }
-        else if (itemQuantity < 1)
+        else if (itemQuantity < 0)
         {
-            this.quantity = 1;
+            this.quantity = 0;
         }
         else
         {
             this.quantity = itemQuantity;
+        }
+
+        this.useAction = useAction;
+        if(useAction != null && useAction != "")
+        {
+            this.action = Resources.Load<ItemAction>("Actions/ItemActions/" + useAction);
+            this.action.itemID = itemID;
         }
     }
 
@@ -135,9 +152,12 @@ public class GameItem
     /// <param name="copy">Copy.</param>
     private void FillData(GameItem copy)
     {
-        FillData(copy.guiSprite, copy.groundSprite, copy.name, 
+        FillData(null, copy.groundSprite, copy.name, 
                  copy.description, copy.value, copy.rarity, 
-                 copy.quantity, copy.maxStacks, copy.itemID);
+                 copy.quantity, copy.maxStacks, copy.itemID, copy.useAction);
+        //Copy the gui sprites and textures here to avoid duplicating texture generation.
+        this.guiSprite = copy.guiSprite;
+        this.guiTexture = copy.guiTexture;
     }
 
     /// <summary>
@@ -181,6 +201,10 @@ public class GameItem
                itemID == item.itemID;
     }
 
+    /// <summary>
+    /// Determine if this item is not the UNSET_ITEM.
+    /// </summary>
+    /// <returns><c>true</c>, if set.<c>false</c> if this GameItem is UNSET_ITEM.</returns>
     public bool SetYet()
     {
         if(itemID == UNSET_ITEM.itemID)
@@ -188,6 +212,105 @@ public class GameItem
             return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// Create and set the GUI Texture based on guiSprite.
+    /// </summary>
+    protected void SetGuiTexture()
+    {
+        if (guiSprite != null)
+        {
+            guiTexture = TextureFromSprite(guiSprite);
+        }
+        else 
+        {
+            guiTexture = null;
+        }
+    }
+
+    /// <summary>
+    /// Returns the rarity color of the given item.
+    /// </summary>
+    /// <param name="item">Item to examine.</param>
+    public Color RarityColor()
+    {
+        float opaqueness = 1.0f;
+        Color commonColor = new Color(1f, 1f, 1f, opaqueness);
+        switch (rarity)
+        {
+        case ItemRarity.COMMON:
+            return commonColor;
+        case ItemRarity.UNCOMMON:
+            return new Color(167f / 255f, 1f, 215f / 255f, opaqueness);
+        case ItemRarity.RARE:
+            return new Color(21f / 255f, 1f, 231f / 255f, opaqueness);
+        case ItemRarity.EPIC:
+            return new Color(51f / 255f, 60f / 255f, 1f, opaqueness);
+        case ItemRarity.LEGENDARY:
+            return new Color(1f, 11f / 255f, 253f / 255f, opaqueness);
+        default:
+            Debug.Log("GameItem.RarityColor: Please add another color for rarity '" + rarity.ToString("G") + "'");
+            return commonColor;
+        }
+    }
+
+    /// <summary>
+    /// Creates a game object representing the GameItem in the physical world as a dropped item.
+    /// </summary>
+    /// <returns>The game object.</returns>
+    /// <param name="position">Position to spawn the dropped item at.</param>
+    public GameObject CreateGameObject(Vector3 position)
+    {
+        GameObject droppedItem = (GameObject) GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Item"));
+        droppedItem.transform.position = position;
+        ItemManager itemManager = droppedItem.GetComponent<ItemManager>();
+        itemManager.item = this;
+        return droppedItem;
+    }
+
+    public bool ValidateUse(GameObject obj)
+    {
+        return action != null && action.Validate(obj);
+    }
+
+    public bool Use(GameObject obj)
+    {
+        return action.Execute(obj);
+    }
+
+
+    /// <summary>
+    /// Yanks a texture representing the image of a sprite from the sprite
+    /// </summary>
+    /// <param name="s">The sprite.</param>
+    protected Texture2D TextureFromSprite(Sprite sprite)
+    {
+        if (sprite.rect.width != sprite.texture.width)
+        {
+            // Crop the texture
+            Texture2D t = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
+
+            t.SetPixels(sprite.texture.GetPixels((int)sprite.textureRect.x,
+                (int)sprite.textureRect.y,
+                (int)sprite.textureRect.width,
+                (int)sprite.textureRect.height));
+            t.Apply();
+
+            return t;
+        }
+        else
+        {
+            // We really don't need to do any processing here
+            return sprite.texture;
+        }
+    }
+
+    public string TooltipText()
+    {
+        string nl = Environment.NewLine;
+        return "<i>Name:</i> " + name + nl
+             + "<i>Description:</i> " + description;
     }
 
     #region Getters And Setters
@@ -204,6 +327,15 @@ public class GameItem
         set
         {
             guiSprite = value;
+            SetGuiTexture();
+        }
+    }
+
+    public Texture2D GuiTexture
+    {
+        get
+        {
+            return guiTexture;
         }
     }
 
@@ -326,9 +458,9 @@ public class GameItem
             {
                 quantity = maxStacks;
             }
-            else if (value < 1)
+            else if (value < 0)
             {
-                quantity = 1;
+                quantity = 0;
             }
             else
             {
@@ -348,6 +480,7 @@ public class GameItem
         }
     }
     #endregion
+
 
 
 }

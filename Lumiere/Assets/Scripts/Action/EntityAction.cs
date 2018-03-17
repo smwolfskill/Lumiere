@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class EntityAction : Action
 {
-    //TODO: Add code here in future iterations
+    public Entity target;
 }

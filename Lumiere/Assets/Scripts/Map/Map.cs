@@ -56,6 +56,20 @@ public class Map
         return tile;
     }
 
+    public List<Tile> GetTiles()
+    {
+        List<Tile> tiles = new List<Tile> ();
+        for (int i = 0; i < tileMatrix.GetLength(0); i++) 
+        {
+            for (int j = 0; j < tileMatrix.GetLength(1); j++) 
+            {
+                tiles.Add (tileMatrix [i, j]);    
+            }   
+        }
+
+        return tiles;
+    }
+
     public void FillArea(int x, int y, int w, int h, TileType tileType, Room room)
     {
         // Force top and left of rectangle to be inside the map.
@@ -200,6 +214,10 @@ public class Map
 
         return room;
     }
+
+    //TODO maybe merge with getRandRoom?
+    //TODO this function can get stuck in infinite loops
+
 
     public void RemoveRoom(Room room)
     {

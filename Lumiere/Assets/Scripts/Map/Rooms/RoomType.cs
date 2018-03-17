@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class RoomType : BaseObject
 {
+    public Player player;
+
     virtual public GameObject PopulateGameObject()
     {
         return new GameObject(name);

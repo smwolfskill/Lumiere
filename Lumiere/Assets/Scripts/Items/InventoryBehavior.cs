@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryBehavior : MonoBehaviour {
+public class InventoryBehavior : MonoBehaviour
+{
+    //LEGACY CODE: OnGUI is unscalable and runs out of memory quickly from textures being re-drawn every frame
+    //(for some reason not garbage-collected)
+    //Unity's UI objects are used instead with InventoryPanel.
+    public Entity entity;
+
     [Header("General Settings")]
     public bool visible;
     public int blockSize;
@@ -30,15 +36,50 @@ public class InventoryBehavior : MonoBehaviour {
     public Sprite item4;
     public Sprite item5;
 
-    [Header("Input Parameters")]
-    public int mouseX;
-    public int mouseY;
+    //mouse input
+    private int mouseX;
+    private int mouseY;
+    private int selectedX;
+    private int selectedY;
 
     // Privately managed inventory
     private Inventory inv;
 
-    void Start () {
+    #region Getters & Setters
+    public Inventory ManagedInventory
+    {
+        get
+        {
+            return inv;
+        }
+    }
+
+    public int SelectedX {
+        get
+        {
+            return selectedX;
+        }
+    }
+
+    public int SelectedY {
+        get
+        {
+            return selectedY;
+        }
+    }
+
+    public bool Visible {
+        get
+        {
+            return visible;
+        }
+    }
+    #endregion
+
+    void Start ()
+    {
         inv = new Inventory(nWidth, nHeight);
+        entity.inventory = inv;
         inv.AddItem(new GameItem(item1, item1, "item 1", "item 1", 50,
                     GameItem.ItemRarity.COMMON, 5, 64, 1));
         inv.AddItem(new GameItem(item2, item2, "item 2", "item 2", 40,
@@ -51,6 +92,13 @@ public class InventoryBehavior : MonoBehaviour {
                     GameItem.ItemRarity.LEGENDARY, 1, 64, 5));
     }
 
+    void Update()
+    {
+        Vector3 mouse = Input.mousePosition;
+        mouseX = (int)mouse.x;
+        mouseY = Screen.height - (int)mouse.y;
+    }
+
     /// <summary>
     /// Draws the GUI on the screen
     /// </summary>
@@ -58,6 +106,7 @@ public class InventoryBehavior : MonoBehaviour {
     {
         if (visible)
         {
+            UseItemActions();
             // Center the inventory display
             int w = (nWidth + 1) * padding + nWidth * blockSize;
             int h = (nHeight + 1) * padding + nHeight * blockSize;
@@ -67,7 +116,8 @@ public class InventoryBehavior : MonoBehaviour {
             // Inventory GUI background
             DrawQuad(new Rect(padx + offsetX, pady + offsetY, w, h),
                      background);
-            
+
+            //Draw the items in the inventory
             for (int j = 0; j < nHeight; j++)
             {
                 for (int i = 0; i < nWidth; i++)
@@ -81,17 +131,22 @@ public class InventoryBehavior : MonoBehaviour {
                     {
                         // We are hovering over the item
                         DrawQuad(box, selected);
+                        selectedX = i;
+                        selectedY = j;
                     }
                     else
                     {
                         // Otherwise we want to show rarity
                         DrawQuad(box, RarityColor(item));
                     }
-                    
+
+                    //Draw the sprite if it's an actual item (not GameItem.UNSET_ITEM)
                     if (item.SetYet())
                     {
-                        GUI.Box(new Rect(x, y, blockSize, blockSize),
-                                TextureFromSprite(item.GuiSprite));
+                        /*GUI.Box(new Rect(x, y, blockSize, blockSize),
+                                TextureFromSprite(item.GuiSprite));*/
+                        GUI.Box(new Rect(x, y, blockSize, blockSize), item.GuiTexture);
+                        
 
                         // Show item name and quantity if we are hovering over
                         if (InBox(mouseX, mouseY, box))
@@ -105,6 +160,41 @@ public class InventoryBehavior : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public GameItem GetSelectedItem()
+    {
+        if (visible == false) {
+            return null;
+        }
+        else
+        {
+            return inv.GetItem(selectedX, selectedY);            
+        }
+    }
+
+    /// <summary>
+    /// Uses Item action(s) of a selected item in the inventory, if valid.
+    /// </summary>
+    public void UseItemActions()
+    {
+        GameItem selectedItem = GetSelectedItem();
+        if(selectedItem.ValidateUse(gameObject))
+        {
+            //Player selected to use the current item, and it is valid to be used
+            selectedItem.Use(gameObject);
+        }
+        /*for(int yPos = 0; yPos < inv.GetHeight(); yPos++)
+        {
+            for(int xPos = 0; xPos < inv.GetWidth(); xPos++)
+            {
+                GameItem curItem = inv.GetItem(xPos, yPos);
+                if(curItem.ValidateUse(gameObject))
+                {
+                    curItem.Use(gameObject);
+                }
+            }
+        }*/
     }
 
     /// <summary>
@@ -160,17 +250,17 @@ public class InventoryBehavior : MonoBehaviour {
     /// Yanks a texture representing the image of a sprite from the sprite
     /// </summary>
     /// <param name="s">The sprite.</param>
-    private Texture2D TextureFromSprite(Sprite s)
+    private Texture2D TextureFromSprite(Sprite sprite)
     {
-        if (s.rect.width != s.texture.width)
+        if (sprite.rect.width != sprite.texture.width)
         {
             // Crop the texture
-            Texture2D t = new Texture2D((int)s.rect.width, (int)s.rect.height);
+            Texture2D t = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
 
-            t.SetPixels(s.texture.GetPixels((int)s.textureRect.x,
-                                            (int)s.textureRect.y,
-                                            (int)s.textureRect.width,
-                                            (int)s.textureRect.height));
+            t.SetPixels(sprite.texture.GetPixels((int)sprite.textureRect.x,
+                                            (int)sprite.textureRect.y,
+                                            (int)sprite.textureRect.width,
+                                            (int)sprite.textureRect.height));
             t.Apply();
 
             return t;
@@ -178,7 +268,7 @@ public class InventoryBehavior : MonoBehaviour {
         else
         {
             // We really don't need to do any processing here
-            return s.texture;
+            return sprite.texture;
         }
     }
 }

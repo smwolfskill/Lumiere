@@ -115,16 +115,16 @@ public class EntitySpawnTest
     public void TestEntitySpawnLocation()
     {
         Vector2 location1 = new Vector2 (0f, 0f);
-        GameObject entity1 = entityToSpawn.Spawn (location1);
+        GameObject entity1 = entityToSpawn.Spawn (map, location1);
         Assert.AreEqual (location1, (Vector2) entity1.transform.position);
 
 
         Vector2 location2 = new Vector2 (-15f, -15f);
-        GameObject entity2 = entityToSpawn.Spawn (location2);
+        GameObject entity2 = entityToSpawn.Spawn (map, location2);
         Assert.AreEqual (location2, (Vector2) entity2.transform.position);
 
         Vector2 location3 = new Vector2 (15f, 15f);
-        GameObject entity3 = entityToSpawn.Spawn (location3);
+        GameObject entity3 = entityToSpawn.Spawn (map, location3);
         Assert.AreEqual (location3, (Vector2) entity3.transform.position);
 
         GameObject.Destroy (entity1);

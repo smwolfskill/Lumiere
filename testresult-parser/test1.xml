@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="10" result="Failed(Child)" total="10" passed="9" failed="1" inconclusive="0" skipped="0" asserts="38" engine-version="3.5.0.0" clr-version="2.0.50727.1433" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:03:12Z" duration="31.0165312">
+  <test-suite type="TestSuite" id="1000" name="Lumiere" fullname="Lumiere" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:03:12Z" duration="31.016531" total="10" passed="9" failed="1" inconclusive="0" skipped="0" asserts="38">
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1014" name="Assembly-CSharp.dll" fullname="/builds/c2e17c84/0/wsong9/lumiere/Lumiere/Library/ScriptAssemblies/Assembly-CSharp.dll" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:03:12Z" duration="30.986426" total="10" passed="9" failed="1" inconclusive="0" skipped="0" asserts="38">
+      <properties>
+        <property name="_PID" value="26010" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestFixture" id="1001" name="MapTest" fullname="MapTest" classname="MapTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:02:41Z" duration="0.173520" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="13">
+        <test-case id="1003" name="ContainerAttributeTest" fullname="MapTest.ContainerAttributeTest" methodname="ContainerAttributeTest" classname="MapTest" runstate="Runnable" seed="1953837773" result="Passed" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:02:41Z" duration="0.056859" asserts="6">
+          <output><![CDATA[WallTile must be instantiated using the ScriptableObject.CreateInstance method instead of new WallTile.
+ArgumentException: The Object you want to instantiate is null.
+]]></output>
+        </test-case>
+        <test-case id="1002" name="MapStructureTest" fullname="MapTest.MapStructureTest" methodname="MapStructureTest" classname="MapTest" runstate="Runnable" seed="1019387916" result="Passed" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:02:41Z" duration="0.049713" asserts="7">
+          <output><![CDATA[WallTile must be instantiated using the ScriptableObject.CreateInstance method instead of new WallTile.
+ArgumentException: The Object you want to instantiate is null.
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1004" name="MonsterMovementTest" fullname="MonsterMovementTest" classname="MonsterMovementTest" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:03:11Z" duration="30.366916" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="12">
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1008" name="TestChangePosition" fullname="MonsterMovementTest.TestChangePosition" methodname="TestChangePosition" classname="MonsterMovementTest" runstate="Runnable" seed="1215842719" result="Passed" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:02:41Z" duration="0.066703" asserts="4">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1006" name="TestFailMove" fullname="MonsterMovementTest.TestFailMove" methodname="TestFailMove" classname="MonsterMovementTest" runstate="Runnable" seed="1791534196" result="Passed" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:02:41Z" duration="0.049765" asserts="3" />
+        <test-case id="1007" name="TestSuccessMove" fullname="MonsterMovementTest.TestSuccessMove" methodname="TestSuccessMove" classname="MonsterMovementTest" runstate="Runnable" seed="454383469" result="Passed" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:02:41Z" duration="0.049776" asserts="3" />
+        <test-case id="1005" name="TestValidate" fullname="MonsterMovementTest.TestValidate" methodname="TestValidate" classname="MonsterMovementTest" runstate="Runnable" seed="31641247" result="Failed" start-time="2018-03-01 02:02:41Z" end-time="2018-03-01 02:03:11Z" duration="30.068589" asserts="2">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+          <failure>
+            <message><![CDATA[UnityTest exceeded Timeout value of 30000ms]]></message>
+            <stack-trace><![CDATA[]]></stack-trace>
+          </failure>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1009" name="PlayerMovementTest" fullname="PlayerMovementTest" classname="PlayerMovementTest" runstate="Runnable" testcasecount="4" result="Passed" start-time="2018-03-01 02:03:11Z" end-time="2018-03-01 02:03:12Z" duration="0.347885" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="13">
+        <test-case id="1011" name="TestFailMove" fullname="PlayerMovementTest.TestFailMove" methodname="TestFailMove" classname="PlayerMovementTest" runstate="Runnable" seed="714904617" result="Passed" start-time="2018-03-01 02:03:11Z" end-time="2018-03-01 02:03:11Z" duration="0.049992" asserts="3" />
+        <test-case id="1013" name="TestNoInput" fullname="PlayerMovementTest.TestNoInput" methodname="TestNoInput" classname="PlayerMovementTest" runstate="Runnable" seed="1526194896" result="Passed" start-time="2018-03-01 02:03:11Z" end-time="2018-03-01 02:03:11Z" duration="0.066300" asserts="4">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1012" name="TestSuccessMove" fullname="PlayerMovementTest.TestSuccessMove" methodname="TestSuccessMove" classname="PlayerMovementTest" runstate="Runnable" seed="1717902360" result="Passed" start-time="2018-03-01 02:03:11Z" end-time="2018-03-01 02:03:11Z" duration="0.049711" asserts="3" />
+        <test-case id="1010" name="TestValidate" fullname="PlayerMovementTest.TestValidate" methodname="TestValidate" classname="PlayerMovementTest" runstate="Runnable" seed="350937121" result="Passed" start-time="2018-03-01 02:03:11Z" end-time="2018-03-01 02:03:12Z" duration="0.049834" asserts="3" />
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
