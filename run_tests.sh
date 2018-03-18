@@ -5,5 +5,5 @@ xvfb-run --server-args="-screen 0 1024x768x24" /usr/local/lib/unity3d/Editor/Uni
 cd unity-testresult-parser
 stack setup
 stack build
-stack exec unity-testresult-parser -- $HOME/build_logs/{playmode,editor}-$CI_JOB_ID.xml
+stack exec unity-testresult-parser -- --files=$HOME/build_logs/playmode-$CI_JOB_ID.xml,$HOME/build_logs/editor-$CI_JOB_ID.xml
 exit $?
