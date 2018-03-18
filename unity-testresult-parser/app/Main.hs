@@ -45,7 +45,7 @@ analyzeFile :: String -> ReaderT Config IO Bool
 analyzeFile f = do
   contents' <- getContents f
   case contents' of
-       Left e         -> do
+       Left e -> do
          fail
          lift . print $ e
          reset
