@@ -54,43 +54,50 @@ testResults results =
 accumulateResults :: Element -> [TestCase]
 accumulateResults (Element name a nodes) =
   case nameLocalName name of
-       "test-case" -> return $ TestCase name (read (unpack id)) testresult
-          where name = fromMaybe "" (a !? "name")
-                id = fromMaybe "?" (a !? "id")
-                testresult = case fromMaybe "result not found" (a !? "result") of
-                                  "Passed" -> TestSuccess
-                                  "Failed" -> TestFailure reason
-                                  res      -> UnknownResult res
-                  where failure :: Text
-                        failure = strip $ fromMaybe "<no message found>" failure'
-                        failures = findFailure <$> children
-                        failure' = case filter (/= Nothing) failures of
-                                        (m:_) -> m
-                                        _     -> Nothing
-                        reason = FailureReason failure "<not implemented yet>"
+       "test-case" -> return $ TestCase name' (read (unpack id)) testresult
        _           -> concatMap accumulateResults children
- where children = elements nodes
+  where children = elements nodes
+        name' = fromMaybe "" (a !? "name")
+        id = fromMaybe "?" (a !? "id")
+        testresult = case fromMaybe "result not found" (a !? "result") of
+                          "Passed" -> TestSuccess
+                          "Failed" -> TestFailure reason
+                          res      -> UnknownResult res
+        reason = case filter (/= Nothing) (findFailure <$> children) of
+                      (Just f:_) -> f
+                      _          -> FailureReason
+                                    "<malformed xml>"
+                                    "<malformed xml>"
 
--- attempts to find a failure message for a test that failed
-findFailure :: Element -> Maybe Text
+-- attempts to find a failure reason for a test that failed
+findFailure :: Element -> Maybe FailureReason
 findFailure (Element name a nodes) =
   case nameLocalName name of
-       "failure" -> case filter (/= Nothing) (findMessage <$> children) of
-                         (m:_) -> m
-                         _     -> Nothing
+       "failure" -> Just $ FailureReason message stacktrace
        _         -> case filter (/= Nothing) (findFailure <$> children) of
-                         (m:_) -> m
+                         (f:_) -> f
                          _     -> Nothing
   where children = elements nodes
+        message = strip . fromMaybe "<no message found>" $
+          case filter (/= Nothing) (findTag "message" <$> children) of
+               (m:_) -> m
+               _     -> Nothing
+        stacktrace = strip . fromMaybe "<no stack trace found>" $
+          case filter (/= Nothing) (findTag "stack-trace" <$> children) of
+               (m:_) -> m
+               _     -> Nothing
 
--- attempts to retrieve the message data
-findMessage :: Element -> Maybe Text
-findMessage (Element name a nodes) =
-  case nameLocalName name of
-       "message" -> fromContent (head nodes)
-       _         -> case filter (/= Nothing) (findMessage <$> children) of
-                         (m:_) -> m
-                         _     -> Nothing
+-- attempts to retrieve tag data given an element and tag
+findTag :: Text -> Element ->  Maybe Text
+findTag tag (Element name a nodes) =
+  if nameLocalName name == tag then
+    -- nodes should not be empty lists because every xml tag technically has
+    -- some text
+    fromContent (head nodes)
+  else
+    case filter (/= Nothing) (findTag tag <$> children) of
+         (m:_) -> m
+         _     -> Nothing
   where children = elements nodes
 
 -- gets all the xml elements from a list of xml nodes

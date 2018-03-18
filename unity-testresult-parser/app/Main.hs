@@ -1,31 +1,43 @@
 module Main where
 
-import Prelude hiding      (concat)
+import Prelude hiding       (concat, fail)
 
-import Control.Exception   (try)
-import Control.Monad       (sequence_)
-import Data.Text           (pack, unpack, concat)
-import System.Console.ANSI (setSGR, SGR(Reset, SetColor),
-                            ConsoleLayer(Foreground), ColorIntensity(..),
-                            Color(..))
-import System.Environment  (getArgs, getProgName)
-import System.Exit         (exitWith, exitSuccess, ExitCode(ExitFailure))
+import Control.Exception    (try)
+import Control.Monad        (sequence_)
+import Control.Monad.Reader (ReaderT, runReaderT)
+import Control.Monad.Trans  (lift)
+import Data.Text            (pack, unpack, concat)
+import Options.Applicative  (execParser)
+import System.Exit          (exitWith, exitSuccess, ExitCode(ExitFailure))
+import System.IO            (stdout)
 
-import Parser              (testResults, TestCase, TestResult(..), testCase,
-                            testId, testResult, failureMessage, stackTrace)
+import Config               (Config(..))
+import Parser               (testResults, TestCase, TestResult(..), testCase,
+                             testId, testResult, failureMessage, stackTrace)
+import Options              (optionParser, color, quiet, summary, files)
+import SGR                  (hSupportsANSI, success, fail, unknown, info, reset)
 
 -- runs the test result verifier on every input file and exits with failure if
 -- at least one test fails
 main :: IO ()
 main = do
-  prog <- getProgName
-  args <- getArgs
-  if null args then
-    putStrLn $ "usage: " ++ prog ++ " <file1> [file2] [...]"
-  else do
-    results <- sequence $ analyzeFile <$> args
-    let fail = or results
-    if fail then exitWith (ExitFailure 1) else exitSuccess
+  -- parse all the options
+  opts <- execParser optionParser
+
+  -- configure color output
+  c <- case color opts of
+            "yes"  -> pure True
+            "no"   -> pure False
+            "auto" -> hSupportsANSI stdout
+            _      -> pure False
+
+  let cfg = Config c (quiet opts) (summary opts)
+      args = files opts
+
+  -- get IO actions and failures for each file, and then 'sequence' them one
+  -- after the other in IO
+  results <- sequence $ flip runReaderT cfg . analyzeFile <$> args
+  if or results then exitWith (ExitFailure 1) else exitSuccess
 
 -- true if not all test cases succeed
 failed :: [TestCase] -> Bool
@@ -33,52 +45,56 @@ failed = not . all ((==TestSuccess) . testResult)
 
 -- analyzes a TestResults file given its filename and prints the test results
 -- returns whether or not any of the tests failed
-analyzeFile :: String -> IO Bool
+analyzeFile :: String -> ReaderT Config IO Bool
 analyzeFile f = do
-  contents' <- try (readFile f) :: IO (Either IOError String)
+  contents' <- getContents f
   case contents' of
-       Left _         -> do
-         putStrLn $ "could not find file '" ++ f ++ "'"
+       Left e         -> do
+         fail
+         lift . print $ e
+         reset
          return True
-       Right contents -> do
-         let results = testResults contents
-         case results of
+       Right contents ->
+         case testResults contents of
               Left e -> do
-                putStrLn e
+                fail
+                lift . putStrLn $ e
+                reset
                 return True
               Right results' -> do
                 let failure = failed results'
-                if not failure then
-                   setSGR [SetColor Foreground Vivid Green]
-                else
-                   setSGR [SetColor Foreground Dull Red]
-                putStrLn $ f ++ ":"
-                setSGR [Reset]
+                if not failure then success else fail
+                lift . putStrLn $ f ++ ":"
+                reset
                 sequence_ $ outputResult <$> results'
                 return failure
+  where getContents :: String -> ReaderT Config IO (Either IOError String)
+        getContents = lift . try . readFile
 
 -- outputs a single testcase result in pretty colors
-outputResult :: TestCase -> IO ()
+outputResult :: TestCase -> ReaderT Config IO ()
 outputResult testcase = do
   let tc = testCase testcase
       id = testId testcase
       tr = testResult testcase
-  putStr . unpack . concat $ [tc, " (", pack (show id), "): "]
+  lift . putStr . unpack . concat $ [tc, " (", pack (show id), "): "]
   case tr of
        TestSuccess -> do
-         setSGR [SetColor Foreground Vivid Green]
-         putStrLn "Success"
-         setSGR [Reset]
+         success
+         lift . putStrLn $ "Success"
+         reset
        TestFailure reason -> do
-         setSGR [SetColor Foreground Dull Red]
-         putStrLn "Failure"
-         setSGR [SetColor Foreground Dull Yellow]
-         putStrLn "Reason:"
-         putStrLn $ unpack $ failureMessage reason
-         putStrLn "Stack Trace:"
-         putStrLn $ unpack $ stackTrace reason
-         setSGR [Reset]
+         fail
+         lift . putStrLn $ "Failure"
+         info
+         -- lift an entire IO block
+         lift $ do
+           putStrLn "Reason:"
+           putStrLn . unpack . failureMessage $ reason
+           putStrLn "Stack Trace:"
+           putStrLn . unpack . stackTrace $ reason
+         reset
        UnknownResult r -> do
-         setSGR [SetColor Foreground Vivid Yellow]
-         putStrLn $ unpack r
-         setSGR [Reset]
+         unknown
+         lift . putStrLn . unpack $ r
+         reset
