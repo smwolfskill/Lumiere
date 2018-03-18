@@ -39,10 +39,6 @@ main = do
   results <- sequence $ flip runReaderT cfg . analyzeFile <$> args
   if or results then exitWith (ExitFailure 1) else exitSuccess
 
--- true if not all test cases succeed
-failed :: [TestCase] -> Bool
-failed = not . all ((==TestSuccess) . testResult)
-
 -- analyzes a TestResults file given its filename and prints the test results
 -- returns whether or not any of the tests failed
 analyzeFile :: String -> ReaderT Config IO Bool
@@ -70,6 +66,10 @@ analyzeFile f = do
                 return failure
   where getContents :: String -> ReaderT Config IO (Either IOError String)
         getContents = lift . try . readFile
+        -- true if not all test cases succeed
+        failed :: [TestCase] -> Bool
+        failed = not . all ((==TestSuccess) . testResult)
+
 
 -- outputs a single testcase result in pretty colors
 outputResult :: TestCase -> ReaderT Config IO ()
