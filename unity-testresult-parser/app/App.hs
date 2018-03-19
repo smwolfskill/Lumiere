@@ -2,17 +2,18 @@ module App
   ( parseFiles
   ) where
 
-import Prelude hiding       (fail)
+import Prelude hiding         (fail)
 
-import Control.Exception    (try)
-import Control.Monad.Reader (ReaderT, asks)
-import Control.Monad.Trans  (lift)
-import Data.Text            (pack, unpack)
+import Control.Exception      (try)
+import Control.Monad.IO.Class (MonadIO, liftIO)
+import Control.Monad.Reader   (MonadReader, asks)
+import Control.Monad.Trans    (lift)
+import Data.Text              (pack, unpack)
 
-import Config               (Config(..))
-import Parser               (testResults, TestCase, TestResult(..), testCase,
-                             testId, testResult, failureMessage, stackTrace)
-import SGR                  (success, fail, unknown, info, reset)
+import Config                 (Config(..))
+import Parser                 (testResults, TestCase, TestResult(..), testCase,
+                               testId, testResult, failureMessage, stackTrace)
+import SGR                    (success, fail, unknown, info, reset)
 
 -- monoidable type which will aggregate our test result count
 data AggregateResult = AggregateResult Int Int Int
@@ -24,7 +25,7 @@ instance Monoid AggregateResult where
   mempty = AggregateResult 0 0 0
 
 -- parses a list of files and prints out a total summary
-parseFiles :: [String] -> ReaderT Config IO Bool
+parseFiles :: (MonadIO m, MonadReader Config m) => [String] -> m Bool
 parseFiles files = do
   -- analyzefile <$> args :: [ReaderT Config IO AggregateResult]
   -- sequence the list to get an ReaderT Config IO [AggregateResult]
@@ -38,38 +39,38 @@ parseFiles files = do
   return (nf /= 0)
 
 -- prints a summary of an aggregate of results
-printSummary :: AggregateResult -> ReaderT Config IO ()
+printSummary :: (MonadIO m, MonadReader Config m) => AggregateResult -> m ()
 printSummary (AggregateResult numSuccess numFail numUnknown) = do
-  lift . putStr $ "\nSummary: "
+  liftIO . putStr $ "\nSummary: "
   success
-  lift . putStr $ show numSuccess ++ " passed"
+  liftIO . putStr $ show numSuccess ++ " passed"
   reset
-  lift . putStr $ ", "
+  liftIO . putStr $ ", "
   fail
-  lift . putStr $ show numFail ++ " failed"
+  liftIO . putStr $ show numFail ++ " failed"
   reset
-  lift . putStr $ ", "
+  liftIO . putStr $ ", "
   unknown
-  lift . putStr $ show numUnknown ++ " unknown"
+  liftIO . putStr $ show numUnknown ++ " unknown"
   reset
-  lift . putStr $ "\n"
+  liftIO . putStr $ "\n"
 
 -- analyzes a TestResults file given its filename and prints the test results
 -- returns whether or not any of the tests failed
-analyzeFile :: String -> ReaderT Config IO AggregateResult
+analyzeFile :: (MonadIO m, MonadReader Config m) => String -> m AggregateResult
 analyzeFile f = do
   contents' <- getContents f
   case contents' of
        Left e -> do
          fail
-         lift . print $ e
+         liftIO . print $ e
          reset
          return $ AggregateResult 0 1 0
        Right contents ->
          case testResults contents of
               Left e -> do
                 fail
-                lift . putStrLn $ e
+                liftIO . putStrLn $ e
                 reset
                 return $ AggregateResult 0 1 0
               Right results' -> do
@@ -83,25 +84,29 @@ analyzeFile f = do
                   -- well
                 else do
                   if not failure then success else fail
-                  lift . putStrLn $ f ++ ":"
+                  liftIO . putStrLn $ f ++ ":"
                   reset
                 stuff <- sequence $ outputResult <$> results'
                 return $ mconcat stuff
-  where getContents :: String -> ReaderT Config IO (Either IOError String)
-        getContents = lift . try . readFile
+  where getContents :: (MonadIO m, MonadReader Config m)
+                    => String
+                    -> m (Either IOError String)
+        getContents = liftIO . try . readFile
         -- true if not all test cases succeed
         failed :: [TestCase] -> Bool
         failed = not . all ((==TestSuccess) . testResult)
 
 
 -- outputs a single testcase result in pretty colors
-outputResult :: TestCase -> ReaderT Config IO AggregateResult
+outputResult :: (MonadIO m, MonadReader Config m)
+             => TestCase
+             -> m AggregateResult
 outputResult testcase = do
   let tc = testCase testcase
       id = testId testcase
       tr = testResult testcase
       stuff = [tc, " (", pack (show id), "): "]
-      prefix = lift . putStr . unpack . mconcat $ stuff
+      prefix = liftIO . putStr . unpack . mconcat $ stuff
   quiet <- asks quiet'
   case tr of
        TestSuccess -> do
@@ -110,16 +115,16 @@ outputResult testcase = do
          else do
            prefix
            success
-           lift . putStrLn $ "Success"
+           liftIO . putStrLn $ "Success"
            reset
          return $ AggregateResult 1 0 0
        TestFailure reason -> do
          prefix
          fail
-         lift . putStrLn $ "Failure"
+         liftIO . putStrLn $ "Failure"
          info
          -- lift an entire IO block
-         lift $ do
+         liftIO $ do
            putStrLn "Reason:"
            putStrLn . unpack . failureMessage $ reason
            putStrLn "Stack Trace:"
@@ -129,6 +134,6 @@ outputResult testcase = do
        UnknownResult r -> do
          prefix
          unknown
-         lift . putStrLn . unpack $ r
+         liftIO . putStrLn . unpack $ r
          reset
          return $ AggregateResult 0 0 1

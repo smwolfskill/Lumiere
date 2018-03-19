@@ -49,6 +49,7 @@ executable unity-testresult-parser
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   default-extensions:
       OverloadedStrings
+    , FlexibleContexts
   build-depends:
       base >=4.7 && <5
     , unity-testresult-parser
