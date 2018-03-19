@@ -7,17 +7,16 @@ module SGR
   , supportsANSI
   ) where
 
-import Prelude hiding         (fail)
+import Prelude hiding       (fail)
 
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Reader   (MonadReader, asks)
-import Control.Monad.Trans    (lift)
-import System.Console.ANSI    (setSGR, hSupportsANSI, SGR(Reset, SetColor),
-                               ConsoleLayer(Foreground), ColorIntensity(..),
-                               Color(..))
-import System.IO              (stdout)
+import Control.Monad.Reader (MonadReader, asks)
+import Control.Monad.Trans  (MonadIO, liftIO)
+import System.Console.ANSI  (setSGR, hSupportsANSI, SGR(Reset, SetColor),
+                             ConsoleLayer(Foreground), ColorIntensity(..),
+                             Color(..))
+import System.IO            (stdout)
 
-import Config                 (Config, color')
+import Config               (Config, color')
 
 -- does a set of SGR actions in the context of our config
 doSGR :: (MonadIO m, MonadReader Config m) => [SGR] -> m ()

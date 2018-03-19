@@ -2,18 +2,17 @@ module App
   ( parseFiles
   ) where
 
-import Prelude hiding         (fail)
+import Prelude hiding       (fail)
 
-import Control.Exception      (try)
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Reader   (MonadReader, asks)
-import Control.Monad.Trans    (lift)
-import Data.Text              (pack, unpack)
+import Control.Exception    (try)
+import Control.Monad.Reader (MonadReader, asks)
+import Control.Monad.Trans  (MonadIO, liftIO)
+import Data.Text            (pack, unpack)
 
-import Config                 (Config(..))
-import Parser                 (testResults, TestCase, TestResult(..), testCase,
-                               testId, testResult, failureMessage, stackTrace)
-import SGR                    (success, fail, unknown, info, reset)
+import Config               (Config(..))
+import Parser               (testResults, TestCase, TestResult(..), testCase,
+                             testId, testResult, failureMessage, stackTrace)
+import SGR                  (success, fail, unknown, info, reset)
 
 -- monoidable type which will aggregate our test result count
 data AggregateResult = AggregateResult Int Int Int
