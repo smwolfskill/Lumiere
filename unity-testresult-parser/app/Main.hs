@@ -12,9 +12,9 @@ import System.Exit          (exitWith, exitSuccess, ExitCode(ExitFailure))
 import System.IO            (stdout)
 
 import Config               (Config(..))
+import Options              (optionParser, color, quiet, summary, files)
 import Parser               (testResults, TestCase, TestResult(..), testCase,
                              testId, testResult, failureMessage, stackTrace)
-import Options              (optionParser, color, quiet, summary, files)
 import SGR                  (hSupportsANSI, success, fail, unknown, info, reset)
 
 -- runs the test result verifier on every input file and exits with failure if
