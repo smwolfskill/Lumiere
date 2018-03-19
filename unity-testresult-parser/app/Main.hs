@@ -34,9 +34,10 @@ main = do
   let cfg = Config c (quiet opts) (summary opts)
       args = files opts
 
-  -- get IO actions and failures for each file, and then 'sequence' them one
-  -- after the other in IO
-  results <- sequence $ flip runReaderT cfg . analyzeFile <$> args
+  -- runReaderT . analyzefile <$> args :: [Config -> IO Bool]
+  -- sequence the list of functions against cfg to get an [IO Bool]
+  -- sequence the IO to get an IO [Bool]
+  results <- sequence $ sequence (runReaderT . analyzeFile <$> args) cfg
   if or results then exitWith (ExitFailure 1) else exitSuccess
 
 -- analyzes a TestResults file given its filename and prints the test results
