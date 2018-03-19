@@ -3,7 +3,6 @@ module Main where
 import Prelude hiding       (concat, fail)
 
 import Control.Exception    (try)
-import Control.Monad        (sequence_)
 import Control.Monad.Reader (ReaderT, runReaderT)
 import Control.Monad.Trans  (lift)
 import Data.Text            (pack, unpack, concat)
