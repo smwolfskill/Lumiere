@@ -15,7 +15,7 @@ public class ChaseAction : MonsterMoveAction
     private Vector2 targetPosition;
     private Vector2 oldTargetPosition = new Vector2(int.MaxValue, int.MaxValue);
     private Pathfinding pathfinding = null;
-    private List<TileObj> path = new List<TileObj> ();
+    private List<Tile> path = new List<Tile> ();
     private int currentPathIndex = 1;
 
     /// <summary>

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Lumiere/Room/Path")]
-public class PathRoomType : RoomType
+[CreateAssetMenu(menuName = "Lumiere/Room/Blank")]
+public class BlankRoomType : RoomType 
 {
     public override void GenRoom (Room room, Map map)
     {
-        
+
     }
 }

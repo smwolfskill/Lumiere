@@ -28,17 +28,17 @@ public class Pathfinding
     /// <returns>A list of tiles representing the path to traverse.</returns>
     /// <param name="start">The starting location to create a path from.</param>
     /// <param name="end">The end or target location to path towards.</param>
-    public List<TileObj> GetPath(Vector2 start, Vector2 end)
+    public List<Tile> GetPath(Vector2 start, Vector2 end)
     {
-        TileObj startTile = GetNearestTile(start);
-        TileObj endTile = GetNearestTile(end);
+        Tile startTile = GetNearestTile(start);
+        Tile endTile = GetNearestTile(end);
 
-        List<TileObj> closedSet = new List<TileObj>();
-        List<TileObj> openSet = new List<TileObj>();
+        List<Tile> closedSet = new List<Tile>();
+        List<Tile> openSet = new List<Tile>();
         openSet.Add(startTile);
-        Dictionary<TileObj, TileObj> cameFrom = new Dictionary<TileObj, TileObj>();
-        Dictionary<TileObj, int> gScores = new Dictionary<TileObj, int> ();
-        Dictionary<TileObj, int> fScores = new Dictionary<TileObj, int>();
+        Dictionary<Tile, Tile> cameFrom = new Dictionary<Tile, Tile>();
+        Dictionary<Tile, int> gScores = new Dictionary<Tile, int> ();
+        Dictionary<Tile, int> fScores = new Dictionary<Tile, int>();
 
         InitializeScores(gScores);
         gScores[startTile] = 0;
@@ -47,7 +47,7 @@ public class Pathfinding
 
         while(openSet.Count > 0)
         {
-            TileObj current = GetLowestScoreTile(openSet, fScores);
+            Tile current = GetLowestScoreTile(openSet, fScores);
             if(current == endTile)
             {
                 //reconstruct path
@@ -56,7 +56,7 @@ public class Pathfinding
 
             openSet.Remove(current);
             closedSet.Add(current);
-            foreach(TileObj neighbor in GetNeighbors(current))
+            foreach(Tile neighbor in GetNeighbors(current))
             {
                 if(!closedSet.Contains(neighbor))
                 {
@@ -87,9 +87,9 @@ public class Pathfinding
     /// <returns>The path to be constructed.</returns>
     /// <param name="cameFrom">The dictionary that represents tiles and their parents (the tiles they came from).</param>
     /// <param name="current">The tile to reconstruct a path towards.</param>
-    private List<TileObj> ReconstructPath(Dictionary<TileObj, TileObj> cameFrom, TileObj current)
+    private List<Tile> ReconstructPath(Dictionary<Tile, Tile> cameFrom, Tile current)
     {
-        List<TileObj> totalPath = new List<TileObj>();
+        List<Tile> totalPath = new List<Tile>();
         totalPath.Add(current);
         while(cameFrom.ContainsKey(current))
         {
@@ -106,18 +106,18 @@ public class Pathfinding
     /// <returns>The tile in openSet with the lowest score.</returns>
     /// <param name="openSet">The list of tiles yet to be explored.</param>
     /// <param name="scores">A dictionary that maps a tile to its score.</param>
-    private TileObj GetLowestScoreTile(List<TileObj> openSet, Dictionary<TileObj, int> scores)
+    private Tile GetLowestScoreTile(List<Tile> openSet, Dictionary<Tile, int> scores)
     {
-        TileObj lowestTileObj = openSet[0];
-        foreach(TileObj tile in openSet)
+        Tile lowestTile = openSet[0];
+        foreach(Tile tile in openSet)
         {
-            if(scores[lowestTileObj] < scores[tile])
+            if(scores[lowestTile] < scores[tile])
             {
-                lowestTileObj = tile;
+                lowestTile = tile;
             }
         }
 
-        return lowestTileObj;
+        return lowestTile;
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public class Pathfinding
     /// </summary>
     /// <returns>The nearest tile to the given location.</returns>
     /// <param name="location">Location in world-space.</param>
-    private TileObj GetNearestTile(Vector2 location)
+    private Tile GetNearestTile(Vector2 location)
     {
         return map.GetTile((int)(location.x/map.tileOffset), (int)(location.y/map.tileOffset));
     }
@@ -136,7 +136,7 @@ public class Pathfinding
     /// <returns>The heuristic cost of travelling from startTile to endTile.</returns>
     /// <param name="startTile">Start tile.</param>
     /// <param name="endTile">End tile.</param>
-    private int GetHeuristicCost(TileObj startTile, TileObj endTile)
+    private int GetHeuristicCost(Tile startTile, Tile endTile)
     {
         Vector2 start = new Vector2(startTile.x * map.tileOffset, startTile.y * map.tileOffset);
         Vector2 end = new Vector2(endTile.x * map.tileOffset, endTile.y * map.tileOffset);
@@ -149,7 +149,7 @@ public class Pathfinding
     /// <returns>The distance of travelling from startTile to endTile.</returns>
     /// <param name="startTile">Start tile.</param>
     /// <param name="endTile">End tile.</param>
-    private int GetDistance(TileObj startTile, TileObj endTile)
+    private int GetDistance(Tile startTile, Tile endTile)
     {
         if (!endTile.IsWalkable ()) 
         {
@@ -163,12 +163,12 @@ public class Pathfinding
     /// </summary>
     /// <returns>The list of neighbors of the tile specified.</returns>
     /// <param name="current">The specified tile.</param>
-    private List<TileObj> GetNeighbors(TileObj current)
+    private List<Tile> GetNeighbors(Tile current)
     {
-        List<TileObj> neighbors = new List<TileObj>();
+        List<Tile> neighbors = new List<Tile>();
         foreach(Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
         {
-            TileObj neighbor = current.GetNeighbor (direction);
+            Tile neighbor = current.GetNeighbor (direction);
             if (neighbor != null) 
             {
                 neighbors.Add(neighbor);
@@ -183,10 +183,10 @@ public class Pathfinding
     /// Initializes the scores dictionary and maps all tiles to an initial score of infinity. These will be changed when a lower score is found from the search algorithm.
     /// </summary>
     /// <param name="scores">A dictionary that maps each tile to its score.</param>
-    private void InitializeScores(Dictionary<TileObj, int> scores)
+    private void InitializeScores(Dictionary<Tile, int> scores)
     {
-        List<TileObj> tiles = map.GetTiles();
-        foreach(TileObj tile in tiles)
+        List<Tile> tiles = map.GetTiles();
+        foreach(Tile tile in tiles)
         {
             scores[tile] = int.MaxValue;
         }

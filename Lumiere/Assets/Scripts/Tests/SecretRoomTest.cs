@@ -10,25 +10,33 @@ using NUnit.Framework;
 public class SecretRoomTest 
 {
     SecretRoomType secretRoomType;
-    SecretRoomObj secretRoomObj;
+    Room secretRoom;
     Map map;
     GameObject mapGameObject;
+    RoomProperties roomProperties;
 
     [SetUp]
     public void Init()
     {
         mapGameObject = new GameObject ("Map");
-        Map map = new Map (50, 50, 1, mapGameObject);
-        secretRoomObj = new SecretRoomObj (map);
-        secretRoomType = Resources.Load<SecretRoomType> ("Rooms/Secret");
+        roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
+        Map map = new Map (50, 50, 1, mapGameObject, roomProperties);
+        secretRoomType = Resources.Load<SecretRoomType> ("Rooms/SecretRoom");
+        secretRoom = new Room (map, 0, 0, 30, 30, secretRoomType);
         Assert.IsNotNull (map);
-        Assert.IsNotNull (secretRoomObj);
+        Assert.IsNotNull (secretRoom);
         Assert.IsNotNull (secretRoomType);
     }
 
     [TearDown]
     public void Cleanup()
     {
+        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject> ();
+        foreach (GameObject gameObject in gameObjects) 
+        {
+            GameObject.Destroy (gameObject);
+        }
+
         if (secretRoomType != null) 
         {
             Resources.UnloadAsset (secretRoomType);
@@ -40,7 +48,7 @@ public class SecretRoomTest
         }
 
         map = null;
-        secretRoomObj = null;
+        secretRoom = null;
     }
 
     /// <summary>
@@ -49,8 +57,8 @@ public class SecretRoomTest
     [Test]
     public void TestTilesSpawned()
     {
-        secretRoomObj.GenRoom ();
-        Assert.IsTrue (secretRoomObj.tileObjs.Count > 0);
+        secretRoom.GenRoom ();
+        Assert.IsTrue (secretRoom.tiles.Count > 0);
     }
 
     /// <summary>
@@ -59,7 +67,7 @@ public class SecretRoomTest
     [Test]
     public void TestRoomInGame()
     {
-        GameObject room = GameObject.Find ("SecretRoomObj");
+        GameObject room = GameObject.Find ("SecretRoom");
         Assert.IsNotNull (room);
     }
 

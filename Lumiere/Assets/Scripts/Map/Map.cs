@@ -5,21 +5,23 @@ using UnityEngine;
 public class Map
 {
 
-    private TileObj[,] tileObjMatrix;
-    private List<RoomObj> rooms;
+    private Tile[,] tileMatrix;
+    private List<Room> rooms;
+    private RoomProperties roomProperties;
 
     public int w, h;
     public int tileOffset;
     public GameObject gameObject;
 
-    public Map(int w, int h, int tileOffset, GameObject gameObject)
+    public Map(int w, int h, int tileOffset, GameObject gameObject, RoomProperties roomProperties)
     {
         this.gameObject = gameObject;
         this.w = w;
         this.h = h;
         this.tileOffset = tileOffset;
-        this.tileObjMatrix = new TileObj[h, w];
-        this.rooms = new List<RoomObj>();
+        this.tileMatrix = new Tile[h, w];
+        this.rooms = new List<Room>();
+        this.roomProperties = roomProperties;
     }
 
     /// TODO: this description was from legacy code, change it to fit this (somewhat
@@ -34,41 +36,41 @@ public class Map
     /// True if the tile was placed correctly, false otherwise (such as when the tile
     /// cannot be placed in the specified coordinate due to the coordinate being invalid)
     /// </returns>
-    public TileObj SetTile(int x, int y, TileObj tileObj, RoomObj roomObj)
+    public Tile SetTile(int x, int y, Tile tile, Room room)
     {
         if (!ValidTileSpace(x, y))
             return null;
 
-        TileObj preExistingTile = GetTile(x, y);
+        Tile preExistingTile = GetTile(x, y);
         if (preExistingTile != null)
             preExistingTile.Remove();
 
-        this.tileObjMatrix[y, x] = tileObj;
+        this.tileMatrix[y, x] = tile;
 
-        tileObj.SetX_Y(x, y);
-        tileObj.SetRoom(roomObj);
-        tileObj.SetMap(this);
+        tile.SetX_Y(x, y);
+        tile.SetRoom(room);
+        tile.SetMap(this);
 
-        roomObj.AddTile(tileObj);
+        room.AddTile(tile);
 
-        return tileObj;
+        return tile;
     }
 
-    public List<TileObj> GetTiles()
+    public List<Tile> GetTiles()
     {
-        List<TileObj> tiles = new List<TileObj> ();
-        for (int i = 0; i < tileObjMatrix.GetLength(0); i++) 
+        List<Tile> tiles = new List<Tile> ();
+        for (int i = 0; i < tileMatrix.GetLength(0); i++) 
         {
-            for (int j = 0; j < tileObjMatrix.GetLength(1); j++) 
+            for (int j = 0; j < tileMatrix.GetLength(1); j++) 
             {
-                tiles.Add (tileObjMatrix [i, j]);    
+                tiles.Add (tileMatrix [i, j]);    
             }   
         }
 
         return tiles;
     }
 
-    public void FillArea(int x, int y, int w, int h, TileObj.TileObjType tileObjType, RoomObj roomObj)
+    public void FillArea(int x, int y, int w, int h, TileType tileType, Room room)
     {
         // Force top and left of rectangle to be inside the map.
         if (x < 0)
@@ -86,83 +88,92 @@ public class Map
         {
             for (int currY = y; currY < y + h; currY++)
             {
-                TileObj tileToAdd = 
+                Tile tileToAdd = 
                 SetTile(
                     currX, currY,
-                    TileObj.InstantiateTileObj (currX, currY, this, tileObjType),
-                    roomObj
+                        new Tile(x, y, this, tileType),
+                    room
                 );
             }
         }
     }
 
-    public void FillLine(int x, int y, int length, Utilities.Direction direction, TileObj.TileObjType tileObjType, RoomObj roomObj)
+    public void FillLine(int x, int y, int length, Utilities.Direction direction, TileType tileType, Room room)
     {
         switch (direction)
         {
             case Utilities.Direction.NORTH:
-                FillArea(x, y - length, 1, length, tileObjType, roomObj);
+                FillArea(x, y - length, 1, length, tileType, room);
                 break;
 
             case Utilities.Direction.SOUTH:
-                FillArea(x, y, 1, length, tileObjType, roomObj);
+                FillArea(x, y, 1, length, tileType, room);
                 break;
 
             case Utilities.Direction.WEST:
-                FillArea(x - length, y, length, 1, tileObjType, roomObj);
+                FillArea(x - length, y, length, 1, tileType, room);
                 break;
 
             case Utilities.Direction.EAST:
-                FillArea(x, y, length, 1, tileObjType, roomObj);
+                FillArea(x, y, length, 1, tileType, room);
                 break;
         }
     }
 
-    public TileObj GetTile(int x, int y)
+    public Tile GetTile(int x, int y)
     {
         if (!ValidTileSpace(x, y))
             return null;
 
-        return tileObjMatrix[y, x];
+        return tileMatrix[y, x];
     }
 
-    public RoomObj GenRoom(RoomObj.RoomObjType roomObjType)
+    public Room GenRoom(RoomType roomType)
     {
-        return RoomObj.InstantiateRoomObj(roomObjType, this);
+        int x = Utilities.RandomIntInRange (0, w);
+        int y = Utilities.RandomIntInRange (0, h);
+        int minWidth = roomProperties.minWidth;
+        int maxWidth = roomProperties.maxWidth;
+        int minHeight = roomProperties.minHeight;
+        int maxHeight = roomProperties.maxHeight;
+        int roomWidth = Utilities.RandomIntInRange (minWidth, maxWidth);
+        int roomHeight = Utilities.RandomIntInRange (minHeight, maxHeight);
+        return new Room (this, x, y, roomWidth, roomHeight, roomType);
     }
 
-    public RoomObj GenRandomRoom()
+    public Room GenRandomRoom()
     {
-        RoomObj roomObj;
+        Room room;
         do
         {
-            RoomObj.RoomObjType roomObjType = Utilities.RandomEnumValue<RoomObj.RoomObjType>();
-            roomObj = GenRoom(roomObjType);
+            RoomType[] roomTypes = roomProperties.roomTypes;
+            RoomType roomType = roomTypes[Utilities.RandomIntInRange(0, roomTypes.Length)];
+            room = GenRoom(roomType);
         }
-        while (roomObj == null);
+        while (room == null);
 
-        return roomObj;
+        return room;
     }
 
-    public void AddRoom(RoomObj roomObj)
+    public void AddRoom(Room room)
     {
-        this.rooms.Add(roomObj);
-        roomObj.gameObject.transform.parent = this.gameObject.transform;
+        this.rooms.Add(room);
+        room.gameObject.transform.parent = this.gameObject.transform;
     }
 
-    public bool IsRoomAreaValid(RoomObj roomObj, TileObj.TileObjType[] avoidTiles)
+    public bool IsRoomAreaValid(Room room, TileType[] avoidTiles)
     {
-        for (int currX = roomObj.x; currX < roomObj.x + roomObj.w; currX++)
+        for (int currX = room.x; currX < room.x + room.w; currX++)
         {
-            for (int currY = roomObj.y; currY < roomObj.y + roomObj.h; currY++)
+            for (int currY = room.y; currY < room.y + room.h; currY++)
             {
-                TileObj currTileObj = GetTile(currX, currY);
+                Tile currTileObj = GetTile(currX, currY);
 
                 if (currTileObj != null)
                 {
-                    foreach (TileObj.TileObjType avoidTile in avoidTiles)
+                    foreach (TileType avoidTile in avoidTiles)
                     {
-                        if (avoidTile == currTileObj.tileObjType)
+                        if (avoidTile == currTileObj.tileType)
                             return false;
                     }
                 }
@@ -185,52 +196,32 @@ public class Map
         return (x >= 0 && y >= 0 && x < h && y < h);
     }
 
-    public RoomObj GetRanRoom(RoomObj.RoomObjType[] ignoreRoomObjTypes)
+    public Room GetRanRoom(RoomType[] ignoreRoomObjTypes)
     {
-        RoomObj roomObj;
+        Room room;
         bool isInIgnoreRoomObjTypes = false;
         do
         {
             isInIgnoreRoomObjTypes = false;
-            roomObj = this.rooms[Utilities.RandomIntInRange(0, rooms.Count)];
+            room = this.rooms[Utilities.RandomIntInRange(0, rooms.Count)];
 
-            foreach (RoomObj.RoomObjType roomObjType in ignoreRoomObjTypes)
+            foreach (RoomType roomType in ignoreRoomObjTypes)
             {
-                if (roomObjType == roomObj.roomObjType) isInIgnoreRoomObjTypes = true;
+                if (roomType == room.roomType) isInIgnoreRoomObjTypes = true;
             }
         }
         while (isInIgnoreRoomObjTypes);
 
-        return roomObj;
+        return room;
     }
-
 
     //TODO maybe merge with getRandRoom?
     //TODO this function can get stuck in infinite loops
-    public RoomObj GetHideoutRoom()
+
+
+    public void RemoveRoom(Room room)
     {
-        RoomObj roomObj;
-        bool isInIgnoreRoomObjTypes = false;
-        do
-        {
-            isInIgnoreRoomObjTypes = false;
-            roomObj = this.rooms[Utilities.RandomIntInRange(0, rooms.Count)];
-
-
-                if (roomObj.roomObjType != RoomObj.RoomObjType.Hideout)
-                {
-                        isInIgnoreRoomObjTypes = true;
-                }
-        }
-        while (isInIgnoreRoomObjTypes);
-
-        return roomObj;
-    }
-
-
-    public void RemoveRoom(RoomObj roomObj)
-    {
-        this.rooms.Remove(roomObj);
+        this.rooms.Remove(room);
     }
 
 }

@@ -289,8 +289,7 @@ public class GameItem
         if (sprite.rect.width != sprite.texture.width)
         {
             // Crop the texture
-            Texture2D t = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
-
+            Texture2D t = new Texture2D((int)sprite.textureRect.width, (int)sprite.textureRect.height);
             t.SetPixels(sprite.texture.GetPixels((int)sprite.textureRect.x,
                 (int)sprite.textureRect.y,
                 (int)sprite.textureRect.width,

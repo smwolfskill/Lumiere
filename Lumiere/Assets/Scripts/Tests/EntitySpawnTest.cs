@@ -10,21 +10,24 @@ using NUnit.Framework;
 public class EntitySpawnTest 
 {
     EntityRoomType entityRoomType;
-    EntityRoomObj entityRoomObj;
+    Room entityRoom;
     Entity entityToSpawn;
     Map map;
     GameObject mapGameObject;
+    RoomProperties roomProperties;
 
     [SetUp]
     public void Init()
     {
         mapGameObject = new GameObject ("Map");
-        Map map = new Map (50, 50, 1, mapGameObject);
-        entityRoomObj = new EntityRoomObj (map);
-        entityRoomType = Resources.Load<EntityRoomType> ("Rooms/Entity");
+        roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
+        Map map = new Map (50, 50, 1, mapGameObject, roomProperties);
+
+        entityRoomType = Resources.Load<EntityRoomType> ("Rooms/EntityRoom");
         entityToSpawn = Resources.Load<Entity> ("Entities/Monsters/Monster 1");
+        entityRoom = new Room(map, 0, 0, 30, 30, entityRoomType);
         Assert.IsNotNull (map);
-        Assert.IsNotNull (entityRoomObj);
+        Assert.IsNotNull (entityRoom);
         Assert.IsNotNull (entityRoomType);
         Assert.IsNotNull (entityToSpawn);
     }
@@ -32,6 +35,12 @@ public class EntitySpawnTest
     [TearDown]
     public void Cleanup()
     {
+        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject> ();
+        foreach (GameObject gameObject in gameObjects) 
+        {
+            GameObject.Destroy (gameObject);
+        }
+
         if (entityRoomType != null) 
         {
             Resources.UnloadAsset (entityRoomType);
@@ -48,7 +57,7 @@ public class EntitySpawnTest
         }
 
         map = null;
-        entityRoomObj = null;
+        entityRoom = null;
     }
 
     /// <summary>
@@ -57,8 +66,8 @@ public class EntitySpawnTest
     [Test]
     public void TestTilesSpawned()
     {
-        entityRoomObj.GenRoom ();
-        Assert.IsTrue (entityRoomObj.tileObjs.Count > 0);
+        entityRoom.GenRoom ();
+        Assert.IsTrue (entityRoom.tiles.Count > 0);
     }
 
     /// <summary>
@@ -67,7 +76,7 @@ public class EntitySpawnTest
     [Test]
     public void TestRoomInGame()
     {
-        GameObject room = GameObject.Find ("EntityRoomObj");
+        GameObject room = GameObject.Find ("EntityRoom");
         Assert.IsNotNull (room);
     }
 
@@ -77,10 +86,10 @@ public class EntitySpawnTest
     [Test]
     public void TestEntitiesSpawned()
     {
-        entityRoomObj.GenRoom ();
+        entityRoom.GenRoom ();
         int minEntities = entityRoomType.minimumEntities;
         int maxEntities = entityRoomType.maximumEntities;
-        int entitiesSpawned = entityRoomObj.GetEntitiesSpawned ();
+        int entitiesSpawned = entityRoomType.GetEntitiesSpawned ();
         Assert.IsTrue (entitiesSpawned >= minEntities);
         Assert.IsTrue (entitiesSpawned <= maxEntities);
     }
@@ -91,7 +100,7 @@ public class EntitySpawnTest
     [Test]
     public void TestEntitiesInGame()
     {
-        entityRoomObj.GenRoom ();
+        entityRoom.GenRoom ();
         string monster1Name = "Monster 1";
         string monster2Name = "Monster 2";
         GameObject monster1 = GameObject.Find(monster1Name);
