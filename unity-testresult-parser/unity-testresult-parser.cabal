@@ -40,7 +40,8 @@ library
 executable unity-testresult-parser
   main-is: Main.hs
   other-modules:
-      Config
+      App
+    , Config
     , Options
     , SGR
   hs-source-dirs:

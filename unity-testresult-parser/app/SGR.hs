@@ -4,7 +4,7 @@ module SGR
   , unknown
   , info
   , reset
-  , hSupportsANSI
+  , supportsANSI
   ) where
 
 import Prelude hiding       (fail)
@@ -14,6 +14,7 @@ import Control.Monad.Trans  (lift)
 import System.Console.ANSI  (setSGR, hSupportsANSI, SGR(Reset, SetColor),
                              ConsoleLayer(Foreground), ColorIntensity(..),
                              Color(..))
+import System.IO            (stdout)
 
 import Config               (Config, color')
 
@@ -37,3 +38,6 @@ info :: ReaderT Config IO ()
 info = doSGR [SetColor Foreground Dull Yellow]
 reset :: ReaderT Config IO ()
 reset = doSGR [Reset]
+
+supportsANSI :: IO Bool
+supportsANSI = hSupportsANSI stdout
