@@ -6,8 +6,8 @@ public class Map
 {
 
     private Tile[,] tileMatrix;
-    private List<Container> containers;
-    private RoomProperties roomProperties;
+    public List<Container> containers;
+    public RoomProperties roomProperties;
 
     public int w, h;
     public int tileOffset;
@@ -182,6 +182,21 @@ public class Map
                             return false;
                     }
                 }
+            }
+        }
+
+        return true;
+    }
+
+    public bool DoesAreaContainOnlyThisTile(int x, int y, int w, int h, TileType tileType)
+    {
+        for (int currX = x; currX < x + w; currX++)
+        {
+            for (int currY = y; currY < y + h; currY++)
+            {
+                Tile currTileObj = GetTile(currX, currY);
+
+                if (currTileObj != null && currTileObj.tileType != tileType) return false;
             }
         }
 

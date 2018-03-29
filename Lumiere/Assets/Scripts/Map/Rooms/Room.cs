@@ -7,7 +7,7 @@ public class Room : Container
     public int x, y;
     public int w, h;
 
-
+    public List<Door> doors;
 
     public RoomType roomType;
 
@@ -18,12 +18,60 @@ public class Room : Container
         this.w = w;
         this.h = h;
 
+        this.doors = new List<Door>();
+
         this.roomType = (RoomType)this.containerType;
     }
 
     public void GenRoom()
     {
         roomType.GenRoom (this, map);
+
+        return;
+
+        int doorAttempts = Utilities.RandomIntInRange(1, 5);
+        // Add some doors
+        for (int doorAttempt = 0; doorAttempt < doorAttempts;  doorAttempt++)
+        {
+            int incrementOffOfWidth = Utilities.RandomIntInRange(1, w);
+            int incrementOffOfHeight = Utilities.RandomIntInRange(1, h);
+            Door door;
+            switch (Utilities.RandomEnumValue<Utilities.Direction>())
+            {
+                case Utilities.Direction.NORTH:
+                    door = new Door(x + incrementOffOfWidth, y);
+                    break;
+                case Utilities.Direction.SOUTH:
+                    door = new Door(x + incrementOffOfWidth, y + h - 1);
+                    break;
+                case Utilities.Direction.WEST:
+                    door = new Door(x, y + incrementOffOfHeight);
+                    break;
+                case Utilities.Direction.EAST:
+                    door = new Door(x + w - 1, y + incrementOffOfHeight);
+                    break;
+                default:
+                    door = null;
+                    break;
+            }
+
+            if(IsDoorValid(door))
+            {
+                doors.Add(door);
+            }
+        }
+
+    }
+
+    private bool IsDoorValid(Door doorAttempt)
+    {
+        foreach(Door door in doors)
+        {
+            if (doorAttempt.x == door.x && doorAttempt.y == door.y)
+                return false;
+        }
+
+        return true;
     }
 
     public void RefineSize()

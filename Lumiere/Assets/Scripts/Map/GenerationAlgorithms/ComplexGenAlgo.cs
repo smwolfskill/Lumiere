@@ -7,8 +7,6 @@ public class ComplexGenAlgo : GenAlgo
 {
 
     public int roomAttempts;
-    public int minDoorsPerRoom;
-    public int maxDoorsPerRoom;
     public TileType[] walkableTileTypes;
     public TileType earthTileType;
     public ContainerType baseContainerType;
@@ -24,7 +22,20 @@ public class ComplexGenAlgo : GenAlgo
             AttemptGenRandomRoom(map);
         }
 
+        //AttemptGenPaths();
         
+    }
+
+    private void AttemptGenPaths()
+    {
+        foreach(Container container in map.containers)
+        {
+            if(typeof(Container).IsAssignableFrom(container.GetType()))
+            {
+                Room room = (Room)container;
+                Debug.Log(room.doors.Count);
+            }
+        }
     }
 
     /// <summary>
@@ -34,25 +45,28 @@ public class ComplexGenAlgo : GenAlgo
     /// <returns>
     /// False when a room is not created, True otherwise
     /// </returns>
-    private bool AttemptGenRandomRoom(Map map)
+    private void AttemptGenRandomRoom(Map map)
     {
         // Gen a random room. If you do not see your room appearing, look into RoomObj.InstantiateRoomObj()
         Room room = map.GenRandomRoom();
 
         // Must check if we can place this new room into the map.
-        if (!map.IsRoomAreaValid(room, walkableTileTypes))
+        if (!map.DoesAreaContainOnlyThisTile(
+            room.x - 5,
+            room.y - 5,
+            room.w + 10,
+            room.h + 10,
+            earthTileType
+        ))
         {
             // If we cant, forget about adding the room and remove it.
             room.Remove();
-            return false;
         }
 
         // If we can, add the room to the map as well as generating the tiles and placing the
         // tiles on the map.
         map.AddContainer(room);
         room.GenRoom();
-
-        return true;
     }
     
 
