@@ -17,8 +17,10 @@ public class SimpleGenAlgo : GenAlgo
 
     public override void GenerateMap(Map map)
     {
+        //Needs refactoring before can be functional again.
+        /*
         Room baseRoom = new Room(map, 0, 0, map.w, map.h, blankRoomType);
-        map.AddRoom(baseRoom);
+        map.AddContainer(baseRoom);
         map.FillArea(baseRoom.x, baseRoom.y, baseRoom.w, baseRoom.h, earthTileType, baseRoom);
 
 
@@ -34,7 +36,7 @@ public class SimpleGenAlgo : GenAlgo
         }
 
         //Determine a HideoutRoom to put the player in
-        Room playerRoom = map.GetRanRoom(new RoomType[] { blankRoomType, pathRoomType });
+        Room playerRoom = map.GetRanContainer(new RoomType[] { blankRoomType, pathRoomType });
 
         if (playerRoom == null)
         {
@@ -45,8 +47,10 @@ public class SimpleGenAlgo : GenAlgo
         {
             playerRoom.SpawnPlayer();
         }
+        */
     }
 
+    /*
     /// TODO: this is an old description of a very similar function, should be rewritten
     ///
     /// <summary>
@@ -71,7 +75,7 @@ public class SimpleGenAlgo : GenAlgo
 
         // If we can, add the room to the map as well as generating the tiles and placing the
         // tiles on the map.
-        map.AddRoom(room);
+        map.AddContainer(room);
         room.GenRoom();
 
         return true;
@@ -80,10 +84,10 @@ public class SimpleGenAlgo : GenAlgo
     private void AttemptGenRandomPath(Map map)
     {
         Room pathRoom = map.GenRoom (pathRoomType);
-        map.AddRoom(pathRoom);
+        map.AddContainer(pathRoom);
 
         Utilities.Direction startingDirection = Utilities.RandomEnumValue<Utilities.Direction>();
-        Room startingRoom = map.GetRanRoom(new RoomType[] { blankRoomType, pathRoomType });
+        Room startingRoom = map.GetRanContainer(new RoomType[] { blankRoomType, pathRoomType });
 
         if(startingRoom.w < 3 || startingRoom.h < 3)
         {
@@ -153,6 +157,8 @@ public class SimpleGenAlgo : GenAlgo
         AttemptGenRandomPathStep(map, tile.GetNeighbor(direction), direction, pathRoom);
 
     }
+
+    */
 
 
 }
