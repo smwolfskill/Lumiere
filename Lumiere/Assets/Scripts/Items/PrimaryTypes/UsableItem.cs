@@ -41,6 +41,11 @@ public class UsableItem : GameItem
         InitAction(itemID, useAction);
     }
 
+    /// <summary>
+    /// Initilizes the item data for a usable item.
+    /// </summary>
+    /// <param name="itemID">The ID of the item.</param>
+    /// <param name="useAction">Optional use action that describes on use functionality.</param>
     private void InitAction(int itemID, string useAction)
     {
         this.useAction = useAction;
@@ -51,11 +56,21 @@ public class UsableItem : GameItem
         }
     }
 
+    /// <summary>
+    /// A validation function for items uses. Required for front-end behavior.
+    /// </summary>
+    /// <param name="obj">Object to validate the action on.</param>
+    /// <returns>True if successful, False otherwise.</returns>
     public bool ValidateUse(GameObject obj)
     {
         return action != null && action.Validate(obj);
     }
 
+    /// <summary>
+    /// A use function for the item. Required for front-end behavior.
+    /// </summary>
+    /// <param name="obj">Object to perform the action on.</param>
+    /// <returns>True if successful, False otherwise.</returns>
     public bool Use(GameObject obj)
     {
         return action.Execute(obj);
