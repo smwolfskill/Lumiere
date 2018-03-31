@@ -110,7 +110,7 @@ public class InventoryPanel : MonoBehaviour
             GameItem.ItemRarity.UNCOMMON, 4, 64, 2));
         inv.AddItem(new GameItem(item3, item3, "item 3", "item 3", 30,
             GameItem.ItemRarity.RARE, 3, 64, 3));
-        inv.AddItem(new GameItem(item4, item4, "Health Potion", "A health potion.", 1,
+        inv.AddItem(new UsableItem(item4, item4, "Health Potion", "A health potion.", 1,
             GameItem.ItemRarity.EPIC, 2, 5, 100, "HealthPotionAction"));
         inv.AddItem(new GameItem(item5, item5, "The God Portal", "The ultimate portal of mysticality and memes.", 10,
             GameItem.ItemRarity.LEGENDARY, 1, 64, 5));
@@ -209,10 +209,18 @@ public class InventoryPanel : MonoBehaviour
     public void UseItemActions()
     {
         GameItem selectedItem = GetSelectedItem();
-        if(selectedItem != null && selectedItem.ValidateUse(gameObject))
+
+        if (selectedItem == null)
+            return;
+
+        if (selectedItem is UsableItem)
         {
-            //Player selected to use the current item, and it is valid to be used
-            selectedItem.Use(gameObject);
+            UsableItem selectedUsable = (UsableItem)selectedItem;
+            if (selectedUsable.ValidateUse(gameObject))
+            {
+                //Player selected to use the current item, and it is valid to be used
+                selectedUsable.Use(gameObject);
+            }
         }
     }
 
