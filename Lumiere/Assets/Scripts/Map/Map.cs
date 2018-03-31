@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Map
 {
@@ -240,4 +241,31 @@ public class Map
         this.containers.Remove(container);
     }
 
+    public List<Room> GetRooms()
+    {
+        return (List<Room>)containers.OfType<Room>();
+    }
+
+    // For each room, fill a list of all other rooms based on distance from
+    // the given room.
+    public void PopulateClosestOtherRooms()
+    {
+        foreach(Room room in GetRooms())
+        {
+            List<Pair<Room, float>> closestRoomsByDistance = new List<Pair<Room, float>>();
+
+            foreach(Room compareToRoom in GetRooms())
+            {
+                if (compareToRoom == room) continue;
+
+                float dist = Vector2.Distance(new Vector2(room.x, room.y), new Vector2(compareToRoom.x, compareToRoom.y));
+
+                closestRoomsByDistance.Add(new Pair<Room, float>(compareToRoom, dist));
+            }
+
+            closestRoomsByDistance = (List<Pair<Room,float>>)closestRoomsByDistance.OrderBy(i => i.Second);
+
+            room.closestOtherRooms = closestRoomsByDistance.Select(i => i.First).ToList();
+        }
+    }
 }

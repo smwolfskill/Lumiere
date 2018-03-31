@@ -7,12 +7,15 @@ public class ComplexGenAlgo : GenAlgo
 {
 
     public int roomAttempts;
+    public int spaceBetweenRooms = 5;
     public TileType[] walkableTileTypes;
     public TileType earthTileType;
     public ContainerType baseContainerType;
 
     public override void GenerateMap(Map map)
     {
+        this.map = map;
+
         Container baseContainer = new Container(map, baseContainerType);
         map.AddContainer(baseContainer);
         map.FillArea(0, 0, map.w, map.h, earthTileType, baseContainer); 
@@ -22,18 +25,21 @@ public class ComplexGenAlgo : GenAlgo
             AttemptGenRandomRoom(map);
         }
 
-        //AttemptGenPaths();
+        map.PopulateClosestOtherRooms();
+
+
+
+        AttemptGenPaths();
         
     }
 
     private void AttemptGenPaths()
     {
-        foreach(Container container in map.containers)
+        foreach(Room room in map.GetRooms())
         {
-            if(typeof(Container).IsAssignableFrom(container.GetType()))
+            foreach(Door door in room.doors)
             {
-                Room room = (Room)container;
-                Debug.Log(room.doors.Count);
+
             }
         }
     }
@@ -52,15 +58,17 @@ public class ComplexGenAlgo : GenAlgo
 
         // Must check if we can place this new room into the map.
         if (!map.DoesAreaContainOnlyThisTile(
-            room.x - 5,
-            room.y - 5,
-            room.w + 10,
-            room.h + 10,
+            room.x - spaceBetweenRooms,
+            room.y - spaceBetweenRooms,
+            room.w + spaceBetweenRooms*2,
+            room.h + spaceBetweenRooms*2,
             earthTileType
         ))
         {
             // If we cant, forget about adding the room and remove it.
             room.Remove();
+
+            return;
         }
 
         // If we can, add the room to the map as well as generating the tiles and placing the

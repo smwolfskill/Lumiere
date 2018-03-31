@@ -6,6 +6,11 @@ public class Room : Container
 {
     public int x, y;
     public int w, h;
+    public int centerX, centerY;
+
+    // A list of all other rooms, sorted by closest to furthest based
+    // on centerX, centerY
+    public List<Room> closestOtherRooms;
 
     public List<Door> doors;
 
@@ -18,7 +23,11 @@ public class Room : Container
         this.w = w;
         this.h = h;
 
+        this.centerX = x + w / 2;
+        this.centerY = y + h / 2;
+
         this.doors = new List<Door>();
+        this.closestOtherRooms = new List<Room>();
 
         this.roomType = (RoomType)this.containerType;
     }
@@ -26,8 +35,6 @@ public class Room : Container
     public void GenRoom()
     {
         roomType.GenRoom (this, map);
-
-        return;
 
         int doorAttempts = Utilities.RandomIntInRange(1, 5);
         // Add some doors
