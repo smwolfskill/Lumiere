@@ -9,6 +9,7 @@ public abstract class EntityObject
     protected float maxHealth;
     protected float currHealth;
     protected bool isDead;
+	protected Inventory inventory;
 
     /*
     public EntityObject(float maxHealth)
@@ -23,6 +24,7 @@ public abstract class EntityObject
         this.maxHealth = maxHealth;
         this.currHealth = maxHealth;
         this.isDead = false;
+		this.inventory = null;
     }
 
     virtual public void InflictDamage(float damageAmount)

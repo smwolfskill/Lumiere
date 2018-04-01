@@ -21,7 +21,6 @@ public class Player : Entity
     {
         GameObject player = base.Spawn (map, location, maxHealth);
         player.tag = "Player";
-        Camera.main.GetComponent<CameraFollow>().SetTargetTransform(player.transform);
         EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);

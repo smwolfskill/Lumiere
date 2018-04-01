@@ -8,7 +8,6 @@ using UnityEngine.XR.WSA;
 [CreateAssetMenu(menuName = "Lumiere/Actions/PickupItem")]
 public class PickupItem : EntityAction
 {
-    private float lastInput = 0.0f;
     private GameObject itemObj = null;
     private ItemManager itemManager = null;
     private GameItem toPickup = null;
@@ -23,9 +22,9 @@ public class PickupItem : EntityAction
         //TODO: prevent player picking up items while inventory is open. 
         //There is also an infinite loop bug if attempting to move while inventory is open.
 
-        float pickupItemInput = Input.GetAxis("PickupItem");
+        bool pickupItemInput = Input.GetButtonDown("PickupItem");
         bool clickedOnItem = false;
-        if(pickupItemInput > 0.0f && pickupItemInput != lastInput)
+        if(pickupItemInput)
         {
             //Gather 3D mouse position and raycasting information
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -53,7 +52,6 @@ public class PickupItem : EntityAction
                 }
             }
         }
-        lastInput = pickupItemInput;
         return clickedOnItem;
     }
 

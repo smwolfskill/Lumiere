@@ -51,14 +51,16 @@ public class InventoryPanel : MonoBehaviour
         }
     }
 
-    public int SelectedX {
+    public int SelectedX
+    {
         get
         {
             return selectedX;
         }
     }
 
-    public int SelectedY {
+    public int SelectedY
+    {
         get
         {
             return selectedY;
@@ -73,20 +75,35 @@ public class InventoryPanel : MonoBehaviour
     }
     #endregion
 
-    void Start ()
+    public void SetInitialInventory(Inventory playerInventory)
     {
-        if(!initialized)
-        {
-            Reset();
-        }
+        inv = playerInventory;
+        AddInitialItems();
+        Initialize();
+
     }
 
-    public void Reset()
+    void Start ()
     {
-        inv = new Inventory(nWidth, nHeight);
+        
+        //if(!initialized)
+        //{
+        //    Reset();
+        //}
+    }
+
+
+    public void Initialize()
+    {
         inv.uiPanel = this;
         gridLayout = GetComponent<GridLayoutGroup>();
         entity.inventory = inv;
+        ResetSelectedItem();
+        inv.UpdateUI();
+        initialized = true;
+    }
+
+    public void AddInitialItems(){
         inv.AddItem(new GameItem(item1, item1, "item 1", "item 1", 50,
             GameItem.ItemRarity.COMMON, 5, 64, 1));
         inv.AddItem(new GameItem(item2, item2, "item 2", "item 2", 40,
@@ -97,8 +114,12 @@ public class InventoryPanel : MonoBehaviour
             GameItem.ItemRarity.EPIC, 2, 5, 100, "HealthPotionAction"));
         inv.AddItem(new GameItem(item5, item5, "The God Portal", "The ultimate portal of mysticality and memes.", 10,
             GameItem.ItemRarity.LEGENDARY, 1, 64, 5));
-        ResetSelectedItem();
-        initialized = true;
+    }
+
+    public void Reset()
+    {
+        //inv = new Inventory(nWidth, nHeight);
+        //Initialize();
     }
 
     public void DrawInventory()
@@ -106,6 +127,7 @@ public class InventoryPanel : MonoBehaviour
         nWidth = inv.GetWidth();
         nHeight = inv.GetHeight();
         capacity = nWidth * nHeight;
+        Debug.Log(capacity.ToString());
         gridLayout.constraintCount = nWidth; //# of columns
         InventoryItemButton[] childrenScripts = GetComponentsInChildren<InventoryItemButton>(); //used to access the children game objects
         //Set or create each GameItem's UI element
