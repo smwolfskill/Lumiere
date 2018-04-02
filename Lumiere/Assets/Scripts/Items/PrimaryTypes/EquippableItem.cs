@@ -8,9 +8,18 @@ public class EquippableItem : GameItem
     // Stats will be added here at some point to store additional information about these sorts of items and how they affect players.
 
     /// <summary>
+    /// Copy constructor
+    /// </summary>
+    /// <param name="other">other item</param>
+    public EquippableItem(EquippableItem other) : base(other)
+    {
+        this.EquipSlot = other.EquipSlot;
+    }
+
+    /// <summary>
     /// Enumeration that keeps track of slots items can be put into.
     /// </summary>
-    public enum EquipSlot
+    public enum EquipmentSlot
     {
         HEAD,
         WEAPON,
@@ -19,5 +28,10 @@ public class EquippableItem : GameItem
         GLOVES,
         RING,
         NECK
+    }
+
+    public EquipmentSlot EquipSlot
+    {
+        get; private set;
     }
 }
