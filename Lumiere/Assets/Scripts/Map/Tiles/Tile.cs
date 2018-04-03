@@ -68,4 +68,25 @@ public class Tile
         }
         return null;
     }
+
+    /// <summary>
+    /// Gets all the valid neighbors of the tile specified and enumerates them in a list.
+    /// </summary>
+    /// <returns>The list of neighbors of the tile specified.</returns>
+    /// <param name="current">The specified tile.</param>
+    public List<Tile> GetNeighbors()
+    {
+        List<Tile> neighbors = new List<Tile>();
+        foreach(Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
+        {
+            Tile neighbor = this.GetNeighbor (direction);
+            if (neighbor != null) 
+            {
+                neighbors.Add(neighbor);
+            }
+
+        }
+
+        return neighbors;
+    }
 }
