@@ -74,7 +74,6 @@ public class Tile
     /// Gets all the valid neighbors of the tile specified and enumerates them in a list.
     /// </summary>
     /// <returns>The list of neighbors of the tile specified.</returns>
-    /// <param name="current">The specified tile.</param>
     public List<Tile> GetNeighbors()
     {
         List<Tile> neighbors = new List<Tile>();
