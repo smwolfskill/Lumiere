@@ -56,9 +56,28 @@ public class Utilities : MonoBehaviour
     public static T RandomEnumValue<T>()
     {
         var v = System.Enum.GetValues(typeof(T));
-        return (T)v.GetValue(new System.Random().Next(v.Length));
+        return (T)v.GetValue(random.Next(v.Length));
     }
 
+    public static T EndOfList<T>(List<T> list)
+    {
+        return list[list.Count - 1];
+    }
+
+    public static void RemoveEndOfList<T>(List<T> list)
+    {
+        list.RemoveAt(list.Count - 1);
+    }
+
+    public static float GetAngle(int currX, int currY, int destX, int destY)
+    {
+        int difX = destX - currX;
+        int difY = destY - currY;
+        float angle =  Mathf.Atan2(difY, difX) * (180.0f / Mathf.PI);
+
+        if (angle < 0) angle += 360;
+        return angle;
+    }
 
 }
 
@@ -70,6 +89,14 @@ public class Pair<T, U>
         this.Second = second;
     }
 
-    public T First { get; set; }
-    public U Second { get; set; }
+    public T First
+    {
+        get;
+        set;
+    }
+    public U Second
+    {
+        get;
+        set;
+    }
 };

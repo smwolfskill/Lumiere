@@ -34,40 +34,44 @@ public class Room : Container
 
     public void GenRoom()
     {
-        roomType.GenRoom (this, map);
+        roomType.GenRoom(this, map);
 
+        GenDoors();
+    }
+
+    private void GenDoors()
+    {
         int doorAttempts = Utilities.RandomIntInRange(1, 5);
         // Add some doors
-        for (int doorAttempt = 0; doorAttempt < doorAttempts;  doorAttempt++)
+        for (int doorAttempt = 0; doorAttempt < doorAttempts; doorAttempt++)
         {
-            int incrementOffOfWidth = Utilities.RandomIntInRange(1, w);
-            int incrementOffOfHeight = Utilities.RandomIntInRange(1, h);
+            int incrementOffOfWidth = Utilities.RandomIntInRange(1, w - 1);
+            int incrementOffOfHeight = Utilities.RandomIntInRange(1, h - 1);
             Door door;
             switch (Utilities.RandomEnumValue<Utilities.Direction>())
             {
                 case Utilities.Direction.NORTH:
-                    door = new Door(x + incrementOffOfWidth, y);
+                    door = new Door(x + incrementOffOfWidth, y, Utilities.Direction.NORTH);
                     break;
                 case Utilities.Direction.SOUTH:
-                    door = new Door(x + incrementOffOfWidth, y + h - 1);
+                    door = new Door(x + incrementOffOfWidth, y + h - 1, Utilities.Direction.SOUTH);
                     break;
                 case Utilities.Direction.WEST:
-                    door = new Door(x, y + incrementOffOfHeight);
+                    door = new Door(x, y + incrementOffOfHeight, Utilities.Direction.WEST);
                     break;
                 case Utilities.Direction.EAST:
-                    door = new Door(x + w - 1, y + incrementOffOfHeight);
+                    door = new Door(x + w - 1, y + incrementOffOfHeight, Utilities.Direction.EAST);
                     break;
                 default:
                     door = null;
                     break;
             }
 
-            if(IsDoorValid(door))
+            if (IsDoorValid(door))
             {
                 doors.Add(door);
             }
         }
-
     }
 
     private bool IsDoorValid(Door doorAttempt)

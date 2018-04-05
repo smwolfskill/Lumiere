@@ -5,10 +5,15 @@ using UnityEngine;
 public class Door
 {
     public int x, y;
+    public Utilities.Direction direction;
 
-    public Door(int x, int y)
+    public Door(int x, int y, Utilities.Direction direction)
     {
         this.x = x;
         this.y = y;
+
+        this.direction = direction;
     }
+
+
 }

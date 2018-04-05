@@ -243,7 +243,7 @@ public class Map
 
     public List<Room> GetRooms()
     {
-        return (List<Room>)containers.OfType<Room>();
+        return containers.OfType<Room>().ToList<Room>();
     }
 
     // For each room, fill a list of all other rooms based on distance from
@@ -261,9 +261,10 @@ public class Map
                 float dist = Vector2.Distance(new Vector2(room.x, room.y), new Vector2(compareToRoom.x, compareToRoom.y));
 
                 closestRoomsByDistance.Add(new Pair<Room, float>(compareToRoom, dist));
+
             }
 
-            closestRoomsByDistance = (List<Pair<Room,float>>)closestRoomsByDistance.OrderBy(i => i.Second);
+            closestRoomsByDistance = closestRoomsByDistance.OrderBy(i => i.Second).ToList();
 
             room.closestOtherRooms = closestRoomsByDistance.Select(i => i.First).ToList();
         }
