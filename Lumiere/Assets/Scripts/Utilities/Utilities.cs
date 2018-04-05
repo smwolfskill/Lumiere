@@ -48,6 +48,28 @@ public class Utilities : MonoBehaviour
         return Direction.NORTH;
     }
 
+    public static Pair<int,int> CordInDirection(Direction direction, int x, int y)
+    {
+        switch (direction)
+        {
+            case Direction.NORTH:
+                return new Pair<int, int>(x, y - 1);
+            case Direction.EAST:
+                return new Pair<int, int>(x + 1,y);
+            case Direction.SOUTH:
+                return new Pair<int, int>(x, y + 1);
+            case Direction.WEST:
+                return new Pair<int, int>(x - 1, y);
+        }
+
+        return new Pair<int, int>(x, y);
+    }
+
+    public static Pair<int, int> CordInDirection(Direction direction, Pair<int,int> pair)
+    {
+        return CordInDirection(direction, pair.First, pair.Second);
+    }
+
     public static int RandomIntInRange(int minInclusive, int maxExclusive)
     {
         return random.Next(minInclusive, maxExclusive);
@@ -99,4 +121,5 @@ public class Pair<T, U>
         get;
         set;
     }
+
 };

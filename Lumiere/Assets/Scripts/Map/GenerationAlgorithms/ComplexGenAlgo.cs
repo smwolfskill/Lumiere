@@ -73,6 +73,14 @@ public class ComplexGenAlgo : GenAlgo
         map.SetTile(otherDoor.x, otherDoor.y,
             new Tile(otherDoor.x, otherDoor.y, map, earthTileType),
             baseContainer);
+
+        Pair<int,int> oneOutsideOtherDoorPair = Utilities.CordInDirection(otherDoor.direction, new Pair<int, int>(otherDoor.x, otherDoor.y));
+        /*map.SetTile(oneOutsideOtherDoorPair.First, oneOutsideOtherDoorPair.Second,
+            new Tile(oneOutsideOtherDoorPair.First, oneOutsideOtherDoorPair.Second, map, earthTileType),
+            baseContainer);
+            */
+        otherDoor = new Door(oneOutsideOtherDoorPair.First, oneOutsideOtherDoorPair.Second, otherDoor.direction);
+
         map.SetTile(door.x, door.y,
             new Tile(door.x, door.y, map, earthTileType),
             baseContainer);
@@ -87,28 +95,31 @@ public class ComplexGenAlgo : GenAlgo
         // searched.
         Dictionary<Tile, bool> tileHasBeenSearched = new Dictionary<Tile, bool>();
 
-        Link currLink = AddToQueue(currTile, null, queue, tileHasBeenSearched);
+        Link currLink = AddToQueue(currTile, null, queue, tileHasBeenSearched, door.direction, false, true);
 
         int halfWayInbetweenRooms = (int)Mathf.Ceil(((float)spaceBetweenRooms) / 2.0f);
 
         for (int i = 0; i < halfWayInbetweenRooms; i++)
-        {
-            currLink = AddToQueue(currLink, door.direction, queue, tileHasBeenSearched);
+        {                       
+            currLink = AddToQueue(currLink, door.direction, queue, tileHasBeenSearched, false, true);
         }
+        queue.Enqueue(currLink);
 
         Link endLink = null;
 
         while(endLink == null && queue.Count != 0)
-        {
+        {                                    
             endLink = BFSStep(queue, tileHasBeenSearched, otherDoor);
         }
 
         if(endLink != null)
         {
             ModifyMapWithLinks(endLink);
+
+            return true;
         }
 
-        return true;
+        return false;
         /*
 
         List<Pair<int, int>> path = new List<Pair<int,int>>();
@@ -179,18 +190,25 @@ public class ComplexGenAlgo : GenAlgo
 
     }
 
-
     private Link AddToQueue(
         Tile currTile,
         Link parentLink,
         Queue<Link> queue,
-        Dictionary<Tile, bool> tileHasBeenSearched
+        Dictionary<Tile, bool> tileHasBeenSearched,
+        Utilities.Direction direction,
+        bool addToQueue = true,
+        bool ignoreIsValidTile = false
     )
     {
-        if (!IsValidTile(currTile, tileHasBeenSearched)) return null;
+        if (currTile == null) return null;
+
+        if (!ignoreIsValidTile && !IsValidTile(currTile, tileHasBeenSearched, direction)) return null;
 
         Link currLink = new Link(currTile, parentLink);
-        queue.Enqueue(currLink);
+
+        if (currLink == null) return null;
+
+        if(addToQueue) queue.Enqueue(currLink);
 
         SearchTile(tileHasBeenSearched, currTile);
 
@@ -201,7 +219,9 @@ public class ComplexGenAlgo : GenAlgo
         Link parentLink,
         Utilities.Direction direction,
         Queue<Link> queue,
-        Dictionary<Tile, bool> tileHasBeenSearched
+        Dictionary<Tile, bool> tileHasBeenSearched,
+        bool addToQueue = true,
+        bool ignoreIsValidTile = false
     )
     {
         if (parentLink == null) return null;
@@ -234,9 +254,10 @@ public class ComplexGenAlgo : GenAlgo
 
         Tile currTile = map.GetTile(newX, newY);
 
-        return AddToQueue(currTile, parentLink, queue, tileHasBeenSearched);
+        return AddToQueue(currTile, parentLink, queue, tileHasBeenSearched, direction, addToQueue, ignoreIsValidTile);
     }
 
+    /*
     // returns true if the door has been reached, otherwise false
     private bool BFSStep(List<Pair<int, int>> path, Dictionary<Tile, bool> tileHasBeenSearched, Door door)
     {
@@ -298,8 +319,9 @@ public class ComplexGenAlgo : GenAlgo
 
         return false;
     }
+    */
 
-
+    /*
     private void ModifyMapUsingPath(List<Pair<int, int>> path)
     {
         // todo: choose a more specific container type for the path's container
@@ -313,7 +335,9 @@ public class ComplexGenAlgo : GenAlgo
         }
 
     }
-    
+    */
+
+    /*
     // If can add to path, do so and return true. If cant (tile has been searched already),
     // dont add to path and return false.
     private bool AddToPath(List<Pair<int, int>> path, Utilities.Direction direction, Dictionary<Tile, bool> tileHasBeenSearched)
@@ -356,9 +380,9 @@ public class ComplexGenAlgo : GenAlgo
         SearchTile(tileHasBeenSearched, path);
 
         return true;
-    }
+    }*/
 
-    private bool IsValidTile(Tile potentialTile, Dictionary<Tile, bool> tileHasBeenSearched)
+    private bool IsValidTile(Tile potentialTile, Dictionary<Tile, bool> tileHasBeenSearched, Utilities.Direction direction)
     {
         if(
             potentialTile == null ||
@@ -369,7 +393,33 @@ public class ComplexGenAlgo : GenAlgo
             return false;
         }
 
+        int radius = 2;
+        Pair<int, int> currLeftOfPair = new Pair<int, int>(potentialTile.x, potentialTile.y);
+        Pair<int, int> currRightOfPair = new Pair<int, int>(potentialTile.x, potentialTile.y);
+        Utilities.Direction leftOf = Utilities.LeftOf(direction);
+        Utilities.Direction rightOf = Utilities.RightOf(direction);
+
+        for(int i = 0; i < radius; i++)
+        {
+            currLeftOfPair = Utilities.CordInDirection(leftOf, currLeftOfPair);
+            currRightOfPair = Utilities.CordInDirection(rightOf, currRightOfPair);
+
+            if
+            (
+                !IsValidSurroundingTile(currLeftOfPair) ||
+                !IsValidSurroundingTile(currRightOfPair)
+            )
+                return false;
+        }
+
         return true;
+    }
+
+    private bool IsValidSurroundingTile(Pair<int, int> pair)
+    {
+        Tile tile = map.GetTile(pair.First, pair.Second);
+
+        return (tile != null && tile.tileType == earthTileType);
     }
 
     private bool TileHasBeenSearched(Dictionary<Tile, bool> tileHasBeenSearched, Tile tile)
@@ -379,7 +429,7 @@ public class ComplexGenAlgo : GenAlgo
         return (tileHasBeenSearched.ContainsKey(tile) && tileHasBeenSearched[tile]);
     }
 
-    private bool HasTileBeenSearched(Dictionary<Tile, bool> tileHasBeenSearched, int x, int y)
+    private bool TileHasBeenSearched(Dictionary<Tile, bool> tileHasBeenSearched, int x, int y)
     {
         if (map.GetTile(x, y) == null) return true;
         return TileHasBeenSearched(tileHasBeenSearched, map.GetTile(x, y));
