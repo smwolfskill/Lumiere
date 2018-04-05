@@ -73,19 +73,46 @@ public class ComplexGenAlgo : GenAlgo
         map.SetTile(otherDoor.x, otherDoor.y,
             new Tile(otherDoor.x, otherDoor.y, map, earthTileType),
             baseContainer);
+        map.SetTile(door.x, door.y,
+            new Tile(door.x, door.y, map, earthTileType),
+            baseContainer);
 
+        // The pair contains the current tile and the parent tile
+        Queue<Link> queue = new Queue<Link>();
 
-        
+        Tile currTile = map.GetTile(door.x, door.y);
 
+        // Given a tile, return true if this tile has been searched, otherwise false. This
+        // dict is modified in AddToQueue() as once a path has been added, it has been
+        // searched.
+        Dictionary<Tile, bool> tileHasBeenSearched = new Dictionary<Tile, bool>();
 
+        Link currLink = AddToQueue(currTile, null, queue, tileHasBeenSearched);
 
+        int halfWayInbetweenRooms = (int)Mathf.Ceil(((float)spaceBetweenRooms) / 2.0f);
 
+        for (int i = 0; i < halfWayInbetweenRooms; i++)
+        {
+            currLink = AddToQueue(currLink, door.direction, queue, tileHasBeenSearched);
+        }
 
+        Link endLink = null;
 
+        while(endLink == null && queue.Count != 0)
+        {
+            endLink = BFSStep(queue, tileHasBeenSearched, otherDoor);
+        }
+
+        if(endLink != null)
+        {
+            ModifyMapWithLinks(endLink);
+        }
+
+        return true;
+        /*
 
         List<Pair<int, int>> path = new List<Pair<int,int>>();
 
-        int halfWayInbetweenRooms = (int)Mathf.Ceil(((float)spaceBetweenRooms) / 2.0f);
 
         // Given a tile, return true if this tile has been searched, otherwise false. This
         // dict is modified in AddToPath() as once a path has been added, it has been
@@ -115,6 +142,99 @@ public class ComplexGenAlgo : GenAlgo
         }
 
         return true;
+
+        */
+    }
+
+    private Link BFSStep(Queue<Link> queue, Dictionary<Tile, bool> tileHasBeenSearched, Door otherDoor)
+    {
+        Link link = queue.Dequeue();
+
+        foreach(Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
+        {
+            Link newLink = AddToQueue(link, direction, queue, tileHasBeenSearched);
+
+            if(newLink != null && newLink.currTile.x == otherDoor.x && newLink.currTile.y == otherDoor.y)
+            {
+                return link;
+            }
+        }
+
+        return null;
+    }
+
+    private void ModifyMapWithLinks(Link currLink)
+    {
+        // todo: choose a more specific container type for the path's container
+        Container container = new Container(map, baseContainerType);
+        map.AddContainer(container);
+
+        while (currLink != null)
+        {
+            Tile tile = new Tile(currLink.currTile.x, currLink.currTile.y, map, pathTileType);
+            map.SetTile(currLink.currTile.x, currLink.currTile.y, tile, container);
+
+            currLink = currLink.parentLink;
+        }
+
+    }
+
+
+    private Link AddToQueue(
+        Tile currTile,
+        Link parentLink,
+        Queue<Link> queue,
+        Dictionary<Tile, bool> tileHasBeenSearched
+    )
+    {
+        if (!IsValidTile(currTile, tileHasBeenSearched)) return null;
+
+        Link currLink = new Link(currTile, parentLink);
+        queue.Enqueue(currLink);
+
+        SearchTile(tileHasBeenSearched, currTile);
+
+        return currLink;
+    }
+
+    private Link AddToQueue(
+        Link parentLink,
+        Utilities.Direction direction,
+        Queue<Link> queue,
+        Dictionary<Tile, bool> tileHasBeenSearched
+    )
+    {
+        if (parentLink == null) return null;
+
+        int currX = parentLink.currTile.x;
+        int currY = parentLink.currTile.y;
+
+        int newX = 0;
+        int newY = 0;
+
+        switch (direction)
+        {
+            case Utilities.Direction.NORTH:
+                newX = currX;
+                newY = currY - 1;
+                break;
+            case Utilities.Direction.SOUTH:
+                newX = currX;
+                newY = currY + 1;
+                break;
+            case Utilities.Direction.WEST:
+                newX = currX - 1;
+                newY = currY;
+                break;
+            case Utilities.Direction.EAST:
+                newX = currX + 1;
+                newY = currY;
+                break;
+        }
+
+        Tile currTile = map.GetTile(newX, newY);
+
+        return AddToQueue(currTile, parentLink, queue, tileHasBeenSearched);
     }
 
     // returns true if the door has been reached, otherwise false
@@ -229,14 +349,7 @@ public class ComplexGenAlgo : GenAlgo
 
         Tile potentialTile = map.GetTile(newX, newY);
 
-        if (
-            potentialTile == null ||
-            potentialTile.tileType != earthTileType ||
-            HasTileBeenSearched(tileHasBeenSearched, potentialTile)
-        )
-        {
-            return false;
-        }
+        if (!IsValidTile(potentialTile, tileHasBeenSearched)) return false;
 
         path.Add(new Pair<int, int>(newX, newY));
 
@@ -250,16 +363,16 @@ public class ComplexGenAlgo : GenAlgo
         if(
             potentialTile == null ||
             potentialTile.tileType != earthTileType ||
-            HasTileBeenSearched(tileHasBeenSearched, potentialTile)
+            TileHasBeenSearched(tileHasBeenSearched, potentialTile)
         )
         {
             return false;
         }
 
-
+        return true;
     }
 
-    private bool HasTileBeenSearched(Dictionary<Tile, bool> tileHasBeenSearched, Tile tile)
+    private bool TileHasBeenSearched(Dictionary<Tile, bool> tileHasBeenSearched, Tile tile)
     {
         // if tileHasBeenSearched has a key and returns true, it means the tile
         // has been searched. otherwise, the tile has not been searched.
@@ -269,7 +382,7 @@ public class ComplexGenAlgo : GenAlgo
     private bool HasTileBeenSearched(Dictionary<Tile, bool> tileHasBeenSearched, int x, int y)
     {
         if (map.GetTile(x, y) == null) return true;
-        return HasTileBeenSearched(tileHasBeenSearched, map.GetTile(x, y));
+        return TileHasBeenSearched(tileHasBeenSearched, map.GetTile(x, y));
     }
 
     private void SearchTile(Dictionary<Tile, bool> tileHasBeenSearched, Tile tile)
@@ -325,4 +438,16 @@ public class ComplexGenAlgo : GenAlgo
     
 
 
+}
+
+public class Link
+{
+    public Tile currTile;
+    public Link parentLink;
+
+    public Link(Tile currTile, Link parentLink)
+    {
+        this.currTile = currTile;
+        this.parentLink = parentLink;
+    }
 }
