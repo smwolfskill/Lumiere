@@ -300,4 +300,18 @@ public class Map
             CreateTileAndSetTile(currRightOfPair, door.room, tileType);
         }
     }
+
+    public void ChangeTilesInArea(int x, int y, int radius, TileType targetTileType, TileType newTileType, Container container)
+    {
+        for(int currX = x - radius; currX <= x + radius; currX++)
+        {
+            for(int currY = y - radius; currY <= y + radius; currY++)
+            {
+                if(GetTile(currX,currY).tileType == targetTileType)
+                {
+                    CreateTileAndSetTile(currX, currY, container, newTileType);
+                }
+            }
+        }
+    }
 }

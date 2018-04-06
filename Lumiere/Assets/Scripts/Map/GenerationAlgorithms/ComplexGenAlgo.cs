@@ -196,6 +196,8 @@ public class ComplexGenAlgo : GenAlgo
             Tile tile = new Tile(currLink.currTile.x, currLink.currTile.y, map, pathTileType);
             map.SetTile(currLink.currTile.x, currLink.currTile.y, tile, container);
 
+            map.ChangeTilesInArea(currLink.currTile.x, currLink.currTile.y, 1, earthTileType, wallTileType, container);
+
             currLink = currLink.parentLink;
         }
 

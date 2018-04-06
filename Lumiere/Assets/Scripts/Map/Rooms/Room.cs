@@ -43,7 +43,7 @@ public class Room : Container
     {
         if (radius > w - radius || radius > h - radius) return;
 
-        int doorAttempts = Utilities.RandomIntInRange(1, 5);
+        int doorAttempts = Utilities.RandomIntInRange(10, 50);
         // Add some doors
         for (int doorAttempt = 0; doorAttempt < doorAttempts; doorAttempt++)
         {
