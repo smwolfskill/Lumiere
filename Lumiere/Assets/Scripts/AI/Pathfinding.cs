@@ -56,7 +56,7 @@ public class Pathfinding
 
             openSet.Remove(current);
             closedSet.Add(current);
-            foreach(Tile neighbor in GetNeighbors(current))
+            foreach(Tile neighbor in current.GetNeighbors())
             {
                 if(!closedSet.Contains(neighbor))
                 {
@@ -156,27 +156,6 @@ public class Pathfinding
             return int.MaxValue;
         }
         return GetHeuristicCost(startTile, endTile);
-    }
-
-    /// <summary>
-    /// Gets all the valid neighbors of the tile specified and enumerates them in a list.
-    /// </summary>
-    /// <returns>The list of neighbors of the tile specified.</returns>
-    /// <param name="current">The specified tile.</param>
-    private List<Tile> GetNeighbors(Tile current)
-    {
-        List<Tile> neighbors = new List<Tile>();
-        foreach(Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
-        {
-            Tile neighbor = current.GetNeighbor (direction);
-            if (neighbor != null) 
-            {
-                neighbors.Add(neighbor);
-            }
-
-        }
-
-        return neighbors;
     }
 
     /// <summary>

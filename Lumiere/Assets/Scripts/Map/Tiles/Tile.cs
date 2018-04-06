@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,5 +68,25 @@ public class Tile
                 return map.GetTile(x + 1, y);
         }
         return null;
+    }
+
+    /// <summary>
+    /// Gets all the valid neighbors of the tile specified and enumerates them in a list.
+    /// </summary>
+    /// <returns>The list of neighbors of the tile specified.</returns>
+    public List<Tile> GetNeighbors()
+    {
+        List<Tile> neighbors = new List<Tile>();
+        foreach(Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
+        {
+            Tile neighbor = this.GetNeighbor (direction);
+            if (neighbor != null) 
+            {
+                neighbors.Add(neighbor);
+            }
+
+        }
+
+        return neighbors;
     }
 }
