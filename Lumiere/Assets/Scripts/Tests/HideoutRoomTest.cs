@@ -57,7 +57,7 @@ public class HideoutRoomTest
     [Test]
     public void TestTilesSpawned()
     {
-        hideoutRoom.GenRoom ();
+        hideoutRoom.GenRoom (5 / 2);
         Assert.IsTrue (hideoutRoom.tiles.Count > 0);
     }
 

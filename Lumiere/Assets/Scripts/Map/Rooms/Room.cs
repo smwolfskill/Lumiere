@@ -32,35 +32,37 @@ public class Room : Container
         this.roomType = (RoomType)this.containerType;
     }
 
-    public void GenRoom()
+    public void GenRoom(int doorRadius)
     {
         roomType.GenRoom(this, map);
 
-        GenDoors();
+        GenDoors(doorRadius);
     }
 
-    private void GenDoors()
+    private void GenDoors(int radius)
     {
+        if (radius > w - radius || radius > h - radius) return;
+
         int doorAttempts = Utilities.RandomIntInRange(1, 5);
         // Add some doors
         for (int doorAttempt = 0; doorAttempt < doorAttempts; doorAttempt++)
         {
-            int incrementOffOfWidth = Utilities.RandomIntInRange(1, w - 1);
-            int incrementOffOfHeight = Utilities.RandomIntInRange(1, h - 1);
+            int incrementOffOfWidth = Utilities.RandomIntInRange(radius, w - radius);
+            int incrementOffOfHeight = Utilities.RandomIntInRange(radius, h - radius);
             Door door;
             switch (Utilities.RandomEnumValue<Utilities.Direction>())
             {
                 case Utilities.Direction.NORTH:
-                    door = new Door(x + incrementOffOfWidth, y, Utilities.Direction.NORTH);
+                    door = new Door(x + incrementOffOfWidth, y, Utilities.Direction.NORTH, this, radius);
                     break;
                 case Utilities.Direction.SOUTH:
-                    door = new Door(x + incrementOffOfWidth, y + h - 1, Utilities.Direction.SOUTH);
+                    door = new Door(x + incrementOffOfWidth, y + h - 1, Utilities.Direction.SOUTH, this, radius);
                     break;
                 case Utilities.Direction.WEST:
-                    door = new Door(x, y + incrementOffOfHeight, Utilities.Direction.WEST);
+                    door = new Door(x, y + incrementOffOfHeight, Utilities.Direction.WEST, this, radius);
                     break;
                 case Utilities.Direction.EAST:
-                    door = new Door(x + w - 1, y + incrementOffOfHeight, Utilities.Direction.EAST);
+                    door = new Door(x + w - 1, y + incrementOffOfHeight, Utilities.Direction.EAST, this, radius);
                     break;
                 default:
                     door = null;

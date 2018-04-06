@@ -11,6 +11,7 @@ public class ComplexGenAlgo : GenAlgo
     public TileType[] walkableTileTypes;
     public TileType earthTileType;
     public TileType pathTileType;
+    public TileType wallTileType;
     public ContainerType baseContainerType;
 
     public override void GenerateMap(Map map)
@@ -35,10 +36,14 @@ public class ComplexGenAlgo : GenAlgo
     private void AttemptGenPaths()
     {
         // connect all doors for all rooms
-        foreach(Room room in map.GetRooms())
+        for(int i = map.GetRooms().Count - 1; i >= 0; i--)
         {
-            foreach(Door door in room.doors)
+            Room room = map.GetRooms()[i];
+
+            for (int j = room.doors.Count - 1; j >= 0; j--)
             {
+                Door door = room.doors[j];
+
                 bool nextDoor = false;
 
                 // try connecting to the cloest otherRooms first
@@ -57,8 +62,8 @@ public class ComplexGenAlgo : GenAlgo
 
                     if (nextDoor) break;
                 }
-            }
 
+            }
         }
     }
 
@@ -67,36 +72,35 @@ public class ComplexGenAlgo : GenAlgo
     private bool ConnectDoors(Door door, Door otherDoor)
     {
 
-        // TODO: REMOVE - FOR TESTING ONLY
-        Container baseContainer = new Container(map, baseContainerType);
-        map.AddContainer(baseContainer);
-        map.SetTile(otherDoor.x, otherDoor.y,
-            new Tile(otherDoor.x, otherDoor.y, map, earthTileType),
-            baseContainer);
+        // open up both door areas to prepare for the path
+        /*
+        map.OpenDoorArea(door, earthTileType);
+        map.OpenDoorArea(otherDoor, earthTileType);
+        Pair<int,int> behindPair = Utilities.CordInDirection(Utilities.Behind(otherDoor.direction), otherDoor.x, otherDoor.y);
+        map.CreateTileAndSetTile(behindPair, otherDoor.room, earthTileType);
+        */
 
-        Pair<int,int> oneOutsideOtherDoorPair = Utilities.CordInDirection(otherDoor.direction, new Pair<int, int>(otherDoor.x, otherDoor.y));
-        /*map.SetTile(oneOutsideOtherDoorPair.First, oneOutsideOtherDoorPair.Second,
-            new Tile(oneOutsideOtherDoorPair.First, oneOutsideOtherDoorPair.Second, map, earthTileType),
-            baseContainer);
-            */
-        otherDoor = new Door(oneOutsideOtherDoorPair.First, oneOutsideOtherDoorPair.Second, otherDoor.direction);
+        Pair<int,int> doorPushedPair = Utilities.CordInDirection(door.direction, door.x, door.y);
+        Pair<int, int> otherDoorPushedPair = Utilities.CordInDirection(otherDoor.direction, otherDoor.x, otherDoor.y);
 
-        map.SetTile(door.x, door.y,
-            new Tile(door.x, door.y, map, earthTileType),
-            baseContainer);
+        Door doorPushed = new Door(doorPushedPair.First, doorPushedPair.Second, door.direction, door.room, door.radius);
+        Door otherDoorPushed = new Door(otherDoorPushedPair.First, otherDoorPushedPair.Second, otherDoor.direction, otherDoor.room, otherDoor.radius);
+
+        map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.room, earthTileType);
 
         // The pair contains the current tile and the parent tile
         Queue<Link> queue = new Queue<Link>();
 
-        Tile currTile = map.GetTile(door.x, door.y);
+        Tile currTile = map.GetTile(doorPushed.x, doorPushed.y);
 
         // Given a tile, return true if this tile has been searched, otherwise false. This
         // dict is modified in AddToQueue() as once a path has been added, it has been
         // searched.
         Dictionary<Tile, bool> tileHasBeenSearched = new Dictionary<Tile, bool>();
 
-        Link currLink = AddToQueue(currTile, null, queue, tileHasBeenSearched, door.direction, false, true);
+        Link currLink = AddToQueue(currTile, null, queue, tileHasBeenSearched, doorPushed.direction);
 
+        /*
         int halfWayInbetweenRooms = (int)Mathf.Ceil(((float)spaceBetweenRooms) / 2.0f);
 
         for (int i = 0; i < halfWayInbetweenRooms; i++)
@@ -104,58 +108,45 @@ public class ComplexGenAlgo : GenAlgo
             currLink = AddToQueue(currLink, door.direction, queue, tileHasBeenSearched, false, true);
         }
         queue.Enqueue(currLink);
+        */
 
         Link endLink = null;
 
         while(endLink == null && queue.Count != 0)
         {                                    
-            endLink = BFSStep(queue, tileHasBeenSearched, otherDoor);
+            endLink = BFSStep(queue, tileHasBeenSearched, otherDoorPushed);
         }
 
-        if(endLink != null)
+        /*
+        // close the door area
+        map.OpenDoorArea(door, wallTileType);
+        map.OpenDoorArea(otherDoor, wallTileType);
+        */
+
+        map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.room, wallTileType);
+
+        // successful path found
+        if (endLink != null)
         {
+            //add the path to the map
             ModifyMapWithLinks(endLink);
+
+
+            //add openings to the door areas
+            map.CreateTileAndSetTile(door.x, door.y, door.room, pathTileType);
+            map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.room, pathTileType);
+
+            // never use the doors again
+            door.Destroy();
+            otherDoor.Destroy();
 
             return true;
         }
 
+
         return false;
-        /*
-
-        List<Pair<int, int>> path = new List<Pair<int,int>>();
-
-
-        // Given a tile, return true if this tile has been searched, otherwise false. This
-        // dict is modified in AddToPath() as once a path has been added, it has been
-        // searched.
-        Dictionary<Tile, bool> tileHasBeenSearched = new Dictionary<Tile, bool>();
-
-        // Add the starting tile, the door, to the path. This is necessary to
-        // use AddToPath as a single tile needs to exist in path
-        path.Add(new Pair<int, int>(door.x, door.y));
-
-        // Since we added to the path, we need to search that tile. This is done automatically
-        // in AddToPath()
-        SearchTile(tileHasBeenSearched, path);
-
-        // Add the first few tiles to the path. These are the tiles that leave
-        // the door and go outside of the room.
-        for (int i = 0; i < halfWayInbetweenRooms; i++)
-        {
-            AddToPath(path, door.direction, tileHasBeenSearched);
-        }
-
-        // If the BFS is successful (finds the otherDoor), then use the
-        // populated path to draw a path on the map
-        if (BFSStep(path, tileHasBeenSearched, otherDoor))
-        {
-            ModifyMapUsingPath(path);
-        }
-
-        return true;
-
-        */
     }
+
 
     private Link BFSStep(Queue<Link> queue, Dictionary<Tile, bool> tileHasBeenSearched, Door otherDoor)
     {
@@ -163,15 +154,35 @@ public class ComplexGenAlgo : GenAlgo
 
         foreach(Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
         {
+            if (!CanTakeThisDirection(link, direction)) continue;
+
             Link newLink = AddToQueue(link, direction, queue, tileHasBeenSearched);
 
+            // Check to see if the goal has been reached
             if(newLink != null && newLink.currTile.x == otherDoor.x && newLink.currTile.y == otherDoor.y)
             {
-                return link;
+                return newLink;
             }
         }
 
         return null;
+    }
+
+    private bool CanTakeThisDirection(Link link, Utilities.Direction direction)
+    {
+        return true;
+        List<Utilities.Turn> turnsToCheck = new List<Utilities.Turn>();
+
+        switch(Utilities.GetTurn(link.currTileDirection, direction))
+        {
+            case Utilities.Turn.FORWARD:
+                return true;
+
+            case Utilities.Turn.LEFT:
+                turnsToCheck.Add(Utilities.Turn.FORWARD);
+
+
+        }
     }
 
     private void ModifyMapWithLinks(Link currLink)
@@ -195,20 +206,16 @@ public class ComplexGenAlgo : GenAlgo
         Link parentLink,
         Queue<Link> queue,
         Dictionary<Tile, bool> tileHasBeenSearched,
-        Utilities.Direction direction,
-        bool addToQueue = true,
-        bool ignoreIsValidTile = false
+        Utilities.Direction direction
     )
     {
-        if (currTile == null) return null;
+        if (!IsValidTile(currTile, tileHasBeenSearched, direction)) return null;
 
-        if (!ignoreIsValidTile && !IsValidTile(currTile, tileHasBeenSearched, direction)) return null;
-
-        Link currLink = new Link(currTile, parentLink);
+        Link currLink = new Link(currTile, parentLink, direction);
 
         if (currLink == null) return null;
 
-        if(addToQueue) queue.Enqueue(currLink);
+        queue.Enqueue(currLink);
 
         SearchTile(tileHasBeenSearched, currTile);
 
@@ -219,9 +226,7 @@ public class ComplexGenAlgo : GenAlgo
         Link parentLink,
         Utilities.Direction direction,
         Queue<Link> queue,
-        Dictionary<Tile, bool> tileHasBeenSearched,
-        bool addToQueue = true,
-        bool ignoreIsValidTile = false
+        Dictionary<Tile, bool> tileHasBeenSearched
     )
     {
         if (parentLink == null) return null;
@@ -254,133 +259,8 @@ public class ComplexGenAlgo : GenAlgo
 
         Tile currTile = map.GetTile(newX, newY);
 
-        return AddToQueue(currTile, parentLink, queue, tileHasBeenSearched, direction, addToQueue, ignoreIsValidTile);
+        return AddToQueue(currTile, parentLink, queue, tileHasBeenSearched, direction);
     }
-
-    /*
-    // returns true if the door has been reached, otherwise false
-    private bool BFSStep(List<Pair<int, int>> path, Dictionary<Tile, bool> tileHasBeenSearched, Door door)
-    {
-        //A door has been found
-        if(Utilities.EndOfList(path).First == door.x && Utilities.EndOfList(path).Second == door.y)
-        {
-            return true;
-        }
-
-        
-        int currX = Utilities.EndOfList(path).First;
-        int currY = Utilities.EndOfList(path).Second;
-        int destX = door.x;
-        int destY = door.y;
-
-        float angle = Utilities.GetAngle(currX, currY, destX, destY);
-
-        if(Utilities.RandomIntInRange(0, 700) == 0)
-        {
-            Debug.Log(currX + " " + currY + " " + destX + " " + destY + " " + angle);
-        }
-
-        Utilities.Direction[] directionAttemptOrder;
-
-        if (angle >= 0 && angle < 45)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.EAST, Utilities.Direction.NORTH, Utilities.Direction.SOUTH, Utilities.Direction.WEST };
-        else if (angle >= 45 && angle < 90)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.NORTH, Utilities.Direction.EAST, Utilities.Direction.SOUTH, Utilities.Direction.WEST };
-        else if (angle >= 90 && angle < 135)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.NORTH, Utilities.Direction.WEST, Utilities.Direction.EAST, Utilities.Direction.SOUTH };
-        else if (angle >= 135 && angle < 180)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.WEST, Utilities.Direction.NORTH, Utilities.Direction.SOUTH, Utilities.Direction.EAST };
-        else if (angle >= 180 && angle < 225)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.WEST, Utilities.Direction.SOUTH, Utilities.Direction.NORTH, Utilities.Direction.EAST };
-        else if (angle >= 225 && angle < 270)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.SOUTH, Utilities.Direction.WEST, Utilities.Direction.SOUTH, Utilities.Direction.NORTH };
-        else if (angle >= 270 && angle < 315)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.SOUTH, Utilities.Direction.EAST, Utilities.Direction.NORTH, Utilities.Direction.WEST };
-        else // if (angle >= 315 && angle < 360)
-            directionAttemptOrder = new Utilities.Direction[] { Utilities.Direction.EAST, Utilities.Direction.SOUTH, Utilities.Direction.NORTH, Utilities.Direction.WEST };
-        
-
-        // for each direction at the end of the path
-        foreach (Utilities.Direction direction in directionAttemptOrder)// Utilities.Direction.GetValues(typeof(Utilities.Direction)))
-        {
-            if(AddToPath(path, direction, tileHasBeenSearched))
-            {
-                if(BFSStep(path, tileHasBeenSearched, door))
-                {
-                    // recursing further reached the door, thus no
-                    // more searching needs to be done
-                    return true;
-                }
-
-                //that BFSStep did not reach a door, undo it
-                Utilities.RemoveEndOfList(path);
-            }
-        }
-
-        return false;
-    }
-    */
-
-    /*
-    private void ModifyMapUsingPath(List<Pair<int, int>> path)
-    {
-        // todo: choose a more specific container type for the path's container
-        Container container = new Container(map, baseContainerType);
-        map.AddContainer(container);
-
-        foreach(Pair<int, int> cord in path)
-        {
-            Tile tile = new Tile(cord.First, cord.Second, map, pathTileType);
-            map.SetTile(cord.First, cord.Second, tile, container);
-        }
-
-    }
-    */
-
-    /*
-    // If can add to path, do so and return true. If cant (tile has been searched already),
-    // dont add to path and return false.
-    private bool AddToPath(List<Pair<int, int>> path, Utilities.Direction direction, Dictionary<Tile, bool> tileHasBeenSearched)
-    {
-        int currX = Utilities.EndOfList(path).First;
-        int currY = Utilities.EndOfList(path).Second;
-
-        int newX, newY;
-
-        switch (direction)
-        {
-            case Utilities.Direction.NORTH:
-                newX = currX;
-                newY = currY - 1;
-                break;
-            case Utilities.Direction.SOUTH:
-                newX = currX;
-                newY = currY + 1;
-                break;
-            case Utilities.Direction.WEST:
-                newX = currX - 1;
-                newY = currY;
-                break;
-            case Utilities.Direction.EAST:
-                newX = currX + 1;
-                newY = currY;
-                break;
-            default:
-                newX = currX;
-                newY = currY;
-                break;
-        }
-
-        Tile potentialTile = map.GetTile(newX, newY);
-
-        if (!IsValidTile(potentialTile, tileHasBeenSearched)) return false;
-
-        path.Add(new Pair<int, int>(newX, newY));
-
-        SearchTile(tileHasBeenSearched, path);
-
-        return true;
-    }*/
 
     private bool IsValidTile(Tile potentialTile, Dictionary<Tile, bool> tileHasBeenSearched, Utilities.Direction direction)
     {
@@ -393,13 +273,12 @@ public class ComplexGenAlgo : GenAlgo
             return false;
         }
 
-        int radius = 2;
         Pair<int, int> currLeftOfPair = new Pair<int, int>(potentialTile.x, potentialTile.y);
         Pair<int, int> currRightOfPair = new Pair<int, int>(potentialTile.x, potentialTile.y);
         Utilities.Direction leftOf = Utilities.LeftOf(direction);
         Utilities.Direction rightOf = Utilities.RightOf(direction);
 
-        for(int i = 0; i < radius; i++)
+        for(int i = 0; i < spaceBetweenRooms / 2; i++)
         {
             currLeftOfPair = Utilities.CordInDirection(leftOf, currLeftOfPair);
             currRightOfPair = Utilities.CordInDirection(rightOf, currRightOfPair);
@@ -412,7 +291,15 @@ public class ComplexGenAlgo : GenAlgo
                 return false;
         }
 
+        Pair<int, int> forwardPair = Utilities.CordInDirection(direction, potentialTile.x, potentialTile.y);
+        if (!IsValidSurroundingTile(forwardPair)) return false;
+
         return true;
+    }
+
+    private bool IsValidSurroundingTile(int x, int y)
+    {
+        return IsValidSurroundingTile(new Pair<int, int>(x, y));
     }
 
     private bool IsValidSurroundingTile(Pair<int, int> pair)
@@ -483,7 +370,7 @@ public class ComplexGenAlgo : GenAlgo
         // If we can, add the room to the map as well as generating the tiles and placing the
         // tiles on the map.
         map.AddContainer(room);
-        room.GenRoom();
+        room.GenRoom(spaceBetweenRooms / 2);
     }
     
 
@@ -494,10 +381,12 @@ public class Link
 {
     public Tile currTile;
     public Link parentLink;
+    public Utilities.Direction currTileDirection;
 
-    public Link(Tile currTile, Link parentLink)
+    public Link(Tile currTile, Link parentLink, Utilities.Direction currTileDirection)
     {
         this.currTile = currTile;
         this.parentLink = parentLink;
+        this.currTileDirection = currTileDirection;
     }
 }

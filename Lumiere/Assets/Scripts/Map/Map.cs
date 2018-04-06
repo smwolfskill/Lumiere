@@ -57,6 +57,18 @@ public class Map
         return tile;
     }
 
+    public Tile CreateTileAndSetTile(int x, int y, Container container, TileType tileType)
+    {
+        Tile tile = new Tile(x, y, this, tileType);
+
+        return SetTile(x, y, tile, container);
+    }
+
+    public Tile CreateTileAndSetTile(Pair<int, int> pair, Container container, TileType tileType)
+    {
+        return CreateTileAndSetTile(pair.First, pair.Second, container, tileType);
+    }
+
     public List<Tile> GetTiles()
     {
         List<Tile> tiles = new List<Tile> ();
@@ -267,6 +279,25 @@ public class Map
             closestRoomsByDistance = closestRoomsByDistance.OrderBy(i => i.Second).ToList();
 
             room.closestOtherRooms = closestRoomsByDistance.Select(i => i.First).ToList();
+        }
+    }
+
+    public void OpenDoorArea(Door door, TileType tileType)
+    {
+        CreateTileAndSetTile(door.x, door.y, door.room, tileType);
+
+        Pair<int, int> currLeftOfPair = new Pair<int, int>(door.x, door.y);
+        Pair<int, int> currRightOfPair = new Pair<int, int>(door.x, door.y);
+        Utilities.Direction leftOf = Utilities.LeftOf(door.direction);
+        Utilities.Direction rightOf = Utilities.RightOf(door.direction);
+
+        for (int i = 0; i < door.radius; i++)
+        {
+            currLeftOfPair = Utilities.CordInDirection(leftOf, currLeftOfPair);
+            currRightOfPair = Utilities.CordInDirection(rightOf, currRightOfPair);
+
+            CreateTileAndSetTile(currLeftOfPair, door.room, tileType);
+            CreateTileAndSetTile(currRightOfPair, door.room, tileType);
         }
     }
 }

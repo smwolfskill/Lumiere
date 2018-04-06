@@ -14,6 +14,27 @@ public class Utilities : MonoBehaviour
         WEST
     }
 
+    public enum Turn
+    {
+        FORWARD,
+        BACKWARD,
+        LEFT,
+        RIGHT
+    }
+
+    public static Turn GetTurn(Direction currDir, Direction nextDir)
+    {
+        if (currDir == nextDir) return Turn.FORWARD;
+
+        if (LeftOf(currDir) == nextDir) return Turn.LEFT;
+
+        if (RightOf(currDir) == nextDir) return Turn.RIGHT;
+
+        if (Behind(currDir) == nextDir) return Turn.BACKWARD;
+
+        return Turn.FORWARD;
+    }
+
     public static Direction LeftOf(Direction direction)
     {
         switch(direction)
@@ -43,6 +64,23 @@ public class Utilities : MonoBehaviour
                 return Direction.WEST;
             case Direction.WEST:
                 return Direction.NORTH;
+        }
+
+        return Direction.NORTH;
+    }
+
+    public static Direction Behind(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.NORTH:
+                return Direction.SOUTH;
+            case Direction.EAST:
+                return Direction.WEST;
+            case Direction.SOUTH:
+                return Direction.NORTH;
+            case Direction.WEST:
+                return Direction.EAST;
         }
 
         return Direction.NORTH;
