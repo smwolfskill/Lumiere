@@ -9,10 +9,11 @@ public class Inventory
 {
     public InventoryPanel uiPanel;
 
-    protected int width;          // Width in blocks.
-    protected int height;         // Height in blocks.
+    protected int width;                // Width in blocks.
+    protected int height;               // Height in blocks.
 
-    protected GameItem[,] items;  // Array of items.
+    protected GameItem[,] items;        // Array of items.
+    protected EquipmentManager equips;  // Equipment management.
 
     /// <summary>
     /// Constructor for an inventory.
@@ -25,6 +26,7 @@ public class Inventory
         this.height = nHeight;
 
         this.items = new GameItem[width, height];
+        this.equips = new EquipmentManager();
     }
 
     /// <summary>
@@ -37,6 +39,7 @@ public class Inventory
         this.height = inv.height;
 
         this.items = new GameItem[width, height];
+        this.equips = new EquipmentManager();
 
         for (int i = 0; i < width; i++)
         {
@@ -58,6 +61,11 @@ public class Inventory
         }
     }
 
+    /// <summary>
+    /// Updates the UI quantity text at slot x and y.
+    /// </summary>
+    /// <param name="x">Location to be updated (x).</param>
+    /// <param name="y">Location to be updated (y).</param>
     public void UpdateUIQuantityText(int x, int y)
     {
         if(uiPanel != null)
@@ -92,6 +100,15 @@ public class Inventory
     public GameItem[,] GetItems()
     {
         return this.items;
+    }
+
+    /// <summary>
+    /// Gets the equipment manager of the inventory.
+    /// </summary>
+    /// <returns>Equipment storage system for items.</returns>
+    public EquipmentManager getEquipment()
+    {
+        return this.equips;
     }
     #endregion
 
