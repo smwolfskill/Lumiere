@@ -58,7 +58,6 @@ public class EquipmentManager
     /// <returns>The item if it was removed, null if there was no item or removal somehow failed.</returns>
     public EquippableItem DeEquip(EquipSlot slot)
     {
-        // TODO: Implement.
         int index = (int) slot;
         if (index < 0 || index >= equipment.Length) 
         {
@@ -147,8 +146,21 @@ public class EquipmentManager
     /// <returns>Total percentage boost of speed modifiers on equipment.</returns>
     public double GetSpeedModifier()
     {
-        // TODO: Implement.
-        return 0.0;
+        double modifier = 0.0;
+        for (int i = 0; i < Enum.GetNames(typeof(EquipSlot)).Length; i++)
+        {
+            EquippableItem currEquip = equipment[i];
+            // Dummy Checks, two layers deep.
+            if (currEquip != null)
+            {
+                if (currEquip is ArmorItem)
+                {
+                    ArmorItem armor = (ArmorItem)currEquip;
+                    modifier += armor.SpeedModifier;
+                }
+            }
+        }
+        return modifier;
     }
 
     /// <summary>
@@ -157,8 +169,21 @@ public class EquipmentManager
     /// <returns>Total percentage boost of damage modifiers on equipment.</returns>
     public double GetDamageModifier()
     {
-        // TODO: Implement.
-        return 0.0;
+        double modifier = 0.0;
+        for (int i = 0; i < Enum.GetNames(typeof(EquipSlot)).Length; i++)
+        {
+            EquippableItem currEquip = equipment[i];
+            // Dummy Checks, two layers deep.
+            if (currEquip != null)
+            {
+                if (currEquip is ArmorItem)
+                {
+                    ArmorItem armor = (ArmorItem)currEquip;
+                    modifier += armor.DamageModifier;
+                }
+            }
+        }
+        return modifier;
     }
 
     /// <summary>
@@ -167,8 +192,21 @@ public class EquipmentManager
     /// <returns>Total armor rating of all armor pieces.</returns>
     public double GetArmorRating()
     {
-        // TODO: Implement.
-        return 0.0;
+        double armorRating = 0.0;
+        for (int i = 0; i < Enum.GetNames(typeof(EquipSlot)).Length; i++)
+        {
+            EquippableItem currEquip = equipment[i];
+            // Dummy Checks, two layers deep.
+            if (currEquip != null)
+            {
+                if (currEquip is ArmorItem)
+                {
+                    ArmorItem armor = (ArmorItem)currEquip;
+                    armorRating += armor.Armor;
+                }
+            }
+        }
+        return armorRating;
     }
     #endregion
 }
