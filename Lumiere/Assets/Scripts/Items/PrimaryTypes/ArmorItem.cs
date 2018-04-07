@@ -11,6 +11,11 @@ class ArmorItem : EquippableItem
     private double armor;
     private double damageModifier;
 
+    public ArmorItem(EquipmentManager.EquipSlot slot = EquipmentManager.EquipSlot.CHEST, double armor = 1.0, double speedModifier = 0.0, double damageModifier = 0.0) : base(slot)
+    {
+
+    }
+
     /// <summary>
     /// Base Equippable Item constructor.
     /// <param name="armor">Armor Value.</param>
