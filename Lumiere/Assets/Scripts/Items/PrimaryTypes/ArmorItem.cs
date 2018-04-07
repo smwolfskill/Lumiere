@@ -13,7 +13,7 @@ class ArmorItem : EquippableItem
 
     public ArmorItem(EquipmentManager.EquipSlot slot = EquipmentManager.EquipSlot.CHEST, double armor = 1.0, double speedModifier = 0.0, double damageModifier = 0.0) : base(slot)
     {
-
+        InitArmor(armor, speedModifier, damageModifier);
     }
 
     /// <summary>
