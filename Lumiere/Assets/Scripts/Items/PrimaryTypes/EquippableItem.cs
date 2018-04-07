@@ -36,6 +36,15 @@ public class EquippableItem : GameItem
     }
 
     /// <summary>
+    /// Constructor that only requires the slot information.
+    /// </summary>
+    /// <param name="newSlot">Slot to place the item into for equipment.</param>
+    public EquippableItem(EquipmentManager.EquipSlot newSlot = EquipmentManager.EquipSlot.CHEST) : base()
+    {
+        this.slot = newSlot;
+    }
+
+    /// <summary>
     /// Getters and Setters for the slot.
     /// </summary>
     public EquipmentManager.EquipSlot Slot
