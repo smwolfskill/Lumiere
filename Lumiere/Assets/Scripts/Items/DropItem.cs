@@ -59,7 +59,7 @@ public class DropItem : EntityAction
     /// <returns>Returns true if the item was picked up successfully, false otherwise.</returns>
     public override bool Execute(GameObject obj)
     {
-        bool stackModifierInput = Input.GetKeyDown(SettingsManager.GetStackModifier()); //if pressed, will drop entire stack
+        bool stackModifierInput = Input.GetKey(SettingsManager.GetStackModifier()); //if pressed, will drop entire stack
         int amountToDrop = 1;
         if(stackModifierInput)
         {

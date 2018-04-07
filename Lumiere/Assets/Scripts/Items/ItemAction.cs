@@ -6,7 +6,7 @@ public abstract class ItemAction : EntityAction
 {
     public int itemID;
 
-    protected float lastInput = 0.0f;
+    protected bool lastInput = false;
     protected InventoryPanel invPanel;
     protected GameItem toUse;
     protected int useX;
@@ -14,8 +14,8 @@ public abstract class ItemAction : EntityAction
 
     public bool UseItemInput()
     {
-        float useItemInput = Input.GetAxis("UseItem");
-        bool inputChanged = useItemInput > 0.0 && useItemInput != lastInput;
+        bool useItemInput = Input.GetKeyDown(SettingsManager.GetUseItem());
+        bool inputChanged = useItemInput && useItemInput != lastInput;
         lastInput = useItemInput;
         return inputChanged;
     }
