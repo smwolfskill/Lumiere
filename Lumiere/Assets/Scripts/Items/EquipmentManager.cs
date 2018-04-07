@@ -47,6 +47,11 @@ public class EquipmentManager
             return false;
         }
 
+        if (equipment[(int)item.Slot] != null)
+        {
+            return false;
+        }
+
         equipment [(int) item.Slot] = item;
         return true;
     }
