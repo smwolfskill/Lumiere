@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Lumiere/Actions/DropItem")]
 public class DropItem : EntityAction
 {
-    private float lastInput = 0.0f;
+    private bool lastInput = false;
     //private InventoryBehavior invBehavior = null;
     private InventoryPanel invPanel = null;
     private GameItem toDrop = null;
@@ -19,8 +19,8 @@ public class DropItem : EntityAction
     /// <returns>Return false if no item clicked upon, or player not in range of the object.</returns>
     public override bool Validate(GameObject obj)
     {
-        float dropItem = Input.GetAxis("DropItem");
-        bool inputChanged = dropItem > 0.0 && dropItem != lastInput;
+        bool dropItem = Input.GetKeyDown(SettingsManager.GetDropItem());
+        bool inputChanged = dropItem && dropItem != lastInput;
         lastInput = dropItem;
         if(inputChanged)
         {
@@ -59,9 +59,9 @@ public class DropItem : EntityAction
     /// <returns>Returns true if the item was picked up successfully, false otherwise.</returns>
     public override bool Execute(GameObject obj)
     {
-        float stackModifierInput = Input.GetAxis("StackModifier"); //if pressed, will drop entire stack
+        bool stackModifierInput = Input.GetKeyDown(SettingsManager.GetStackModifier()); //if pressed, will drop entire stack
         int amountToDrop = 1;
-        if(stackModifierInput > 0.0)
+        if(stackModifierInput)
         {
             amountToDrop = toDrop.Quantity;
         }
