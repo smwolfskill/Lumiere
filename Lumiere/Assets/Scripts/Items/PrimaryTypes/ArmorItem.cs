@@ -11,6 +11,13 @@ class ArmorItem : EquippableItem
     private double armor;
     private double damageModifier;
 
+    /// <summary>
+    /// Armor constructor.
+    /// <param name="slot">The slot the item can be placed into.</param>
+    /// <param name="armor">Armor Value.</param>
+    /// <param name="speedModifier">How much this armor affects the player's velocity. (0 = 0% boost; 100.0 = 100% boost)</param>
+    /// <param name="damageModifier">How much this armor affects the player's damage output. (0 = 0% boost; 100.0 = 100% boost)</param>
+    /// </summary>
     public ArmorItem(EquipmentManager.EquipSlot slot = EquipmentManager.EquipSlot.CHEST, double armor = 1.0, double speedModifier = 0.0, double damageModifier = 0.0) : base(slot)
     {
         InitArmor(armor, speedModifier, damageModifier);
