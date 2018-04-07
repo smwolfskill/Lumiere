@@ -27,6 +27,7 @@ public class PickupItem : EntityAction
         bool clickedOnItem = false;
         if(pickupItemInput && pickupItemInput != lastInput)
         {
+            //Still uses mouse click because otherwise cannot know which item(s) in radius to pickup!
             //Gather 3D mouse position and raycasting information
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 origin = obj.transform.position;    //location of the object (player)
