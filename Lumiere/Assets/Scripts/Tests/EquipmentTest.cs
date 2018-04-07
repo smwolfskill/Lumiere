@@ -41,7 +41,7 @@ class EquipmentTest
         EquippableItem chestAgain = equips.GetEquippedItem(EquipmentManager.EquipSlot.CHEST);
         Assert.IsNotNull(chestAgain);
         Assert.IsInstanceOf<ArmorItem>(chestAgain);
-        Assert.Equals(10, ((ArmorItem)chestAgain).Armor);
+        Assert.AreEqual(10, ((ArmorItem)chestAgain).Armor);
 
         // Test that the ring is equipped to the ring slot.
         Assert.IsTrue(equips.Equip(ring));
@@ -111,7 +111,7 @@ class EquipmentTest
         UsableItem removed = equips.RemoveHotBarItem(5);
         Assert.IsNotNull(removed);
         Assert.IsNull(equips.GetHotbarItem(5));
-        Assert.Equals(0, weapon.Name.CompareTo(removed.Name));
+        Assert.AreEqual(0, weapon.Name.CompareTo(removed.Name));
     }
 
     /// <summary>
@@ -125,13 +125,13 @@ class EquipmentTest
         equips.Equip(chestPlate);
 
         // Tests that the damage adding utility works.
-        Assert.Equals(12,equips.GetDamageModifier());
+        Assert.AreEqual(12, equips.GetDamageModifier());
 
         // Tests that the speed adding utility works.
-        Assert.Equals(30, equips.GetSpeedModifier());
+        Assert.AreEqual(30, equips.GetSpeedModifier());
 
 
         // Tests that the armor rating utility works.
-        Assert.Equals(11, equips.GetArmorRating());
+        Assert.AreEqual(11, equips.GetArmorRating());
     }
 }
