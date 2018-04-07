@@ -6,10 +6,12 @@ using System.IO;
 
 public static class SettingsManager
 {
+    public static bool loaded = false;
     private static Settings settings;
 
     public static bool LoadSettings(string file_path) //TODO: main game loop load settings upon game launch
     {
+        loaded = true;
         try
         {
             using (StreamReader r = new StreamReader(file_path))
@@ -22,6 +24,9 @@ public static class SettingsManager
         } 
         catch 
         {
+            Debug.Log("Setting default settings.");
+            //Problem with loading from file, so set default settings.
+            settings = new Settings();
             return false;
         }
     }
@@ -86,7 +91,38 @@ public static class SettingsManager
     }
     #endregion
 
+    public static bool SetKey(string key, string settingName)
+    {
+        switch(settingName)
+        {
+            case "moveUp": return SetMoveUp(key);
+                break;
+            case "moveDown": return SetMoveDown(key);
+                break;
+            case "moveLeft": return SetMoveLeft(key);
+                break;
+            case "moveRight": return SetMoveRight(key);
+                break;
+            case "useItem": return SetUseItem(key);
+                break;
+            case "dropItem": return SetDropItem(key);
+                break;
+            case "pickupItem": return SetPickupItem(key);
+                break;
+            case "openInventory": return SetOpenInventory(key);
+                break;
+            case "stackModifier": return SetStackModifier(key);
+                break;
+            default: return false;
+        }
+    }
+
     #region Setters
+    public static void SetDifficulty(Settings.Difficulty difficulty)
+    {
+        settings.difficulty = difficulty; 
+    }
+
     public static bool SetMoveUp(string key)
     {
         if(IsValidKeyCode(key))

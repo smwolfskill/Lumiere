@@ -1,0 +1,88 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Experimental.UIElements;
+
+public class SettingsButton : MonoBehaviour 
+{
+    public string settingName;
+    public UnityEngine.UI.Button button;
+    private bool pressed = false;   //true indicates button has been pressed
+    private bool sameClick = false; //true indicates that it's the same instance of Mouse0 being clicked.
+	
+	void Start () 
+    {
+        pressed = false;
+        sameClick = false;
+        button.onClick.AddListener(OnClick);
+        if(!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
+        {
+            SettingsManager.LoadSettings("TODO elsewhere"); //will load default settings since loading from file will fail
+        }
+	}
+	
+	void Update ()
+    {
+        if(pressed)
+        {
+            string key = "";
+            bool keyPressed = false;
+            Event e = new Event();
+            while (Event.PopEvent(e))
+            {
+                if (e.rawType == EventType.MouseDown)
+                {
+                    if(sameClick)
+                    {
+                        sameClick = false;
+                    }
+                    else 
+                    {
+                        keyPressed = true;
+                        key = "Mouse" + e.button;
+                        if(e.button == 0)
+                        {
+                            sameClick = true;
+                        }
+                        //Debug.Log("Mouse up " + e.button);
+                    }
+                }
+                if (e.rawType == EventType.KeyDown)
+                {
+                    keyPressed = true;
+                    //Debug.Log("KeyCode: " + e.keyCode);
+                    key = e.keyCode.ToString();
+                    sameClick = false;
+                }
+            }
+
+            if(keyPressed)
+            {
+                Debug.Log("Setting key '" + key + "'");
+                if(!SettingsManager.SetKey(key, settingName))
+                {
+                    Debug.Log("Setting failed!");
+                }
+                pressed = false;
+                button.onClick.AddListener(OnClick);
+                return;
+            }
+        }
+	}
+
+    void OnClick()
+    {
+        if(!sameClick)
+        {
+            Debug.Log("pressed");
+            pressed = true;
+            sameClick = true;
+            button.onClick.RemoveListener(OnClick); //to allow mouse clicks, disable button interaction until after user presses key
+        }
+        else
+        {
+            sameClick = false;
+        }
+    }
+}
