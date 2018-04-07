@@ -10,8 +10,8 @@ public class SettingsButton : MonoBehaviour
     public UnityEngine.UI.Button button;
     private bool pressed = false;   //true indicates button has been pressed
     private bool sameClick = false; //true indicates that it's the same instance of Mouse0 being clicked.
-	
-	void Start () 
+    
+    void Start () 
     {
         pressed = false;
         sameClick = false;
@@ -20,9 +20,10 @@ public class SettingsButton : MonoBehaviour
         {
             SettingsManager.LoadSettings("TODO elsewhere"); //will load default settings since loading from file will fail
         }
-	}
-	
-	void Update ()
+        button.GetComponentInChildren<Text>().text = SettingsManager.GetKey(settingName).ToString();
+    }
+    
+    void Update ()
     {
         if(pressed)
         {
@@ -66,10 +67,11 @@ public class SettingsButton : MonoBehaviour
                 }
                 pressed = false;
                 button.onClick.AddListener(OnClick);
+                button.GetComponentInChildren<Text>().text = key;
                 return;
             }
         }
-	}
+    }
 
     void OnClick()
     {

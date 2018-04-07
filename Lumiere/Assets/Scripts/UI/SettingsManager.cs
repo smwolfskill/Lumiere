@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 //using NUnit.Framework;
 
 public static class SettingsManager
@@ -90,6 +91,32 @@ public static class SettingsManager
         return StringToKeyCode(settings.useItem);
     }
     #endregion
+    
+    public static KeyCode GetKey(string settingName)
+    {
+        switch(settingName)
+        {
+            case "moveUp": return GetMoveUp();
+                break;
+            case "moveDown": return GetMoveDown();
+                break;
+            case "moveLeft": return GetMoveLeft();
+                break;
+            case "moveRight": return GetMoveRight();
+                break;
+            case "useItem": return GetUseItem();
+                break;
+            case "dropItem": return GetDropItem();
+                break;
+            case "pickupItem": return GetPickupItem();
+                break;
+            case "openInventory": return GetOpenInventory();
+                break;
+            case "stackModifier": return GetStackModifier();
+                break;
+            default: throw new ArgumentException("settingName");
+        }
+    }
 
     public static bool SetKey(string key, string settingName)
     {

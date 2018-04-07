@@ -32,8 +32,8 @@ public class Settings
         moveRight = "D";
         useItem = "E";
         dropItem = "Q";
-        pickupItem = "Mouse 0";
-        stackModifier = "Shift";
+        pickupItem = "Mouse0";
+        stackModifier = "LeftShift";
         openInventory = "Tab";
     }
 
