@@ -56,6 +56,7 @@ public abstract class EntityObject
 
     virtual protected void Die()
     {
+        Object.Destroy(gameObject);
         this.isDead = true;
     }
 
