@@ -5,12 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Lumiere/Actions/PlayerAttack")]
 public class PlayerAttack : EntityAction
 {
-    private UsableItem weapon;
+    private WeaponItem weapon;
+    private EntityHealthManager targetHM;
 
     /// <summary>
     /// Checks whether the player can attack a monster
     /// </summary>
-    /// <param name="obj">The Player's GameObject</param>
+    /// <param name="_player">The Player's GameObject</param>
     /// <returns>true if the clicked on monster is within the hotbar's selected item's attack range</returns>
     public override bool Validate(GameObject _player)
     {
@@ -49,22 +50,26 @@ public class PlayerAttack : EntityAction
                 {
                     BoxCollider2D objCollider =
                         _player.GetComponent<BoxCollider2D>();
-                    float dist = Physics2D.Distance(objCollider,
-                                                    hit2D.collider).distance;
-                    float attackRange = 0.0f; // melee range (no weapon)
+                    double dist = Physics2D.Distance(objCollider,
+                                                     hit2D.collider).distance;
+                    double attackRange = 0.0f; // melee range (no weapon)
                     UsableItem selected = equips.GetSelectedItem();
+                    WeaponItem weapon = selected is WeaponItem ?
+                        (WeaponItem)selected : null;
 
-                    // TODO: check if hotbar item is weapon
-                    if (selected != null && selected.SetYet())
+                    // check if hotbar is a weapon and update the attack range
+                    if (weapon != null && weapon.SetYet())
                     {
-                        // TODO: update attack range
+                        attackRange = weapon.AttackRange;
                     }
  
                     if (dist <= attackRange)
                     {
                         // we are within the attack range
-                        this.weapon = selected;
+                        this.weapon = weapon;
                         this.target = ent;
+                        this.targetHM =
+                            target.GetComponent<EntityHealthManager>();
                         return true;
                     }
                 }
@@ -76,12 +81,17 @@ public class PlayerAttack : EntityAction
     /// <summary>
     /// Attack the target
     /// </summary>
-    /// <param name="obj">The Player's GameObject</param>
+    /// <param name="_player">The Player's GameObject</param>
     /// <returns>true if the attack succeeded (e.g. we didn't run out of arrows)</returns>
-    public override bool Execute(GameObject obj)
+    public override bool Execute(GameObject _player)
     {
-        // TODO: use weapon on target
-        Debug.Log("Attack!");
+        Player player;
+        float dmg;
+
+        player = (Player)_player.GetComponent<EntitySpriteManager>().entity;
+        dmg = weapon == null ? player.FisticuffDamage : weapon.Damage;
+        targetHM.InflictDamage(dmg);
+        
         return true;
     }
 }
