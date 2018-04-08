@@ -1,0 +1,12 @@
+{
+    "difficulty": 1,
+    "moveUp": "W",
+    "moveDown": "S",
+    "moveLeft": "G",
+    "moveRight": "S",
+    "useItem": "E",
+    "dropItem": "Q",
+    "pickupItem": "Mouse0",
+    "stackModifier": "LeftShift",
+    "openInventory": "Tab"
+}

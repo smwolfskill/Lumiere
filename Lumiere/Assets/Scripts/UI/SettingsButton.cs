@@ -87,4 +87,9 @@ public class SettingsButton : MonoBehaviour
             sameClick = false;
         }
     }
+
+    public void Reload()
+    {
+        button.GetComponentInChildren<Text>().text = SettingsManager.GetKey(settingName).ToString();
+    }
 }
