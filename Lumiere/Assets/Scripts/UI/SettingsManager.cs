@@ -7,7 +7,7 @@ using System;
 
 public static class SettingsManager
 {
-    public static bool loaded = false;
+    public static volatile bool loaded = false;
     private static Settings settings;
 
     public static bool LoadSettings(string file_path) //TODO: main game loop load settings upon game launch

@@ -9,12 +9,16 @@ public class UIBehavior : MonoBehaviour
     public GameObject tooltip;
     public bool inventoryVisible = false;
 
-    private float lastToggleInventoryInput = 0.0f; //last input to toggle inventory
+    private bool lastToggleInventoryInput = false; //last input to toggle inventory
     private Canvas canvas;
 
 	// Use this for initialization
 	void Start ()
     {
+        if(!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
+        {
+            SettingsManager.LoadSettings("TODO elsewhere"); //will load default settings since loading from file will fail
+        }
         canvas = GetComponent<Canvas>();
         //TODO in future iterations: add other methods of input which would open/close UI (e.g. Esc to open the menu).
         //Have UI inputs of greatest precedence (e.g. opening menu) at beginning of conditional 
@@ -57,8 +61,8 @@ public class UIBehavior : MonoBehaviour
 
     public bool ToggleInventoryInput()
     {
-        float toggleInventoryInput = Input.GetAxis("ToggleInventory");
-        bool toggleInventory = toggleInventoryInput > 0.0f && toggleInventoryInput != lastToggleInventoryInput;
+        bool toggleInventoryInput = Input.GetKeyDown(SettingsManager.GetOpenInventory());
+        bool toggleInventory = toggleInventoryInput && toggleInventoryInput != lastToggleInventoryInput;
         lastToggleInventoryInput = toggleInventoryInput;
         return toggleInventory;
     }
