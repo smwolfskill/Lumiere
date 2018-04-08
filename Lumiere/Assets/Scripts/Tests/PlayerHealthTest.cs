@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 using NUnit.Framework;
 using System.Collections;
 
@@ -7,11 +8,14 @@ using System.Collections;
 public class PlayerHealthTest
 {
     GameObject player;
+    GameObject camera;
     GameObject healthBarCanvas;
     GameObject canvasHealthBar;
+    GameObject invPanel;
     PlayerObject playerObject;
     GameObject playerHealthBar;
     EntityHealthManager playerHealthManager;
+    Player _player;
 
     /// <summary>
     /// Initialize the Player GameObject for use in all the tests.
@@ -20,6 +24,21 @@ public class PlayerHealthTest
     public void Init()
     {
         InitHealthBar();
+        _player = new Player();
+        camera = new GameObject("Main Camera",
+                                typeof(Camera),
+                                typeof(CameraFollow))
+        {
+            tag = "MainCamera"
+        };
+        camera.GetComponent<Camera>().enabled = true;
+        invPanel = new GameObject("Inventory Panel",
+                                  typeof(InventoryPanel),
+                                  typeof(GridLayoutGroup))
+        {
+            tag = "InventoryPanel"
+        };
+        invPanel.GetComponent<InventoryPanel>().entity = _player;
         player = new GameObject("Player", typeof(EntityHealthManager));
         playerHealthManager = player.GetComponent<EntityHealthManager>();
         playerObject = new PlayerObject(player, 100.0f);
