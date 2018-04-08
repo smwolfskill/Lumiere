@@ -23,14 +23,31 @@ public class EquipmentManager
     private EquippableItem[] equipment;
     private UsableItem[] hotbar;
 
+    private int _selection;
+    private int HotbarSelection
+    {
+        get
+        {
+            return _selection;
+        }
+        set
+        {
+            if (value >= 1 && value <= hotbar.Length)
+            {
+                _selection = value;
+            }
+        }
+    }
+
     /// <summary>
     /// Constructor for equipment manager.
     /// </summary>
     /// <param name="hotBarSize">Size of the player's hotbar, this is how many weapons usable items can be quick-swapped without opening a manager menu.</param>
-    public EquipmentManager(int hotBarSize = 10)
+    public EquipmentManager(int hotBarSize = 10, int selection = 1)
     {
         this.equipment = new EquippableItem[Enum.GetNames(typeof(EquipSlot)).Length];
         this.hotbar = new UsableItem[hotBarSize];
+        Select(selection);
     }
 
     #region Equipping And Unequipping
@@ -74,6 +91,15 @@ public class EquipmentManager
     }
 
     /// <summary>
+    /// Selects a hotbar item
+    /// </summary>
+    /// <param name="selection">hotbar slot</param>
+    public void Select(int selection)
+    {
+        this.HotbarSelection = selection;
+    }
+
+    /// <summary>
     /// Fetches the item data associated with a particular item slot.
     /// </summary>
     /// <param name="slot">The slot of the equipped item.</param>
@@ -87,6 +113,24 @@ public class EquipmentManager
         }
 
         return equipment[index];
+    }
+
+    /// <summary>
+    /// Gets the currently selected index with respect to hotbar
+    /// </summary>
+    /// <returns>the currently selected index</returns>
+    public int GetSelectedIndex()
+    {
+        return HotbarSelection - 1;
+    }
+
+    /// <summary>
+    /// Gets the currently selected hotbar item
+    /// </summary>
+    /// <returns>the currently selected hotbar item</returns>
+    public UsableItem GetSelectedItem()
+    {
+        return GetHotbarItem(GetSelectedIndex());
     }
 
     /// <summary>
