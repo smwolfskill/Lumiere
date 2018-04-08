@@ -24,7 +24,13 @@ public class UINavigationBehavior : MonoBehaviour
 
 	void OnClick()
 	{
-		currentScreen.SetActive(false);
-		nextScreen.SetActive(true);
+		if(nextScreen == null || (nextScreen != null && nextScreen.tag != "UISettingsScreen"))
+		{
+			currentScreen.SetActive(false);
+		}
+		if(nextScreen != null)
+		{
+			nextScreen.SetActive(true);
+		}
 	}
 }
