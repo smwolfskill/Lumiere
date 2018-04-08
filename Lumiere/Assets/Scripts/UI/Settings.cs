@@ -25,7 +25,7 @@ public class Settings
 
     public Settings()
     {
-        difficulty = Difficulty.Easy;
+        difficulty = Difficulty.Normal;
         moveUp = "W";
         moveDown = "S";
         moveLeft = "A";

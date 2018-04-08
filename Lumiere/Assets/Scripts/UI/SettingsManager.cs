@@ -90,6 +90,10 @@ public static class SettingsManager
     {
         return StringToKeyCode(settings.useItem);
     }
+    public static Settings.Difficulty GetDifficulty()
+    {
+        return settings.difficulty;
+    }
     #endregion
     
     public static KeyCode GetKey(string settingName)
