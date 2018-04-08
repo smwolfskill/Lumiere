@@ -48,7 +48,7 @@ public class PlayerAttack : EntityAction
                 if (ent != null && ent is Monster)
                 {
                     BoxCollider2D objCollider =
-                        target.GetComponent<BoxCollider2D>();
+                        _player.GetComponent<BoxCollider2D>();
                     float dist = Physics2D.Distance(objCollider,
                                                     hit2D.collider).distance;
                     float attackRange = 0.0f; // melee range (no weapon)
@@ -81,6 +81,7 @@ public class PlayerAttack : EntityAction
     public override bool Execute(GameObject obj)
     {
         // TODO: use weapon on target
+        Debug.Log("Attack!");
         return true;
     }
 }
