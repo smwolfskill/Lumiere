@@ -1,9 +1,9 @@
 {
     "difficulty": 1,
-    "moveUp": "UpArrow",
-    "moveDown": "DownArrow",
-    "moveLeft": "LeftArrow",
-    "moveRight": "RightArrow",
+    "moveUp": "W",
+    "moveDown": "S",
+    "moveLeft": "A",
+    "moveRight": "D",
     "useItem": "E",
     "dropItem": "Q",
     "pickupItem": "Mouse0",
