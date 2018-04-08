@@ -15,7 +15,7 @@ public abstract class Entity : BaseObject
     /// </summary>
     /// <param name="location">Location to spawn this entity.</param>
     /// <returns>Returns the GameObject representing this entity.</returns>
-    virtual public GameObject Spawn (Map map, Vector2 location, float maxHealth = 1.0f)
+    virtual public GameObject Spawn (Map map, Vector2 location)
     {
 
         GameObject entity = new GameObject (this.name);

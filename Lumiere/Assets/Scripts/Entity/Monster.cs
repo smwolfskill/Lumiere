@@ -5,13 +5,12 @@ using UnityEngine;
 [CreateAssetMenu (menuName = "Lumiere/Entity/NPC/Monster")]
 public class Monster : NPC
 {
-
-    override public GameObject Spawn(Map map, Vector2 location, float maxHealth = 10.0f)
+    override public GameObject Spawn(Map map, Vector2 location)
     {
-        //TODO: add EntityObjectManager, instantiate a entityObject, attach the entityObject
-        //      to the EntityObjectManager, somewhere else keep track of the entityObject.
-
-        return base.Spawn(map, location, maxHealth);
+        GameObject monster = base.Spawn(map, location);
+        MonsterObject obj = new MonsterObject(monster, maxHealth);
+        monster.GetComponent<EntityHealthManager>().entityObj = obj;
+        return monster;
     }
   
 }
