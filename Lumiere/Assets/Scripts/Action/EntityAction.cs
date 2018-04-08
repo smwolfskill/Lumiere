@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class EntityAction : Action
 {
-    public Entity target;
+    protected Entity target;
 }
