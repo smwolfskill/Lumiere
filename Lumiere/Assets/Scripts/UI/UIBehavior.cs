@@ -9,7 +9,7 @@ public class UIBehavior : MonoBehaviour
     public GameObject tooltip;
     public bool inventoryVisible = false;
 
-    private float lastToggleInventoryInput = 0.0f; //last input to toggle inventory
+    private bool lastToggleInventoryInput = false; //last input to toggle inventory
     private Canvas canvas;
 
 	// Use this for initialization
@@ -57,8 +57,8 @@ public class UIBehavior : MonoBehaviour
 
     public bool ToggleInventoryInput()
     {
-        float toggleInventoryInput = Input.GetAxis("ToggleInventory");
-        bool toggleInventory = toggleInventoryInput > 0.0f && toggleInventoryInput != lastToggleInventoryInput;
+        bool toggleInventoryInput = Input.GetKeyDown(SettingsManager.GetOpenInventory());
+        bool toggleInventory = toggleInventoryInput && toggleInventoryInput != lastToggleInventoryInput;
         lastToggleInventoryInput = toggleInventoryInput;
         return toggleInventory;
     }
