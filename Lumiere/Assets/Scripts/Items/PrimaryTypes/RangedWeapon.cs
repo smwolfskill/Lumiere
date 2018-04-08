@@ -45,7 +45,7 @@ class RangedWeapon : WeaponItem
     /// <param name="rateOF">Rate of fire of weapon (how many times per second it can be used).</param>
     /// <param name="radius">The range of the swing outward from the entity. Negitive number behavior and 0 behavior not defined.</param>
     /// <param name="arc">Arc of the swing of this melee weapon. Negitive number behavior and values over 360 are not defined.</param>
-    public RangedWeapon(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, double dmg = 5.0, double rateOF = 1.0, double range = 20.0, int penetration = 1) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction, dmg, rateOF)
+    public RangedWeapon(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, float dmg = 5.0f, double rateOF = 1.0, double range = 20.0, int penetration = 1) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction, dmg, rateOF)
     {
         InitAttackData(range, penetration);
     }

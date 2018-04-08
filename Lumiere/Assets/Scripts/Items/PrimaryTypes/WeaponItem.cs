@@ -11,8 +11,15 @@ using UnityEngine;
 /// </summary>
 class WeaponItem : UsableItem
 {
+    // Proximity within which a player can attack a monster with this item
+    public double AttackRange
+    {
+        get;
+        protected set;
+    }
+
     // Damage the weapon deals.
-    protected double damage;
+    protected float damage;
 
     // Rate of fire of the weapon.
     protected double rof;
@@ -20,7 +27,7 @@ class WeaponItem : UsableItem
     /// <summary>
     /// Base Weapon Constructor.
     /// </summary>
-    public WeaponItem(double dmg = 5.0, double rateOF = 1.0) : base()
+    public WeaponItem(float dmg = 5.0f, double rateOF = 1.0) : base()
     {
         this.damage = dmg;
         this.rof = rateOF;
@@ -41,7 +48,7 @@ class WeaponItem : UsableItem
     /// <param name="useAction">Use action for weapon, should default to an ATTACK action.</param>
     /// <param name="dmg">Damage of the weapon in question.</param>
     /// <param name="rateOF">Rate of fire of weapon (how many times per second it can be used).</param>
-    public WeaponItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, double dmg = 5.0, double rateOF = 1.0) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction)
+    public WeaponItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, float dmg = 5.0f, double rateOF = 1.0) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction)
     {
         this.damage = dmg;
         this.rof = rateOF;
@@ -50,7 +57,7 @@ class WeaponItem : UsableItem
     /// <summary>
     /// Getters and Setter for damage.
     /// </summary>
-    public double Damage
+    public float Damage
     {
         get
         {
