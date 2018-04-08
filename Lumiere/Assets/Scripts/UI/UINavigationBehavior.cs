@@ -8,29 +8,29 @@ public class UINavigationBehavior : MonoBehaviour
 {
 	public GameObject nextScreen;
 	public Button button;
-	public GameObject currentScreen;
+	public GameObject[] currentScreens;
 
-	// Use this for initialization
-	void Start () 
+
+	void Start() 
 	{
 		button.onClick.AddListener(OnClick);
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
 	}
 
 	void OnClick()
 	{
 		if(nextScreen == null || (nextScreen != null && nextScreen.tag != "UISettingsScreen"))
 		{
-			currentScreen.SetActive(false);
+            //Hide all current screens
+            foreach(GameObject screen in currentScreens)
+            {
+                screen.SetActive(false);
+            }
 		}
 		if(nextScreen != null)
 		{
+            //Show next screen
 			nextScreen.SetActive(true);
 		}
 	}
+
 }
