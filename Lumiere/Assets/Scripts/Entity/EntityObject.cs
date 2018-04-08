@@ -25,6 +25,8 @@ public abstract class EntityObject
         this.currHealth = maxHealth;
         this.isDead = false;
 		this.inventory = null;
+
+        this.gameObject.AddComponent<EntityHealthManager>();
     }
 
     virtual public void InflictDamage(float damageAmount)
