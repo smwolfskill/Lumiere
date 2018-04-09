@@ -20,13 +20,11 @@ public class PlayerAttack : EntityAction
         Vector3 mousePosition = Input.mousePosition;
         EntitySpriteManager em;
         Player player;
-        Inventory inv;
         EquipmentManager equips;
 
         em = _player.GetComponent<EntitySpriteManager>();
         player = (Player)em.entity;
-        inv = player.inventory;
-        equips = inv.getEquipment();
+        equips = (player.entityObject as PlayerObject).EquipmentManager;
 
         if (attack)
         {
