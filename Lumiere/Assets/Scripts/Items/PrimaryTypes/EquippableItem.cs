@@ -44,6 +44,21 @@ public class EquippableItem : GameItem
         this.slot = newSlot;
     }
 
+    override public GameItem clone()
+    {
+        return new ArmorItem (
+            this.guiSprite,
+            this.groundSprite,
+            this.name,
+            this.description,
+            this.value,
+            this.rarity,
+            this.quantity,
+            this.maxStacks,
+            this.itemID,
+            this.Slot);
+    }
+
     /// <summary>
     /// Getters and Setters for the slot.
     /// </summary>

@@ -21,7 +21,7 @@ public class PlayerObject : EntityObject
         inventoryPanel.GetComponent<InventoryPanel>().SetInitialInventory(this.inventory);
 
         GameObject equipmentPanel = GameObject.FindGameObjectWithTag("EquipmentPanel");
-        equipmentPanel.GetComponent<EquipmentPanel>().SetEquipmentManager(this.EquipmentManager);
+        equipmentPanel.GetComponent<EquipmentPanel>().Manager = this.EquipmentManager;
 
         GameObject hotbarPanel = GameObject.FindGameObjectWithTag("HotbarPanel");
         hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);

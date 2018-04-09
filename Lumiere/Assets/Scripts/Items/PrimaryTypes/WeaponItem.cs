@@ -54,6 +54,23 @@ class WeaponItem : UsableItem
         this.rof = rateOF;
     }
 
+    override public GameItem clone()
+    {
+        return new WeaponItem (
+            this.guiSprite,
+            this.groundSprite,
+            this.name,
+            this.description,
+            this.value,
+            this.rarity,
+            this.quantity,
+            this.maxStacks,
+            this.itemID,
+            this.useAction,
+            this.damage,
+            this.rof);
+    }
+
     /// <summary>
     /// Getters and Setter for damage.
     /// </summary>

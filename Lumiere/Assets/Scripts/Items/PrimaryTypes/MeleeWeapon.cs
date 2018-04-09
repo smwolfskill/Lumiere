@@ -54,6 +54,25 @@ class MeleeWeapon : WeaponItem
         InitAttackData(radius, arc);
     }
 
+    override public GameItem clone()
+    {
+        return new MeleeWeapon (
+            this.guiSprite,
+            this.groundSprite,
+            this.name,
+            this.description,
+            this.value,
+            this.rarity,
+            this.quantity,
+            this.maxStacks,
+            this.itemID,
+            this.useAction,
+            this.damage,
+            this.rof,
+            this.radius,
+            this.arc);
+    }
+
     /// <summary>
     /// Radius Getter and Setter.
     /// </summary>

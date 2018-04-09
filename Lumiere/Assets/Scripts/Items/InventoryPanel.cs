@@ -29,6 +29,9 @@ public class InventoryPanel : MonoBehaviour
     public Sprite item3;
     public Sprite item4;
     public Sprite item5;
+    public Sprite item6;
+    public Sprite item7;
+    public Sprite item8;
 
     //mouse input
     private int mouseX;
@@ -114,6 +117,12 @@ public class InventoryPanel : MonoBehaviour
             GameItem.ItemRarity.EPIC, 2, 5, 100, "HealthPotionAction"));
         inv.AddItem(new GameItem(item5, item5, "The God Portal", "The ultimate portal of mysticality and memes.", 10,
             GameItem.ItemRarity.LEGENDARY, 1, 64, 5));
+        inv.AddItem(new WeaponItem(item6, item6, "Battleaxe", "This Dwarven axe was forged in the Mines of Moria", 1, 
+            GameItem.ItemRarity.COMMON, 1, 1, 6, null, 5, 1));
+        inv.AddItem(new ArmorItem(item7, item7, "Chainmail", "An iron chainmail that offers basic protection", 1, 
+            GameItem.ItemRarity.COMMON, 1, 1, 7, EquipmentManager.EquipSlot.CHEST, 10, 2, 1));
+        inv.AddItem(new ArmorItem(item8, item8, "Spooky mask", "Why would you wear this horrendous mask?", 1, 
+            GameItem.ItemRarity.RARE, 1, 1, 8, EquipmentManager.EquipSlot.HEAD, 2, 2, 1));
     }
 
     public void Reset()

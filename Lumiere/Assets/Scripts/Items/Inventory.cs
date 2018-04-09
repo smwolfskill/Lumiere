@@ -187,7 +187,7 @@ public class Inventory
     public GameItem RemoveItem(int x, int y, int quantity)
     {
         GameItem itemInSlot = GetItem (x, y);
-        GameItem removedItem = new GameItem(itemInSlot);
+        GameItem removedItem = itemInSlot.clone();
         if (!itemInSlot.SetYet())
         {
             return null;
@@ -281,7 +281,7 @@ public class Inventory
             return item;
         }
 
-        GameItem item_cpy = new GameItem(item);
+        GameItem item_cpy = item.clone();
         int currXPos = 0, currYPos = 0;
 
         if (item_cpy.MaxStacks > 1) //stackable item

@@ -86,6 +86,11 @@ public class GameItem
         this.FillData(copy);
     }
 
+    virtual public GameItem clone()
+    {
+        return new GameItem (this);
+    }
+
     /// <summary>
     /// Fills out the class data for constructors.
     /// </summary>

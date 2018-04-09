@@ -49,6 +49,25 @@ class RangedWeapon : WeaponItem
     {
         InitAttackData(range, penetration);
     }
+
+    override public GameItem clone()
+    {
+        return new RangedWeapon (
+            this.guiSprite,
+            this.groundSprite,
+            this.name,
+            this.description,
+            this.value,
+            this.rarity,
+            this.quantity,
+            this.maxStacks,
+            this.itemID,
+            this.useAction,
+            this.damage,
+            this.rof,
+            this.range,
+            this.penetration);
+    }
     
     /// <summary>
     /// Range getter and Setter.

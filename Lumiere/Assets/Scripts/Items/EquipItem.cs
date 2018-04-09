@@ -6,6 +6,7 @@ using UnityEngine;
 public class EquipItem : EntityAction
 {
     private InventoryPanel invPanel = null;
+    private EquipmentPanel eqPanel = null;
     private GameItem toEquip = null;
 
 
@@ -27,15 +28,8 @@ public class EquipItem : EntityAction
             }
             else
             {
-                toEquip = invPanel.GetSelectedItem();
-                if (!toEquip.SetYet())
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                toEquip = invPanel.GetSelectedItem().clone();
+                return toEquip != null && (toEquip is EquippableItem || toEquip is UsableItem) && toEquip.SetYet ();
             }
         }
         else
@@ -51,6 +45,49 @@ public class EquipItem : EntityAction
     /// <returns>Returns true if the item was equipped successfully, false otherwise.</returns>
     public override bool Execute(GameObject obj)
     {
-        return false;
+        invPanel = GameObject.FindGameObjectWithTag("InventoryPanel").GetComponent<InventoryPanel>();
+        eqPanel = GameObject.FindGameObjectWithTag ("EquipmentPanel").GetComponent<EquipmentPanel>();
+        EquipmentManager equipManager = eqPanel.Manager;
+        UsableItem useItem = toEquip as UsableItem;
+        EquippableItem equipItem = toEquip as EquippableItem;
+
+        if (equipItem != null)
+        {
+            EquippableItem currentlyEquipped = equipManager.DeEquip (equipItem.Slot);
+            Debug.Log (equipItem);
+            invPanel.ManagedInventory.RemoveItem (toEquip);
+            if (currentlyEquipped == null || invPanel.ManagedInventory.AddItem (currentlyEquipped) == null)
+            {
+                eqPanel.Manager = equipManager;
+                equipManager.Equip (equipItem); // this should not fail
+                return true;
+            }
+            else
+            {
+                invPanel.ManagedInventory.AddItem (equipItem);
+                equipManager.Equip (currentlyEquipped);
+                return false;
+            }
+        }
+        else if (useItem != null)
+        {
+            bool yay = false;
+            for (int i = 0; i < equipManager.GetHotbarItemsSize (); i++)
+            {
+                yay = equipManager.AddHotBarItem (useItem, i);
+                if (yay)
+                {
+                    invPanel.ManagedInventory.RemoveItem (useItem);
+                    break;
+                }
+            }
+            return yay;
+        }
+        else
+        {
+            throw new UnityException ("WTF are you trying to equip my man");
+            return false;
+        }
+
     }
 }

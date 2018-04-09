@@ -69,14 +69,21 @@ public class EquipmentPanel : MonoBehaviour
             return visible;
         }
     }
-    #endregion
 
-    public void SetEquipmentManager(EquipmentManager playerEquipmentManager)
+    public EquipmentManager Manager
     {
-        equipmentManager = playerEquipmentManager;
-        Initialize();
+        get 
+        {
+            return equipmentManager;
+        }
 
+        set 
+        {
+            equipmentManager = value;
+            Initialize ();
+        }
     }
+    #endregion
 
     void Start ()
     {

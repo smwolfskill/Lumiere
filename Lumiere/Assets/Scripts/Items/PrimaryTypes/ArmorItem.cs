@@ -66,6 +66,24 @@ class ArmorItem : EquippableItem
         InitArmor(armor, speedModifier, damageModifier);
     }
 
+    override public GameItem clone()
+    {
+        return new ArmorItem (
+            this.guiSprite,
+            this.groundSprite,
+            this.name,
+            this.description,
+            this.value,
+            this.rarity,
+            this.quantity,
+            this.maxStacks,
+            this.itemID,
+            this.Slot,
+            this.armor,
+            this.speedModifier,
+            this.damageModifier);
+    }
+
     /// <summary>
     /// Getter and Setter for the speed modifier.
     /// </summary>

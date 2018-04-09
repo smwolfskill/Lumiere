@@ -54,6 +54,21 @@ public class EquipmentManager
         }
     }
 
+    public bool IsFull
+    {
+        get
+        {
+            for (int i = 0; i < hotbar.Length; i++)
+            {
+                if (hotbar [i] == null || !hotbar [i].SetYet ())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     /// <summary>
     /// Constructor for equipment manager.
     /// </summary>

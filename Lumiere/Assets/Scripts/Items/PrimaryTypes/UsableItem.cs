@@ -41,6 +41,21 @@ public class UsableItem : GameItem
         InitAction(itemID, useAction);
     }
 
+    override public GameItem clone()
+    {
+        return new UsableItem (
+            this.guiSprite,
+            this.groundSprite,
+            this.name,
+            this.description,
+            this.value,
+            this.rarity,
+            this.quantity,
+            this.maxStacks,
+            this.itemID,
+            this.useAction);
+    }
+
     /// <summary>
     /// Initilizes the item data for a usable item.
     /// </summary>
