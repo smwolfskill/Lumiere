@@ -12,13 +12,18 @@ public class UINavigationBehavior : MonoBehaviour
 	public GameObject[] currentScreens;
 	private string path;
 
-
+	/// <summary>
+    /// Initialized variables used by navigation buttons on various screens.
+    /// </summary>
 	void Start() 
 	{
 		button.onClick.AddListener(OnClick);
 		path = "Assets/Resources/settings.txt";
 	}
 
+	/// <summary>
+    /// Loads the next screen, and executes actions based on which button is clicked.
+    /// </summary>
 	void OnClick()
 	{
 		// Deal with settings
@@ -54,6 +59,12 @@ public class UINavigationBehavior : MonoBehaviour
 		
 	}
 
+	/// <summary>
+    /// Saves the settings to a given file.
+    /// </summary>
+    /// <param name="file_path">The string containing the path to the file that 
+    /// settings should be written to.</param>
+    /// <returns>Returns true if writing to the file was successful.</returns>
 	void Save(string file_path)
 	{
 		SettingsManager.SaveSettings(file_path);

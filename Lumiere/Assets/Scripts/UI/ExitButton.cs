@@ -6,12 +6,18 @@ using UnityEngine.UI;
 public class ExitButton : MonoBehaviour 
 {
     public Button button;
-	
+
+	/// <summary>
+    /// Adds the function to be executed when the ExitButton is clicked
+    /// </summary>
 	void Start()
     {
         button.onClick.AddListener(OnClick);
 	}
 
+    /// <summary>
+    /// Closes the application.
+    /// </summary>
     void OnClick()
     {
         Application.Quit();

@@ -8,7 +8,9 @@ public class DifficultyBehaviour : MonoBehaviour
 	public UnityEngine.UI.Toggle toggle;
 	public Settings.Difficulty difficulty;
 
-	// Use this for initialization
+	/// <summary>
+    /// Sets up variables used by the difficulty toggles
+    /// </summary>
 	void Start () 
 	{
         toggle.onValueChanged.AddListener(delegate 
@@ -25,6 +27,9 @@ public class DifficultyBehaviour : MonoBehaviour
         }
 	}
 
+	/// <summary>
+    /// Sets the difficulty when the toggle is turned on.
+    /// </summary>
 	void ToggleValueChanged(UnityEngine.UI.Toggle change) 
 	{
 		if(change.isOn) 

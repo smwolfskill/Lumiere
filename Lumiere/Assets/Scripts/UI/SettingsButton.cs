@@ -11,6 +11,9 @@ public class SettingsButton : MonoBehaviour
     private bool pressed = false;   //true indicates button has been pressed
     private bool sameClick = false; //true indicates that it's the same instance of Mouse0 being clicked.
     
+    /// <summary>
+    /// Initialized variables used by buttons on the SettingsScreen
+    /// </summary>
     void Start () 
     {
         pressed = false;
@@ -23,6 +26,9 @@ public class SettingsButton : MonoBehaviour
         button.GetComponentInChildren<Text>().text = SettingsManager.GetKey(settingName).ToString();
     }
     
+    /// <summary>
+    /// Checks if a key was pressed, and if so updates the setting to that key.
+    /// </summary>
     void Update ()
     {
         if(pressed)
@@ -73,6 +79,10 @@ public class SettingsButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// If the settings button is clicked this updates variables to be used
+    /// in the Update function.
+    /// </summary>
     void OnClick()
     {
         if(!sameClick)
@@ -88,6 +98,9 @@ public class SettingsButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the buttons text to the saved setting.
+    /// </summary>
     public void Reload()
     {
         button.GetComponentInChildren<Text>().text = SettingsManager.GetKey(settingName).ToString();

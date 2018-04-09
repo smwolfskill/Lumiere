@@ -5,6 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class Settings
 {
+    /// <summary>
+    /// Enum for Difficulty settings
+    /// </summary>
     public enum Difficulty
     {
         Easy,
@@ -23,6 +26,9 @@ public class Settings
     public string stackModifier;
     public string openInventory;
 
+    /// <summary>
+    /// Holds the default settings
+    /// </summary>
     public Settings()
     {
         difficulty = Difficulty.Normal;
