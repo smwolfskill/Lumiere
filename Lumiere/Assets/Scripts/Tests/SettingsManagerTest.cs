@@ -33,7 +33,7 @@ public class SettingsManagerTest
     }
 
     /// <summary>
-    /// Does the item datatype store its data correctly, and can it be retrieved and set?
+    /// Loads the default settings and ensures that it was loaded
     /// </summary>
     [Test]
     public void LoadSettingsInitial()
