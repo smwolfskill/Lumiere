@@ -5,6 +5,7 @@ module App
 import Prelude hiding       (fail)
 
 import Control.Exception    (try)
+import Control.Monad        (when, unless)
 import Control.Monad.Reader (MonadReader, asks)
 import Control.Monad.Trans  (MonadIO, liftIO)
 import Data.Text            (pack, unpack)
@@ -31,10 +32,7 @@ parseFiles files = do
   results <- sequence $ analyzeFile <$> files
   let results'@(AggregateResult _ nf _) = mconcat results
   summary <- asks summary'
-  if summary then
-    printSummary results'
-  else
-    pure ()
+  when summary $ printSummary results'
   return (nf /= 0)
 
 -- prints a summary of an aggregate of results
@@ -75,13 +73,7 @@ analyzeFile f = do
               Right results' -> do
                 let failure = failed results'
                 quiet <- asks quiet'
-                if quiet && not failure then
-                  pure ()
-                  -- we can return AggregateResult (length results') 0 0 to
-                  -- avoid calling outputResult a bunch of times but
-                  -- outputResult handles quiet as well, so this should work as
-                  -- well
-                else do
+                when (not quiet || failure) $ do
                   if not failure then success else fail
                   liftIO . putStrLn $ f ++ ":"
                   reset
@@ -109,9 +101,7 @@ outputResult testcase = do
   quiet <- asks quiet'
   case tr of
        TestSuccess -> do
-         if quiet then
-           pure ()
-         else do
+         unless quiet $ do
            prefix
            success
            liftIO . putStrLn $ "Success"
