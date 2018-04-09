@@ -20,6 +20,7 @@ public class PlayerMovementTest
     [SetUp]
     public void Init()
     {
+        SettingsManager.LoadSettings(""); //will load default settings since loading from file "" will fail
         player = new GameObject("Player", typeof(BoxCollider2D));
         entityActionManager = player.AddComponent<EntityActionManager>();
         playerMove = Resources.Load<EntityAction>("PlayerMove");
