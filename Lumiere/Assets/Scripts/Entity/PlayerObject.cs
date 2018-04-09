@@ -24,7 +24,7 @@ public class PlayerObject : EntityObject
         equipmentPanel.GetComponent<EquipmentPanel>().SetEquipmentManager(this.EquipmentManager);
 
         GameObject hotbarPanel = GameObject.FindGameObjectWithTag("HotbarPanel");
-        equipmentPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);
+        hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);
     }
 
     public override void InflictDamage(float damageAmount)
