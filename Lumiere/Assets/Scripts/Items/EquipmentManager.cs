@@ -19,9 +19,24 @@ public class EquipmentManager
         NECK
     }
 
+    //Holds the UI Panels for the Hotbar and Equipment
+    public EquipmentPanel equipPanel;
+    public HotbarPanel hotbarPanel;
+
     // Holds onto the current equipment in each possible slot (EquipSlots, 1 per) and the usable items in the hotbar.
     private EquippableItem[] equipment;
     private UsableItem[] hotbar;
+
+
+    public int GetEquipmentSize()
+    {
+        return this.equipment.Length;
+    }
+
+    public int GetHotbarItemsSize()
+    {
+        return this.hotbar.Length;
+    }
 
     private int _selection;
     private int HotbarSelection
@@ -70,6 +85,7 @@ public class EquipmentManager
         }
 
         equipment [(int) item.Slot] = item;
+        UpdateEquipPanel();
         return true;
     }
 
@@ -87,6 +103,7 @@ public class EquipmentManager
         }
         EquippableItem itemToRemove = equipment [index];
         equipment [index] = null;
+        UpdateEquipPanel();
         return itemToRemove;
     }
 
@@ -107,6 +124,21 @@ public class EquipmentManager
     public EquippableItem GetEquippedItem(EquipSlot slot)
     {
         int index = (int) slot;
+        if (index < 0 || index >= equipment.Length) 
+        {
+            return null;
+        }
+
+        return equipment[index];
+    }
+
+    /// <summary>
+    /// Fetches the item data associated with a particular item slot.
+    /// </summary>
+    /// <param name="slot">The index of the equipped item.</param>
+    /// <returns>The item if the slot contained an item. Null otherwise.</returns>
+    public EquippableItem GetEquippedItemFromIndex(int index)
+    {
         if (index < 0 || index >= equipment.Length) 
         {
             return null;
@@ -167,6 +199,7 @@ public class EquipmentManager
         }
 
         hotbar [index] = item;
+        UpdateHotbarPanel();
         return true;
     }
 
@@ -184,7 +217,32 @@ public class EquipmentManager
 
         UsableItem itemToRemove = hotbar [index];
         hotbar [index] = null;
+        UpdateHotbarPanel();
         return itemToRemove;
+    }
+    #endregion
+
+    #region Panel Updaters
+    /// <summary>
+    /// Redraws the Equipment panel
+    /// </summary>
+    private void UpdateEquipPanel()
+    {
+        if (equipPanel != null)
+        {
+            equipPanel.DrawEquipment();
+        }
+    }
+
+    /// <summary>
+    /// Redraws the Hotbar panel
+    /// </summary>
+    private void UpdateHotbarPanel()
+    {
+        if (hotbarPanel != null)
+        {
+            hotbarPanel.DrawHotbar();
+        }
     }
     #endregion
 
