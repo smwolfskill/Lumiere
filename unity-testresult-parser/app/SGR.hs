@@ -9,6 +9,7 @@ module SGR
 
 import Prelude hiding       (fail)
 
+import Control.Monad        (when)
 import Control.Monad.Reader (MonadReader, asks)
 import Control.Monad.Trans  (MonadIO, liftIO)
 import System.Console.ANSI  (setSGR, hSupportsANSI, SGR(Reset, SetColor),
@@ -22,10 +23,7 @@ import Config               (Config, color')
 doSGR :: (MonadIO m, MonadReader Config m) => [SGR] -> m ()
 doSGR sgr = do
   c <- asks color'
-  if c then
-    liftIO . setSGR $ sgr
-  else
-    pure ()
+  when c $ liftIO . setSGR $ sgr
 
 -- changes the output color based on the config
 success :: (MonadIO m, MonadReader Config m) => m ()
