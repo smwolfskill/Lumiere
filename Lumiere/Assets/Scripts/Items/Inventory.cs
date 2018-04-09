@@ -13,7 +13,6 @@ public class Inventory
     protected int height;               // Height in blocks.
 
     protected GameItem[,] items;        // Array of items.
-    protected EquipmentManager equips;  // Equipment management.
 
     /// <summary>
     /// Constructor for an inventory.
@@ -26,7 +25,6 @@ public class Inventory
         this.height = nHeight;
 
         this.items = new GameItem[width, height];
-        this.equips = new EquipmentManager();
     }
 
     /// <summary>
@@ -39,7 +37,6 @@ public class Inventory
         this.height = inv.height;
 
         this.items = new GameItem[width, height];
-        this.equips = new EquipmentManager();
 
         for (int i = 0; i < width; i++)
         {
@@ -100,15 +97,6 @@ public class Inventory
     public GameItem[,] GetItems()
     {
         return this.items;
-    }
-
-    /// <summary>
-    /// Gets the equipment manager of the inventory.
-    /// </summary>
-    /// <returns>Equipment storage system for items.</returns>
-    public EquipmentManager getEquipment()
-    {
-        return this.equips;
     }
     #endregion
 
