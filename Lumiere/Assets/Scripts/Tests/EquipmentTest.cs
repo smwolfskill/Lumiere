@@ -1,11 +1,16 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using NUnit.Framework.Internal;
 
 class EquipmentTest
 {
     private EquipmentManager equips;
-    private ArmorItem chestPlate;
+    private static ArmorItem chestPlate;
     private ArmorItem ring;
+    private ArmorItem helmet;
+    private ArmorItem necklace;
+    private ArmorItem gloves;
+    private ArmorItem plateLegs;
     private UsableItem weapon;
     private UsableItem potion;
 
@@ -16,7 +21,11 @@ class EquipmentTest
     public void Init()
     {
         equips = new EquipmentManager();
+        helmet = new ArmorItem (EquipmentManager.EquipSlot.HEAD, 3, 3, 1);
+        necklace = new ArmorItem (EquipmentManager.EquipSlot.NECK, 1, 10, 10);
+        gloves = new ArmorItem (EquipmentManager.EquipSlot.GLOVES, 1, 0, 10);
         chestPlate = new ArmorItem(EquipmentManager.EquipSlot.CHEST, 10, 10, 2);
+        plateLegs = new ArmorItem (EquipmentManager.EquipSlot.LEGS, 8, 10, 2);
         ring = new ArmorItem(EquipmentManager.EquipSlot.RING, 1, 20, 10);
 
         potion = new UsableItem
@@ -50,6 +59,38 @@ class EquipmentTest
 
         // Test that an item cannot be equipped to a slot with an item already.
         Assert.IsFalse(equips.Equip(chestPlate));
+    }
+
+    [TestCase(-1)]
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    [TestCase(4)]
+    [TestCase(5)]
+    [TestCase(6)]
+    [TestCase(7)]
+    [TestCase(null)]
+    public void EquipmentSlotEquip(int slot)
+    {
+        ArmorItem item = new ArmorItem ((EquipmentManager.EquipSlot) slot);
+        if (item != null) 
+        {
+            for (int i = 0; i < Enum.GetNames(typeof(EquipmentManager.EquipSlot)).Length; i++) 
+            {
+                if ((int) item.Slot == i) 
+                {
+                    Assert.IsTrue (equips.Equip (item));
+                    return;
+                }
+                    
+            }
+
+            Assert.IsFalse (equips.Equip (item));
+            return;
+        }
+
+        Assert.IsFalse (equips.Equip (item));
     }
 
     /// <summary>
@@ -91,6 +132,34 @@ class EquipmentTest
         EquippableItem ringAgain = equips.DeEquip(EquipmentManager.EquipSlot.RING);
         Assert.IsNotNull(ringAgain);
         Assert.IsNull(equips.GetEquippedItem(EquipmentManager.EquipSlot.RING));
+    }
+
+    [TestCase(-1)]
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    [TestCase(4)]
+    [TestCase(5)]
+    [TestCase(6)]
+    [TestCase(7)]
+    [TestCase(null)]
+    public void EquipmentSlotDequip(int slot)
+    {
+        ArmorItem item = new ArmorItem ((EquipmentManager.EquipSlot) slot);
+        EquippableItem dequippedItem = equips.DeEquip (item.Slot);
+        Assert.IsNull (dequippedItem);
+        equips.Equip (item);
+        dequippedItem = equips.DeEquip (item.Slot);
+        if (item == null || slot < 0 || slot >= Enum.GetNames (typeof(EquipmentManager.EquipSlot)).Length) 
+        {
+            Assert.IsNull (dequippedItem);
+            return;
+        }
+
+        Assert.IsNotNull (dequippedItem);
+        Assert.IsNull (equips.GetEquippedItem (item.Slot));
+
     }
 
     /// <summary>
