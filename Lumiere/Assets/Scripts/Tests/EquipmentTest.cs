@@ -5,12 +5,8 @@ using NUnit.Framework.Internal;
 class EquipmentTest
 {
     private EquipmentManager equips;
-    private static ArmorItem chestPlate;
+    private ArmorItem chestPlate;
     private ArmorItem ring;
-    private ArmorItem helmet;
-    private ArmorItem necklace;
-    private ArmorItem gloves;
-    private ArmorItem plateLegs;
     private UsableItem weapon;
     private UsableItem potion;
 
@@ -21,11 +17,7 @@ class EquipmentTest
     public void Init()
     {
         equips = new EquipmentManager();
-        helmet = new ArmorItem (EquipmentManager.EquipSlot.HEAD, 3, 3, 1);
-        necklace = new ArmorItem (EquipmentManager.EquipSlot.NECK, 1, 10, 10);
-        gloves = new ArmorItem (EquipmentManager.EquipSlot.GLOVES, 1, 0, 10);
         chestPlate = new ArmorItem(EquipmentManager.EquipSlot.CHEST, 10, 10, 2);
-        plateLegs = new ArmorItem (EquipmentManager.EquipSlot.LEGS, 8, 10, 2);
         ring = new ArmorItem(EquipmentManager.EquipSlot.RING, 1, 20, 10);
 
         potion = new UsableItem
