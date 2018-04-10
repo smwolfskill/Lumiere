@@ -2,89 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Room : Container
+public class Room
 {
     public int x, y;
     public int w, h;
-    public int centerX, centerY;
 
-    // A list of all other rooms, sorted by closest to furthest based
-    // on centerX, centerY
-    public List<Room> closestOtherRooms;
-
-    public List<Door> doors;
-
+    public GameObject gameObject;
+    protected Map map;
     public RoomType roomType;
+    public List<Tile> tiles;
 
-    public Room(Map map, int x, int y, int w, int h, RoomType roomType) : base(map, roomType)
+    public Room(Map map, int x, int y, int w, int h, RoomType roomType)
     {
+        this.map = map;
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.roomType = roomType;
+        tiles = new List<Tile> ();
 
-        this.centerX = x + w / 2;
-        this.centerY = y + h / 2;
-
-        this.doors = new List<Door>();
-        this.closestOtherRooms = new List<Room>();
-
-        this.roomType = (RoomType)this.containerType;
+        gameObject = roomType.PopulateGameObject ();
     }
 
-    public void GenRoom(int doorRadius)
+    public void GenRoom()
     {
-        roomType.GenRoom(this, map);
-
-        GenDoors(doorRadius);
+        roomType.GenRoom (this, map);
     }
 
-    private void GenDoors(int radius)
+    public void AddTile(Tile tile)
     {
-        if (radius > w - radius || radius > h - radius) return;
+        tile.gameObject.transform.parent = gameObject.transform;
 
-        int doorAttempts = Utilities.RandomIntInRange(10, 50);
-        // Add some doors
-        for (int doorAttempt = 0; doorAttempt < doorAttempts; doorAttempt++)
+        tiles.Add(tile);
+    }
+
+    public void RemoveTile(Tile tile)
+    {
+        tiles.Remove(tile);
+    }
+        
+    public List<Tile> GetWalkableTiles()
+    {
+        List<Tile> walkableTiles = new List<Tile> ();
+        foreach (Tile tile in tiles) 
         {
-            int incrementOffOfWidth = Utilities.RandomIntInRange(radius, w - radius);
-            int incrementOffOfHeight = Utilities.RandomIntInRange(radius, h - radius);
-            Door door;
-            switch (Utilities.RandomEnumValue<Utilities.Direction>())
+            if (tile.IsWalkable ()) 
             {
-                case Utilities.Direction.NORTH:
-                    door = new Door(x + incrementOffOfWidth, y, Utilities.Direction.NORTH, this, radius);
-                    break;
-                case Utilities.Direction.SOUTH:
-                    door = new Door(x + incrementOffOfWidth, y + h - 1, Utilities.Direction.SOUTH, this, radius);
-                    break;
-                case Utilities.Direction.WEST:
-                    door = new Door(x, y + incrementOffOfHeight, Utilities.Direction.WEST, this, radius);
-                    break;
-                case Utilities.Direction.EAST:
-                    door = new Door(x + w - 1, y + incrementOffOfHeight, Utilities.Direction.EAST, this, radius);
-                    break;
-                default:
-                    door = null;
-                    break;
-            }
-
-            if (IsDoorValid(door))
-            {
-                doors.Add(door);
+                walkableTiles.Add (tile);
             }
         }
+
+        return walkableTiles;
     }
 
-    private bool IsDoorValid(Door doorAttempt)
+    public void Remove()
     {
-        foreach(Door door in doors)
-        {
-            if (doorAttempt.x == door.x && doorAttempt.y == door.y)
-                return false;
-        }
-
-        return true;
+        map.RemoveRoom(this);
+        Object.Destroy(gameObject);
     }
 
     public void RefineSize()

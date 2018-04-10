@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class Map
 {
 
     private Tile[,] tileMatrix;
-    public List<Container> containers;
-    public RoomProperties roomProperties;
+    private List<Room> rooms;
+    private RoomProperties roomProperties;
 
     public int w, h;
     public int tileOffset;
@@ -21,7 +20,7 @@ public class Map
         this.h = h;
         this.tileOffset = tileOffset;
         this.tileMatrix = new Tile[h, w];
-        this.containers = new List<Container>();
+        this.rooms = new List<Room>();
         this.roomProperties = roomProperties;
     }
 
@@ -37,7 +36,7 @@ public class Map
     /// True if the tile was placed correctly, false otherwise (such as when the tile
     /// cannot be placed in the specified coordinate due to the coordinate being invalid)
     /// </returns>
-    public Tile SetTile(int x, int y, Tile tile, Container container)
+    public Tile SetTile(int x, int y, Tile tile, Room room)
     {
         if (!ValidTileSpace(x, y))
             return null;
@@ -49,24 +48,12 @@ public class Map
         this.tileMatrix[y, x] = tile;
 
         tile.SetX_Y(x, y);
-        tile.SetContainer(container);
+        tile.SetRoom(room);
         tile.SetMap(this);
 
-        container.AddTile(tile);
+        room.AddTile(tile);
 
         return tile;
-    }
-
-    public Tile CreateTileAndSetTile(int x, int y, Container container, TileType tileType)
-    {
-        Tile tile = new Tile(x, y, this, tileType);
-
-        return SetTile(x, y, tile, container);
-    }
-
-    public Tile CreateTileAndSetTile(Pair<int, int> pair, Container container, TileType tileType)
-    {
-        return CreateTileAndSetTile(pair.First, pair.Second, container, tileType);
     }
 
     public List<Tile> GetTiles()
@@ -83,7 +70,7 @@ public class Map
         return tiles;
     }
 
-    public void FillArea(int x, int y, int w, int h, TileType tileType, Container container)
+    public void FillArea(int x, int y, int w, int h, TileType tileType, Room room)
     {
         // Force top and left of rectangle to be inside the map.
         if (x < 0)
@@ -102,42 +89,35 @@ public class Map
             for (int currY = y; currY < y + h; currY++)
             {
                 Tile tileToAdd = 
-                SetTile(currX, currY, new Tile(x, y, this, tileType), container);
+                SetTile(
+                    currX, currY,
+                        new Tile(x, y, this, tileType),
+                    room
+                );
             }
         }
     }
 
-    public void FillLine(int x, int y, int length, Utilities.Direction direction, TileType tileType, Container container)
+    public void FillLine(int x, int y, int length, Utilities.Direction direction, TileType tileType, Room room)
     {
         switch (direction)
         {
             case Utilities.Direction.NORTH:
-                FillArea(x, y - length, 1, length, tileType, container);
+                FillArea(x, y - length, 1, length, tileType, room);
                 break;
 
             case Utilities.Direction.SOUTH:
-                FillArea(x, y, 1, length, tileType, container);
+                FillArea(x, y, 1, length, tileType, room);
                 break;
 
             case Utilities.Direction.WEST:
-                FillArea(x - length, y, length, 1, tileType, container);
+                FillArea(x - length, y, length, 1, tileType, room);
                 break;
 
             case Utilities.Direction.EAST:
-                FillArea(x, y, length, 1, tileType, container);
+                FillArea(x, y, length, 1, tileType, room);
                 break;
         }
-    }
-
-    public void FillAreaWithBorder(int x, int y, int w, int h, TileType areaTileType, TileType borderTileType, Container container)
-    {
-        FillArea(x, y, w, h, areaTileType, container);
-        FillLine(x, y, w, Utilities.Direction.EAST, borderTileType, container);
-        FillLine(x, y, h, Utilities.Direction.SOUTH, borderTileType, container);
-        FillLine(x, y + h - 1, w, Utilities.Direction.EAST, borderTileType, container);
-        FillLine(x + w - 1, y, h, Utilities.Direction.SOUTH, borderTileType, container);
-        SetTile(x + w - 1, y + h - 1, new Tile(x + w - 1, y + h - 1, this, borderTileType), container);
-
     }
 
     public Tile GetTile(int x, int y)
@@ -150,12 +130,14 @@ public class Map
 
     public Room GenRoom(RoomType roomType)
     {
-        int roomWidth = Utilities.RandomIntInRange(roomProperties.minWidth, roomProperties.maxWidth);
-        int roomHeight = Utilities.RandomIntInRange(roomProperties.minHeight, roomProperties.maxHeight);
-
-        int x = Utilities.RandomIntInRange (0, w - roomWidth);
-        int y = Utilities.RandomIntInRange (0, h - roomHeight);
-
+        int x = Utilities.RandomIntInRange (0, w);
+        int y = Utilities.RandomIntInRange (0, h);
+        int minWidth = roomProperties.minWidth;
+        int maxWidth = roomProperties.maxWidth;
+        int minHeight = roomProperties.minHeight;
+        int maxHeight = roomProperties.maxHeight;
+        int roomWidth = Utilities.RandomIntInRange (minWidth, maxWidth);
+        int roomHeight = Utilities.RandomIntInRange (minHeight, maxHeight);
         return new Room (this, x, y, roomWidth, roomHeight, roomType);
     }
 
@@ -173,10 +155,10 @@ public class Map
         return room;
     }
 
-    public void AddContainer(Container container)
+    public void AddRoom(Room room)
     {
-        this.containers.Add(container);
-        container.gameObject.transform.parent = this.gameObject.transform;
+        this.rooms.Add(room);
+        room.gameObject.transform.parent = this.gameObject.transform;
     }
 
     public bool IsRoomAreaValid(Room room, TileType[] avoidTiles)
@@ -201,21 +183,6 @@ public class Map
         return true;
     }
 
-    public bool DoesAreaContainOnlyThisTile(int x, int y, int w, int h, TileType tileType)
-    {
-        for (int currX = x; currX < x + w; currX++)
-        {
-            for (int currY = y; currY < y + h; currY++)
-            {
-                Tile currTileObj = GetTile(currX, currY);
-
-                if (currTileObj != null && currTileObj.tileType != tileType) return false;
-            }
-        }
-
-        return true;
-    }
-
     /// TODO: this description was from legacy code, change it to fit this (somewhat
     ///       similar) code
     ///  
@@ -229,89 +196,32 @@ public class Map
         return (x >= 0 && y >= 0 && x < h && y < h);
     }
 
-    public Container GetRanContainer(ContainerType[] ignoreContainerTypes)
+    public Room GetRanRoom(RoomType[] ignoreRoomObjTypes)
     {
-        Container container;
-        bool isInIgnoreRoomObjTypes;
+        Room room;
+        bool isInIgnoreRoomObjTypes = false;
         do
         {
             isInIgnoreRoomObjTypes = false;
-            container = this.containers[Utilities.RandomIntInRange(0, containers.Count)];
+            room = this.rooms[Utilities.RandomIntInRange(0, rooms.Count)];
 
-            foreach (ContainerType containerType in ignoreContainerTypes)
+            foreach (RoomType roomType in ignoreRoomObjTypes)
             {
-                if (containerType == container.containerType) isInIgnoreRoomObjTypes = true;
+                if (roomType == room.roomType) isInIgnoreRoomObjTypes = true;
             }
         }
         while (isInIgnoreRoomObjTypes);
 
-        return container;
+        return room;
     }
 
-    public void RemoveContainer(Container container)
+    //TODO maybe merge with getRandRoom?
+    //TODO this function can get stuck in infinite loops
+
+
+    public void RemoveRoom(Room room)
     {
-        this.containers.Remove(container);
+        this.rooms.Remove(room);
     }
 
-    public List<Room> GetRooms()
-    {
-        return containers.OfType<Room>().ToList<Room>();
-    }
-
-    // For each room, fill a list of all other rooms based on distance from
-    // the given room.
-    public void PopulateClosestOtherRooms()
-    {
-        foreach(Room room in GetRooms())
-        {
-            List<Pair<Room, float>> closestRoomsByDistance = new List<Pair<Room, float>>();
-
-            foreach(Room compareToRoom in GetRooms())
-            {
-                if (compareToRoom == room) continue;
-
-                float dist = Vector2.Distance(new Vector2(room.x, room.y), new Vector2(compareToRoom.x, compareToRoom.y));
-
-                closestRoomsByDistance.Add(new Pair<Room, float>(compareToRoom, dist));
-
-            }
-
-            closestRoomsByDistance = closestRoomsByDistance.OrderBy(i => i.Second).ToList();
-
-            room.closestOtherRooms = closestRoomsByDistance.Select(i => i.First).ToList();
-        }
-    }
-
-    public void OpenDoorArea(Door door, TileType tileType)
-    {
-        CreateTileAndSetTile(door.x, door.y, door.room, tileType);
-
-        Pair<int, int> currLeftOfPair = new Pair<int, int>(door.x, door.y);
-        Pair<int, int> currRightOfPair = new Pair<int, int>(door.x, door.y);
-        Utilities.Direction leftOf = Utilities.LeftOf(door.direction);
-        Utilities.Direction rightOf = Utilities.RightOf(door.direction);
-
-        for (int i = 0; i < door.radius; i++)
-        {
-            currLeftOfPair = Utilities.CordInDirection(leftOf, currLeftOfPair);
-            currRightOfPair = Utilities.CordInDirection(rightOf, currRightOfPair);
-
-            CreateTileAndSetTile(currLeftOfPair, door.room, tileType);
-            CreateTileAndSetTile(currRightOfPair, door.room, tileType);
-        }
-    }
-
-    public void ChangeTilesInArea(int x, int y, int radius, TileType targetTileType, TileType newTileType, Container container)
-    {
-        for(int currX = x - radius; currX <= x + radius; currX++)
-        {
-            for(int currY = y - radius; currY <= y + radius; currY++)
-            {
-                if(GetTile(currX,currY).tileType == targetTileType)
-                {
-                    CreateTileAndSetTile(currX, currY, container, newTileType);
-                }
-            }
-        }
-    }
 }

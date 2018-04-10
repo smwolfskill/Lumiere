@@ -8,7 +8,7 @@ public class Tile
 
     public GameObject gameObject;
     private Map map;
-    private Container container;
+    private Room room;
     public int x, y;
     public TileType tileType;
 
@@ -26,9 +26,9 @@ public class Tile
         gameObject.transform.position = new Vector2 (x, y);
     }
 
-    public void SetContainer(Container container)
+    public void SetRoom(Room room)
     {
-        this.container = container;
+        this.room = room;
     }
 
     public void SetMap(Map map)
@@ -43,7 +43,7 @@ public class Tile
             GameObject.Destroy(gameObject);
         }
 
-        this.container.RemoveTile(this);
+        this.room.RemoveTile(this);
     }
 
     public bool IsWalkable()

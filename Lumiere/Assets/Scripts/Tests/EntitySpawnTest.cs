@@ -66,7 +66,7 @@ public class EntitySpawnTest
     [Test]
     public void TestTilesSpawned()
     {
-        entityRoom.GenRoom (5 / 2);
+        entityRoom.GenRoom ();
         Assert.IsTrue (entityRoom.tiles.Count > 0);
     }
 
@@ -86,7 +86,7 @@ public class EntitySpawnTest
     [Test]
     public void TestEntitiesSpawned()
     {
-        entityRoom.GenRoom (5 / 2);
+        entityRoom.GenRoom ();
         int minEntities = entityRoomType.minimumEntities;
         int maxEntities = entityRoomType.maximumEntities;
         int entitiesSpawned = entityRoomType.GetEntitiesSpawned ();
@@ -100,7 +100,7 @@ public class EntitySpawnTest
     [Test]
     public void TestEntitiesInGame()
     {
-        entityRoom.GenRoom (5 / 2);
+        entityRoom.GenRoom ();
         string monster1Name = "Monster 1";
         string monster2Name = "Monster 2";
         GameObject monster1 = GameObject.Find(monster1Name);
