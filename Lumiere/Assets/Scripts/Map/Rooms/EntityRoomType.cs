@@ -9,6 +9,7 @@ public class EntityRoomType : RoomType
     public int minimumEntities;
     public int maximumEntities;
     public TileType floorTile;
+    public TileType wallTile;
     private int entitiesSpawned;
 
     /// <summary>
@@ -52,11 +53,8 @@ public class EntityRoomType : RoomType
 
     public override void GenRoom(Room room, Map map)
     {
-        int x = room.x;
-        int y = room.y;
-        int w = room.w;
-        int h = room.h;
-        map.FillArea(x, y, w, h, floorTile, room);
-        SpawnEntities (room, map);
+        map.FillAreaWithBorder(room.x, room.y, room.w, room.h, floorTile, wallTile, room);
+        SpawnEntities(room, map);
+
     }
 }
