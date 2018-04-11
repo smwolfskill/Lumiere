@@ -18,6 +18,7 @@ public class PlayerHealthTest
     GameObject playerHealthBar;
     EntityHealthManager playerHealthManager;
     Player _player;
+    EquipmentManager equipmentManager;
 
     /// <summary>
     /// Initialize the Player GameObject for use in all the tests.
@@ -25,7 +26,12 @@ public class PlayerHealthTest
     [SetUp]
     public void Init()
     {
-        UICanvas = new GameObject ("UICanvas", typeof(RectTransform));
+        UICanvas = new GameObject("UICanvas",
+                                  typeof(RectTransform),
+                                  typeof(UIBehavior))
+        {
+            tag = "UICanvas"
+        };
         InitHealthBar();
         InitEquipmentPanels();
         _player = new Player();
@@ -43,6 +49,9 @@ public class PlayerHealthTest
             tag = "InventoryPanel"
         };
         invPanel.GetComponent<InventoryPanel>().entity = _player;
+
+        UICanvas.GetComponent<UIBehavior>().inventoryPanel = invPanel;
+
         player = new GameObject("Player", typeof(EntityHealthManager));
         playerHealthManager = player.GetComponent<EntityHealthManager>();
         playerObject = new PlayerObject(player, 100.0f);
@@ -66,6 +75,7 @@ public class PlayerHealthTest
     /// </summary>
     public void InitEquipmentPanels()
     {
+        equipmentManager = new EquipmentManager();
         hotbarPanel = new GameObject("HotbarPanel",
                                      typeof(HotbarPanel),
                                      typeof(GridLayoutGroup))
@@ -73,14 +83,18 @@ public class PlayerHealthTest
             tag = "HotbarPanel"
         };
         hotbarPanel.transform.SetParent(UICanvas.transform);
+        hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(
+            equipmentManager);
 
         equipmentPanel = new GameObject("EquipmentPanel",
-            typeof(EquipmentPanel),
-            typeof(GridLayoutGroup))
+                                        typeof(EquipmentPanel),
+                                        typeof(GridLayoutGroup))
         {
             tag = "EquipmentPanel"
         };
         equipmentPanel.transform.SetParent(UICanvas.transform);
+        equipmentPanel.GetComponent<EquipmentPanel>().Manager =
+            equipmentManager;
     }
 
     /// <summary>
