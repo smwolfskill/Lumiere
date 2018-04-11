@@ -7,12 +7,19 @@ module Options
   , optionParser
   ) where
 
-import Data.List.Split     (splitOn)
-import Data.Monoid         ((<>), mempty)
-import Data.Text           (pack, unpack, strip)
-import Options.Applicative ((<**>), Parser, ParserInfo, strOption, switch, long,
-                            short, value, metavar, help, info, helper, fullDesc,
-                            progDesc, header)
+import Control.Applicative
+  (many)
+import Data.List.Split
+  (splitOn)
+import Data.Monoid
+  ((<>), mempty)
+import Data.Text
+  (pack, unpack, strip)
+import Options.Applicative
+  (Parser, ParserInfo, argument, str, strOption, switch, long, short, value,
+   metavar, help, helpDoc, info, helper, fullDesc, progDesc, header, footerDoc)
+import Text.PrettyPrint.ANSI.Leijen
+  (text, linebreak)
 
 data Options = Options
              { color :: String
@@ -35,26 +42,34 @@ options = Options
        <*> switch
            ( long "quiet"
           <> short 'q'
-          <> help "quiets output (only show failed) (not implemented)"
+          <> help "only show non-passing results"
            )
        <*> switch
            ( long "summary"
           <> short 's'
-          <> help "print test result summary (total passed/failed) (not implemented)"
+          <> help "print test result summary (total passed/failed)"
            )
-       <*> ( fmap (unpack . strip . pack) . splitOn "," <$>
-             strOption
-             ( long "files"
-            <> short 'f'
-            <> metavar "FILES=file1[,file2,...]"
-            <> help "files to parse (commas not allowed in path)"
+       <*> many
+           ( argument str
+             ( metavar "FILES"
+            <> helpDoc
+               ( Just $ text "FILES=[file1] [file2] ..."
+              <> linebreak
+              <> text "files to parse"
+               )
              )
            )
 
 -- construct the actual parser
 optionParser :: ParserInfo Options
 optionParser = info withHelp infomod
-  where withHelp = options <**> helper
+  where withHelp = helper <*> options
         infomod = fullDesc
                <> progDesc "reads every file in FILES and prints out the test results with failure messages and detailed stack traces"
                <> header "unity-testresult-parser -- a parser for unity test results"
+               <> footerDoc
+                  ( Just $ text "example usage:"
+                 <> linebreak
+                 <> text ("unity-testresult-parser --color=auto --quiet " <>
+                          "--summary TestResults.xml")
+                  )
