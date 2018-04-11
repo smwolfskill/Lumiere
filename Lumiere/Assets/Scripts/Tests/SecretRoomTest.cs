@@ -57,7 +57,7 @@ public class SecretRoomTest
     [Test]
     public void TestTilesSpawned()
     {
-        secretRoom.GenRoom ();
+        secretRoom.GenRoom (5 / 2);
         Assert.IsTrue (secretRoom.tiles.Count > 0);
     }
 
