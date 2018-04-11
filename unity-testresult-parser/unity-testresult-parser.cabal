@@ -51,7 +51,8 @@ executable unity-testresult-parser
       OverloadedStrings
     , FlexibleContexts
   build-depends:
-      base >=4.7 && <5
+      ansi-wl-pprint
+    , base >=4.7 && <5
     , unity-testresult-parser
     , ansi-terminal
     , mtl
