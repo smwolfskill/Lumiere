@@ -9,6 +9,7 @@ public abstract class EntityObject
     protected float maxHealth;
     protected float currHealth;
     protected bool isDead;
+	protected Inventory inventory;
 
     /*
     public EntityObject(float maxHealth)
@@ -23,6 +24,9 @@ public abstract class EntityObject
         this.maxHealth = maxHealth;
         this.currHealth = maxHealth;
         this.isDead = false;
+		this.inventory = null;
+
+        this.gameObject.AddComponent<EntityHealthManager>();
     }
 
     virtual public void InflictDamage(float damageAmount)
@@ -54,6 +58,7 @@ public abstract class EntityObject
 
     virtual protected void Die()
     {
+        Object.Destroy(gameObject);
         this.isDead = true;
     }
 

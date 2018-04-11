@@ -40,11 +40,6 @@ public class GameItem
     [SerializeField]
     protected int itemID;            // The ID of the item, each item needs a unique ID.
 
-    [SerializeField]
-    public string useAction;         //name of corresponding action asset to load in Resources/Actions/ItemActions/.
-
-    protected ItemAction action;
-
     /// <summary>
     /// Represents rarity of the item, probably for item color purposes.
     /// </summary>
@@ -77,9 +72,9 @@ public class GameItem
     /// <param name="newMaxStack">Maximum times the item can stack in an inventory slot.</param>
     /// <param name="itemQuantity">Amount of items in this stack.</param>
     /// <param name="itemID">The ID of the item.</param>
-    public GameItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null)
+    public GameItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1)
     {
-        this.FillData(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction);
+        this.FillData(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID);
     }
 
     /// <summary>
@@ -89,6 +84,11 @@ public class GameItem
     public GameItem(GameItem copy)
     {
         this.FillData(copy);
+    }
+
+    virtual public GameItem clone()
+    {
+        return new GameItem (this);
     }
 
     /// <summary>
@@ -137,13 +137,6 @@ public class GameItem
         {
             this.quantity = itemQuantity;
         }
-
-        this.useAction = useAction;
-        if(useAction != null && useAction != "")
-        {
-            this.action = Resources.Load<ItemAction>("Actions/ItemActions/" + useAction);
-            this.action.itemID = itemID;
-        }
     }
 
     /// <summary>
@@ -154,7 +147,7 @@ public class GameItem
     {
         FillData(null, copy.groundSprite, copy.name, 
                  copy.description, copy.value, copy.rarity, 
-                 copy.quantity, copy.maxStacks, copy.itemID, copy.useAction);
+                 copy.quantity, copy.maxStacks, copy.itemID);
         //Copy the gui sprites and textures here to avoid duplicating texture generation.
         this.guiSprite = copy.guiSprite;
         this.guiTexture = copy.guiTexture;
@@ -268,17 +261,6 @@ public class GameItem
         itemManager.item = this;
         return droppedItem;
     }
-
-    public bool ValidateUse(GameObject obj)
-    {
-        return action != null && action.Validate(obj);
-    }
-
-    public bool Use(GameObject obj)
-    {
-        return action.Execute(obj);
-    }
-
 
     /// <summary>
     /// Yanks a texture representing the image of a sprite from the sprite

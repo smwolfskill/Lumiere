@@ -179,10 +179,18 @@ public class InventoryBehavior : MonoBehaviour
     public void UseItemActions()
     {
         GameItem selectedItem = GetSelectedItem();
-        if(selectedItem.ValidateUse(gameObject))
+
+        if (selectedItem == null)
+            return;
+
+        if (selectedItem is UsableItem)
         {
-            //Player selected to use the current item, and it is valid to be used
-            selectedItem.Use(gameObject);
+            UsableItem selectedUsable = (UsableItem)selectedItem;
+            if (selectedUsable.ValidateUse(gameObject))
+            {
+                //Player selected to use the current item, and it is valid to be used
+                selectedUsable.Use(gameObject);
+            }
         }
         /*for(int yPos = 0; yPos < inv.GetHeight(); yPos++)
         {

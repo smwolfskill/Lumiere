@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 using NUnit.Framework;
 using System.Collections;
 
@@ -7,11 +8,16 @@ using System.Collections;
 public class PlayerHealthTest
 {
     GameObject player;
-    GameObject healthBarCanvas;
+    GameObject camera;
+    GameObject UICanvas;
     GameObject canvasHealthBar;
+    GameObject invPanel;
+    GameObject hotbarPanel;
+    GameObject equipmentPanel;
     PlayerObject playerObject;
     GameObject playerHealthBar;
     EntityHealthManager playerHealthManager;
+    Player _player;
 
     /// <summary>
     /// Initialize the Player GameObject for use in all the tests.
@@ -19,7 +25,24 @@ public class PlayerHealthTest
     [SetUp]
     public void Init()
     {
+        UICanvas = new GameObject ("UICanvas", typeof(RectTransform));
         InitHealthBar();
+        InitEquipmentPanels();
+        _player = new Player();
+        camera = new GameObject("Main Camera",
+                                typeof(Camera),
+                                typeof(CameraFollow))
+        {
+            tag = "MainCamera"
+        };
+        camera.GetComponent<Camera>().enabled = true;
+        invPanel = new GameObject("Inventory Panel",
+                                  typeof(InventoryPanel),
+                                  typeof(GridLayoutGroup))
+        {
+            tag = "InventoryPanel"
+        };
+        invPanel.GetComponent<InventoryPanel>().entity = _player;
         player = new GameObject("Player", typeof(EntityHealthManager));
         playerHealthManager = player.GetComponent<EntityHealthManager>();
         playerObject = new PlayerObject(player, 100.0f);
@@ -31,11 +54,33 @@ public class PlayerHealthTest
     /// </summary>
     public void InitHealthBar()
     {
-        healthBarCanvas = new GameObject ("UICanvas", typeof(RectTransform));
+        
         canvasHealthBar = new GameObject("CanvasHealthBar", typeof(RectTransform));
-        canvasHealthBar.transform.SetParent(healthBarCanvas.transform);
+        canvasHealthBar.transform.SetParent(UICanvas.transform);
         playerHealthBar = new GameObject("PanelHealthBarFill", typeof(RectTransform), typeof(HealthBarManager));
         playerHealthBar.transform.SetParent(canvasHealthBar.transform);
+    }
+
+    /// <summary>
+    /// Initialize the panels used by the EquipmentManager with the correct heirarchy.
+    /// </summary>
+    public void InitEquipmentPanels()
+    {
+        hotbarPanel = new GameObject("HotbarPanel",
+                                     typeof(HotbarPanel),
+                                     typeof(GridLayoutGroup))
+        {
+            tag = "HotbarPanel"
+        };
+        hotbarPanel.transform.SetParent(UICanvas.transform);
+
+        equipmentPanel = new GameObject("EquipmentPanel",
+            typeof(EquipmentPanel),
+            typeof(GridLayoutGroup))
+        {
+            tag = "EquipmentPanel"
+        };
+        equipmentPanel.transform.SetParent(UICanvas.transform);
     }
 
     /// <summary>
@@ -59,9 +104,9 @@ public class PlayerHealthTest
             GameObject.Destroy(canvasHealthBar);
         }
 
-        if(healthBarCanvas != null)
+        if(UICanvas != null)
         {
-            GameObject.Destroy(healthBarCanvas);
+            GameObject.Destroy(UICanvas);
         }
     }
 

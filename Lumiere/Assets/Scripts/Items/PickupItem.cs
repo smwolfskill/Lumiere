@@ -8,7 +8,6 @@ using UnityEngine.XR.WSA;
 [CreateAssetMenu(menuName = "Lumiere/Actions/PickupItem")]
 public class PickupItem : EntityAction
 {
-    private bool lastInput = false;
     private GameObject itemObj = null;
     private ItemManager itemManager = null;
     private GameItem toPickup = null;
@@ -25,7 +24,7 @@ public class PickupItem : EntityAction
 
         bool pickupItemInput = Input.GetKeyDown(SettingsManager.GetPickupItem());
         bool clickedOnItem = false;
-        if(pickupItemInput && pickupItemInput != lastInput)
+        if(pickupItemInput)
         {
             //Still uses mouse click because otherwise cannot know which item(s) in radius to pickup!
             //Gather 3D mouse position and raycasting information
@@ -54,7 +53,6 @@ public class PickupItem : EntityAction
                 }
             }
         }
-        lastInput = pickupItemInput;
         return clickedOnItem;
     }
 

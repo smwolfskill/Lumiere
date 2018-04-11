@@ -5,9 +5,29 @@ using UnityEngine;
 public class PlayerObject : EntityObject
 {
     private GameObject healthBar;
+    public EquipmentManager EquipmentManager
+    {
+        get;
+        protected set;
+    }
+
     public PlayerObject(GameObject existingGameObject, float maxHealth) : base(existingGameObject, maxHealth)
     {
+        this.inventory = new Inventory(5,3);
+        this.EquipmentManager = new EquipmentManager(10, 1);
         this.healthBar = GameObject.Find("PanelHealthBarFill");
+        GameObject UICanvas = GameObject.FindGameObjectWithTag("UICanvas");
+        UIBehavior uib = UICanvas.GetComponent<UIBehavior>();
+
+        Camera.main.GetComponent<CameraFollow>().SetTargetTransform(existingGameObject.transform);
+        GameObject inventoryPanel = uib.inventoryPanel;
+        inventoryPanel.GetComponent<InventoryPanel>().SetInitialInventory(this.inventory);
+
+        GameObject equipmentPanel = GameObject.FindGameObjectWithTag("EquipmentPanel");
+        equipmentPanel.GetComponent<EquipmentPanel>().Manager = this.EquipmentManager;
+
+        GameObject hotbarPanel = GameObject.FindGameObjectWithTag("HotbarPanel");
+        hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);
     }
 
     public override void InflictDamage(float damageAmount)

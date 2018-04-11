@@ -5,24 +5,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Lumiere/Actions/DropItem")]
 public class DropItem : EntityAction
 {
-    private bool lastInput = false;
-    //private InventoryBehavior invBehavior = null;
     private InventoryPanel invPanel = null;
     private GameItem toDrop = null;
-    private int dropX;
-    private int dropY;
 
     /// <summary>
-    /// Checks whether the player can pick up an item from the ground.
+    /// Checks whether the player can drop an item on the ground.
     /// </summary>
     /// <param name="obj">The Player's GameObject that wants to execute this action.</param>
-    /// <returns>Return false if no item clicked upon, or player not in range of the object.</returns>
+    /// <returns>Return false if the item cannot be dropped, or if there is no item in the slot.</returns>
     public override bool Validate(GameObject obj)
     {
         bool dropItem = Input.GetKeyDown(SettingsManager.GetDropItem());
-        bool inputChanged = dropItem && dropItem != lastInput;
-        lastInput = dropItem;
-        if(inputChanged)
+        if(dropItem)
         {
             GameObject panel = GameObject.FindGameObjectWithTag("InventoryPanel");
             invPanel = panel.GetComponent<InventoryPanel>();
@@ -32,9 +26,6 @@ public class DropItem : EntityAction
             }
             else
             {
-                dropX = invPanel.SelectedX;
-                dropY = invPanel.SelectedY;
-                //toDrop = invPanel.ManagedInventory.GetItem(dropX, dropY);
                 toDrop = invPanel.GetSelectedItem();
                 if (!toDrop.SetYet())
                 {
@@ -42,7 +33,7 @@ public class DropItem : EntityAction
                 }
                 else
                 {
-                    return inputChanged;
+                    return true;
                 }
             }
         }
@@ -53,10 +44,10 @@ public class DropItem : EntityAction
     }
 
     /// <summary>
-    /// Pick up the item.
+    /// Drop the item.
     /// </summary>
     /// <param name="obj">The GameObject (Player) that wants to execute this action.</param>
-    /// <returns>Returns true if the item was picked up successfully, false otherwise.</returns>
+    /// <returns>Returns true if the item was dropped successfully, false otherwise.</returns>
     public override bool Execute(GameObject obj)
     {
         bool stackModifierInput = Input.GetKey(SettingsManager.GetStackModifier()); //if pressed, will drop entire stack
@@ -66,7 +57,7 @@ public class DropItem : EntityAction
             amountToDrop = toDrop.Quantity;
         }
 
-        GameItem removedItem = invPanel.ManagedInventory.RemoveItem(dropX, dropY, amountToDrop);
+        GameItem removedItem = invPanel.ManagedInventory.RemoveItem(invPanel.SelectedX, invPanel.SelectedY, amountToDrop);
         if(removedItem == null)
         {
             return false; //nothing to drop. Inventory bug

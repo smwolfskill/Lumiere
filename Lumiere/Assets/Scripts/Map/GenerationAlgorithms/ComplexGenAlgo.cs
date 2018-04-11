@@ -30,7 +30,7 @@ public class ComplexGenAlgo : GenAlgo
         map.PopulateClosestOtherRooms();
 
         AttemptGenPaths();
-        
+        map.GetRooms()[0].SpawnPlayer();
     }
 
     private void AttemptGenPaths()

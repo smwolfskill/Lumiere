@@ -9,10 +9,10 @@ public class Inventory
 {
     public InventoryPanel uiPanel;
 
-    protected int width;          // Width in blocks.
-    protected int height;         // Height in blocks.
+    protected int width;                // Width in blocks.
+    protected int height;               // Height in blocks.
 
-    protected GameItem[,] items;  // Array of items.
+    protected GameItem[,] items;        // Array of items.
 
     /// <summary>
     /// Constructor for an inventory.
@@ -58,6 +58,11 @@ public class Inventory
         }
     }
 
+    /// <summary>
+    /// Updates the UI quantity text at slot x and y.
+    /// </summary>
+    /// <param name="x">Location to be updated (x).</param>
+    /// <param name="y">Location to be updated (y).</param>
     public void UpdateUIQuantityText(int x, int y)
     {
         if(uiPanel != null)
@@ -182,7 +187,7 @@ public class Inventory
     public GameItem RemoveItem(int x, int y, int quantity)
     {
         GameItem itemInSlot = GetItem (x, y);
-        GameItem removedItem = new GameItem(itemInSlot);
+        GameItem removedItem = itemInSlot.clone();
         if (!itemInSlot.SetYet())
         {
             return null;
@@ -276,7 +281,7 @@ public class Inventory
             return item;
         }
 
-        GameItem item_cpy = new GameItem(item);
+        GameItem item_cpy = item.clone();
         int currXPos = 0, currYPos = 0;
 
         if (item_cpy.MaxStacks > 1) //stackable item
