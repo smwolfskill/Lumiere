@@ -64,11 +64,11 @@ public class MovementAnimation : MonoBehaviour
         string animationModifier = "";
         if (speed < 0.1f) 
         {
-            animationModifier = "Walk";
+            animationModifier = "Idle";
         } 
         else 
         {
-            animationModifier = "Idle";    
+            animationModifier = "Walk";    
         }
 
         anim.SetTrigger (animationMapping [lastDirection] + animationModifier);
