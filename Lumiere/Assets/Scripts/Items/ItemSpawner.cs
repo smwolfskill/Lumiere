@@ -99,6 +99,7 @@ static class ItemSpawner
     /// <returns>A potential name for the item.</returns>
     public static string GenerateWeaponName(int seed, WeaponItem item)
     {
+        // TODO
         return "";
     }
 
@@ -110,6 +111,7 @@ static class ItemSpawner
     /// <returns>A potential name for the item.</returns>
     public static string GenerateArmorName(int seed, ArmorItem item)
     {
+        // TODO
         return "";
     }
 
@@ -122,6 +124,7 @@ static class ItemSpawner
     /// <returns>A potential description for the item.</returns>
     public static string GenerateWeaponDesc(int seed, WeaponItem item)
     {
+        // TODO
         return "";
     }
 
@@ -134,6 +137,7 @@ static class ItemSpawner
     /// <returns>A potential description for the item.</returns>
     public static string GenerateArmorDesc(int seed, ArmorItem item)
     {
+        // TODO
         return "";
     }
 
@@ -145,6 +149,7 @@ static class ItemSpawner
     /// <returns></returns>
     public static bool ShouldDropItem(int seed, int rewardFactor)
     {
+        // TODO
         return false;
     }
     #endregion
