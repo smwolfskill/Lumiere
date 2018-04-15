@@ -9,6 +9,8 @@ public class Player : Entity
     private float _FisticuffDamage;
     [SerializeField]
     private float maxHealth;
+    [SerializeField]
+    private RuntimeAnimatorController animatorController;
 
     public float FisticuffDamage
     {
@@ -26,6 +28,9 @@ public class Player : Entity
     {
         GameObject player = base.Spawn (map, location);
         player.tag = "Player";
+        Animator anim = player.AddComponent<Animator> ();
+        anim.runtimeAnimatorController = animatorController;
+        MovementAnimation moveAnim = player.AddComponent<MovementAnimation> ();
         EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);

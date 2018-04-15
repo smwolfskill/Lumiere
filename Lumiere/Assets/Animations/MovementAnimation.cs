@@ -71,6 +71,8 @@ public class MovementAnimation : MonoBehaviour
             animationModifier = "Walk";    
         }
 
+        //Debug.Log ("Trigger: " + animationMapping [lastDirection] + animationModifier);
+        //anim.SetTrigger ("TReset");
         anim.SetTrigger (animationMapping [lastDirection] + animationModifier);
 
     }
