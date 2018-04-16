@@ -11,6 +11,7 @@ public class Monster : NPC
     {
         GameObject monster = base.Spawn(map, location);
         GameObject particles = Instantiate(damageParticles, monster.transform);
+        particles.transform.localPosition = Vector3.back;
         monster.layer = LayerMask.NameToLayer("Enemy");
         MonsterObject obj = new MonsterObject(monster, maxHealth);
         
