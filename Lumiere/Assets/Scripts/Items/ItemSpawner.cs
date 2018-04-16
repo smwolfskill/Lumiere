@@ -1,24 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System;
 
 /// <summary>
 /// Specialized static class designed to handle item generation algorithms.
 /// </summary>
 static class ItemSpawner
 {
+    // Essentially a const, it lists the liklyhood an item will be a certain rarity or higher based on the scale.
+    private static readonly int[] rarityWeights = {20, 10, 5, 3, 1};
+
     #region Item Generators
     /// <summary>
-    /// Generation function designed to build an equippable item for spawning, can be a weapon or armor.
+    /// Generation function designed to build an either a weapon or armor.
     /// </summary>
     /// <param name="seed">Seed to use for generation, useful for testing. Set this to system time during playtime.</param>
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
-    /// <returns>An equippable item, with name and description pre-set based on the item spec.</returns>
-    public static EquippableItem GenerateEquipment(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
+    /// <returns>An item, with name and description pre-set based on the item spec.</returns>
+    public static GameItem GenerateItem(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
-        // TODO
-        return null;
+        // Some constants to use for calculations:
+        int armorWeight = 6;    // Weighted likelyhood to pick this over the other.
+        int weaponWeight = 1;   // Weighted likelyhood to pick this over the other.
+
+        // Note we are using the system's random, and not Unity's in order to use a seed.
+        Random random = new Random(seed);
+
+        // Choose what type of thing to generate, armor, or a weapon?
+        int val = random.Next(1, armorWeight + weaponWeight);
+
+        // Call other generation functions based on this.
+        if (val >= weaponWeight)
+            return GenerateWeapon(seed, quality, rarity);
+        else
+            return GenerateArmor(seed, quality, rarity);
     }
 
     /// <summary>
@@ -30,7 +46,46 @@ static class ItemSpawner
     /// <returns>A weapon item, with name and description pre-set based on the item spec.</returns>
     public static ArmorItem GenerateArmor(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
-        // TODO
+        // Some constants to use for calculations:
+        double[] minArmorRarityRatings = {1, 2, 3, 4, 5};           // Scaling factor for minimum based on rarity. Min * RarityRating = Absolute Minimum
+        int[] minArmorRatings = {5, 15, 25, 5, 1, 1};               // Minimum rating per armor slot, in enum order.
+        int[] maxArmorRatings = {20, 50, 100, 10, 5, 5};            // Maximum rating per armor slot, in enum order.
+        
+        double[] minSpeedRarityRatings = {1, 1.25, 1.5, 1.75, 2};   // Scaling factor for minimum based on rarity.
+        double[] minSpeedRatings = {1, 1, 1, 1, 1, 1};              // Minimum rating per armor slot, in enum order.
+        double[] maxSpeedRatings = {2, 5, 2, 1, 5, 5};              // Maximum rating per armor slot, in enum order.
+
+        double[] minDamageRarityRatings = {1, 1.25, 1.5, 1.75, 2};  // Scaling factor for minimum based on rarity.
+        double[] minDamageRatings = {1, 1, 1, 1, 1, 1};             // Minimum rating per armor slot, in enum order.
+        double[] maxDamageRatings = {2, 2, 2, 5, 5, 5};             // Maximum rating per armor slot, in enum order. 
+
+        // For reference, ENUM Order: HEAD, LEGS, CHEST, GLOVES, RING, NECK.
+
+        // Note we are using the system's random, and not Unity's in order to use a seed.
+        Random random = new Random(seed);
+
+        // Select rarity first; this determines effectiveness.
+
+        // Determine slot for armor.
+
+        // Determine sprite info (somehow).
+
+        // Calculate the armor's values.
+
+        // Note that the quality modifier increases only the armor stat by a certain factor based on dungeon depth AFTER the value has already been calculated.
+        // It hasn't exactly been determined HOW this impacts things; but it should be relative to the monster's attack damage and health at a given depth.
+
+        // Build the armor item.
+
+        // Generate a name.
+
+        // Generate a description.
+
+        // Pick a value rating. (Should probably be another utility method).
+
+        // Generate a unique ID (this might require some internal memory somewhere to keep track of what IDs have already been assigned, probably another utility function).
+
+        // Return the finished item.
         return null;
     }
 
@@ -43,8 +98,21 @@ static class ItemSpawner
     /// <returns>A weapon item, with name and description pre-set based on the item spec.</returns>
     public static WeaponItem GenerateWeapon(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
-        // TODO
-        return null;
+        // Some constants to use for calculations:
+        int meleeWeight = 1;    // Weighted likelyhood to pick this over the other.
+        int rangedWeight = 0;   // Weighted likelyhood to pick this over the other.
+
+        // Note we are using the system's random, and not Unity's in order to use a seed.
+        Random random = new Random(seed);
+
+        // Choose what type of thing to generate, armor, or a weapon?
+        int val = random.Next(1, meleeWeight + rangedWeight);
+
+        // Call other generation functions based on this.
+        if (val >= rangedWeight)
+            return GenerateMeleeWeapon(seed, quality, rarity);
+        else
+            return GenerateRangedWeapon(seed, quality, rarity);
     }
 
     /// <summary>
@@ -57,6 +125,7 @@ static class ItemSpawner
     public static MeleeWeapon GenerateMeleeWeapon(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
         // TODO
+        Random random = new Random(seed);
         return null;
     }
 
@@ -70,6 +139,7 @@ static class ItemSpawner
     public static RangedWeapon GenerateRangedWeapon(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
         // TODO
+        Random random = new Random(seed);
         return null;
     }
 
@@ -86,6 +156,7 @@ static class ItemSpawner
     public static GameItem[] GenerateLootBag(int seed, int quality, int min = 1, int max = 5, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
         // TODO
+        Random random = new Random(seed);
         return null;
     }
     #endregion
@@ -99,7 +170,7 @@ static class ItemSpawner
     /// <returns>A potential name for the item.</returns>
     public static string GenerateWeaponName(int seed, WeaponItem item)
     {
-        // TODO
+        Random random = new Random(seed);
         return "";
     }
 
@@ -111,7 +182,7 @@ static class ItemSpawner
     /// <returns>A potential name for the item.</returns>
     public static string GenerateArmorName(int seed, ArmorItem item)
     {
-        // TODO
+        Random random = new Random(seed);
         return "";
     }
 
@@ -124,7 +195,7 @@ static class ItemSpawner
     /// <returns>A potential description for the item.</returns>
     public static string GenerateWeaponDesc(int seed, WeaponItem item)
     {
-        // TODO
+        Random random = new Random(seed);
         return "";
     }
 
@@ -137,7 +208,7 @@ static class ItemSpawner
     /// <returns>A potential description for the item.</returns>
     public static string GenerateArmorDesc(int seed, ArmorItem item)
     {
-        // TODO
+        Random random = new Random(seed);
         return "";
     }
 
@@ -149,8 +220,29 @@ static class ItemSpawner
     /// <returns></returns>
     public static bool ShouldDropItem(int seed, int rewardFactor)
     {
-        // TODO
+        Random random = new Random(seed);
         return false;
+    }
+
+    /// <summary>
+    /// Generates the value for a given item.
+    /// </summary>
+    /// <param name="item">Item data in question, will usually be passed weapons or equipment; should have private helper functions for those.</param>
+    /// <returns>The value the item should logically have. Note it is not random.</returns>
+    public static double GenerateItemValue(GameItem item)
+    {
+        return 0.0;
+    }
+
+    /// <summary>
+    /// Generates an ID for a given item. This function is likely to require some sort of closure or variable that keeps track of what the max selected ID is, given the static nature of this class.
+    /// I imagine the MIN ID to start at 100, so everything below that can be used for special items as needed for testing.
+    /// </summary>
+    /// <param name="item">The item that needs to have an Id assigned to it.</param>
+    /// <returns>An unused ID for the item.</returns>
+    public static int GenerateItemID(GameItem item)
+    {
+        return 0;
     }
     #endregion
 }
