@@ -12,7 +12,7 @@ using UnityEngine;
 public class WeaponItem : UsableItem
 {
     // Proximity within which a player can attack a monster with this item
-    public double AttackRange
+    public float AttackRange
     {
         get;
         protected set;
