@@ -24,13 +24,25 @@ public class Player : Entity
         }
     }
 
+	public GameObject AttackAnimationObject
+	{
+		get;
+		private set;
+	}
+
     override public GameObject Spawn(Map map, Vector2 location)
     {
         GameObject player = base.Spawn (map, location);
+
         player.tag = "Player";
         Animator anim = player.AddComponent<Animator> ();
         anim.runtimeAnimatorController = animatorController;
         MovementAnimation moveAnim = player.AddComponent<MovementAnimation> ();
+
+		AttackAnimationObject = CreateAttackAnimGameObject();
+		AttackAnimationObject.transform.SetParent(player.transform);
+		AttackAnimationObject.transform.localPosition = Vector3.zero;
+
         EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);
@@ -39,6 +51,14 @@ public class Player : Entity
         healthManager.entityObj = entityObj;
         player.AddComponent<EntityObjectManager>().entityObject = entityObj;
 
+
         return player;
     }
+
+	private GameObject CreateAttackAnimGameObject()
+	{
+		GameObject attackAnimObj = new GameObject("PlayerAttackAnim", typeof(SpriteRenderer), typeof(Animation), typeof(AttackAnimation));
+		//attackAnimObj.GetComponent<SpriteRenderer>().enabled = false;
+		return attackAnimObj;
+	}
 }
