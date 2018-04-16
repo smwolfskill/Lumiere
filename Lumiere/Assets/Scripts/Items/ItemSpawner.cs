@@ -10,6 +10,8 @@ static class ItemSpawner
     // Essentially a const, it lists the liklyhood an item will be a certain rarity or higher based on the scale.
     private static readonly int[] rarityWeights = {20, 10, 5, 3, 1};
 
+    private static int lastID = 100;
+
     #region Item Generators
     /// <summary>
     /// Generation function designed to build an either a weapon or armor.
@@ -28,7 +30,7 @@ static class ItemSpawner
         Random random = new Random(seed);
 
         // Choose what type of thing to generate, armor, or a weapon?
-        int val = random.Next(1, armorWeight + weaponWeight);
+        int val = random.Next(1, armorWeight + weaponWeight + 1);
 
         // Call other generation functions based on this.
         if (val >= weaponWeight)
@@ -170,8 +172,94 @@ static class ItemSpawner
     /// <returns>A potential name for the item.</returns>
     public static string GenerateWeaponName(int seed, WeaponItem item)
     {
+        // Use the other name generator functions based on what item we have.
+        if (item is MeleeWeapon)
+            return GenerateMeleeName(seed, item as MeleeWeapon);
+        else
+            return GenerateRangedName(seed, item as RangedWeapon);
+    }
+
+    private static string GenerateMeleeName(int seed, MeleeWeapon item)
+    {
+        // Name Pool.
+        string[] types = {"Dagger", "Shortsword", "Longsword", "Two-Handed Sword"};
+
+        // Based on the range.
+        double[] typeCutoffRange = {1, 2, 3, 5};    
+
+        // Prefixes, based on item rarity.
+        string[] prefixesCommon = {"Basic", "Average", "Mundane", "Blunt", "Trivial", "Ugly"};
+        string[] prefixesUncommon = {"Interesting", "Cool", "Sharp", "Pointy", "Stabby", "Zealous"};
+        string[] prefixesRare = {"Exciting", "Strong", "True", "Knight's", "Rare", "Lordly"};
+        string[] prefixesEpic = {"Powerful", "Dangerous", "Violent", "Epic", "Killer", "Unstoppable"};
+        string[] prefixesLegend = {"Divine", "Legendary", "Godly", "Unbelivable", "Overpowered", "Mythical"};
+
+        // Based on rarity, this is the likelyhood a suffix will appear on the weapon.
+        int[] suffixThreshold = {90, 75, 40, 0, 0};            
+        string[] suffixs = {"Fabulousness", "Coolness", "Swagger", "The Monk", "The Dragon", "The Burrito", "Dangerousness", "Pointyness", "Aggressiveness", "Revengence"};
+
+        // Note we are using the system's random, and not Unity's in order to use a seed.
         Random random = new Random(seed);
-        return "";
+
+        string prefix;
+        bool suffixReq = false;
+
+        // Pick a prefix and determine if a suffix is neccessary.
+        switch (item.Rarity)
+        {
+            case GameItem.ItemRarity.UNCOMMON:
+                prefix = prefixesUncommon[random.Next(0, prefixesUncommon.Length)];
+                suffixReq = (random.Next(0, 101) >= suffixThreshold[1]);
+                break;
+            case GameItem.ItemRarity.RARE:
+                prefix = prefixesRare[random.Next(0, prefixesRare.Length)];
+                suffixReq = (random.Next(0, 101) >= suffixThreshold[2]);
+                break;
+
+            case GameItem.ItemRarity.EPIC:
+                prefix = prefixesEpic[random.Next(0, prefixesEpic.Length)];
+                suffixReq = (random.Next(0, 101) >= suffixThreshold[3]);
+                break;
+
+            case GameItem.ItemRarity.LEGENDARY:
+                prefix = prefixesLegend[random.Next(0, prefixesLegend.Length)];
+                suffixReq = (random.Next(0, 101) >= suffixThreshold[4]);
+                break;
+
+            default:
+                prefix = prefixesCommon[random.Next(0, prefixesCommon.Length)];
+                suffixReq = (random.Next(0, 101) >= suffixThreshold[0]);
+                break;
+        }
+
+        // Generate the type;
+        string type = "NOPE";
+        double range = item.AttackRange;
+
+        // Iterate through list of types, type is based on range.
+        for (int i = 0; i < types.Length && type.CompareTo("NOPE") == 0; i++)
+        {
+            if (range <= typeCutoffRange[i])
+            {
+                type = types[i];
+            }
+        }
+
+        // Pick a suffix (if there should be one).
+        string suffix = "";
+
+        if (suffixReq)
+        {
+            suffix = "of " + suffixs[random.Next(suffixs.Length)];
+        }
+
+        // Combine and return.
+        return prefix + " " + type + " " + suffix;
+    }
+
+    private static string GenerateRangedName(int seed, RangedWeapon item)
+    {
+        return null;
     }
 
     /// <summary>
@@ -238,11 +326,11 @@ static class ItemSpawner
     /// Generates an ID for a given item. This function is likely to require some sort of closure or variable that keeps track of what the max selected ID is, given the static nature of this class.
     /// I imagine the MIN ID to start at 100, so everything below that can be used for special items as needed for testing.
     /// </summary>
-    /// <param name="item">The item that needs to have an Id assigned to it.</param>
     /// <returns>An unused ID for the item.</returns>
-    public static int GenerateItemID(GameItem item)
+    public static int GenerateItemID()
     {
-        return 0;
+        lastID++;
+        return lastID;
     }
     #endregion
 }
