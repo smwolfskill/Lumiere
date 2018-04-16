@@ -12,11 +12,7 @@ using UnityEngine;
 class WeaponItem : UsableItem
 {
     // Proximity within which a player can attack a monster with this item
-    public double AttackRange
-    {
-        get;
-        protected set;
-    }
+    protected double attackRange;
 
     // Damage the weapon deals.
     protected float damage;
@@ -48,10 +44,12 @@ class WeaponItem : UsableItem
     /// <param name="useAction">Use action for weapon, should default to an ATTACK action.</param>
     /// <param name="dmg">Damage of the weapon in question.</param>
     /// <param name="rateOF">Rate of fire of weapon (how many times per second it can be used).</param>
-    public WeaponItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, float dmg = 5.0f, double rateOF = 1.0) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction)
+    /// <param name="range">Range of the possible attack.</param>
+    public WeaponItem(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, float dmg = 5.0f, double rateOF = 1.0, double range = 1.0) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction)
     {
         this.damage = dmg;
         this.rof = rateOF;
+        this.attackRange = range;
     }
 
     override public GameItem clone()
@@ -100,6 +98,22 @@ class WeaponItem : UsableItem
         set
         {
             rof = value;
+        }
+    }
+
+    /// <summary>
+    /// Getter and setter for attack range.
+    /// </summary>
+    public double AttackRange
+    {
+        get
+        {
+            return attackRange;
+        }
+
+        set
+        {
+            attackRange = value;
         }
     }
 }
