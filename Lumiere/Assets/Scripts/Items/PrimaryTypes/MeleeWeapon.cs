@@ -12,23 +12,20 @@ using UnityEngine;
 /// </summary>
 class MeleeWeapon : WeaponItem
 {
-    // Radius and arc of swing.
-    private double radius;
+    // Arc of swing.
     private double arc;
 
     /// <summary>
     /// Base Weapon Constructor.
     /// </summary>
-    /// <param name="radius">The range of the swing outward from the entity. Negitive number behavior and 0 behavior not defined.</param>
     /// <param name="arc">Arc of the swing of this melee weapon. Negitive number behavior and values over 360 are not defined.</param>
-    public MeleeWeapon(double radius = 5.0, double arc = 90.0) : base()
+    public MeleeWeapon(double arc = 90.0) : base()
     {
-        InitAttackData(radius, arc);
+        InitAttackData(arc);
     }
 
-    private void InitAttackData(double radius, double arc)
+    private void InitAttackData(double arc)
     {
-        this.radius = radius;
         this.arc = arc;
     }
 
@@ -47,11 +44,11 @@ class MeleeWeapon : WeaponItem
     /// <param name="useAction">Use action for weapon, should default to an ATTACK action.</param>
     /// <param name="dmg">Damage of the weapon in question.</param>
     /// <param name="rateOF">Rate of fire of weapon (how many times per second it can be used).</param>
-    /// <param name="radius">The range of the swing outward from the entity. Negitive number behavior and 0 behavior not defined.</param>
+    /// <param name="range">The range of the swing outward from the entity. Negitive number behavior and 0 behavior not defined.</param>
     /// <param name="arc">Arc of the swing of this melee weapon. Negitive number behavior and values over 360 are not defined.</param>
-    public MeleeWeapon(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, float dmg = 5.0f, double rateOF = 1.0, double radius = 5.0, double arc = 90.0) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction, dmg, rateOF)
+    public MeleeWeapon(Sprite gui, Sprite ground, string newName, string newDesc, double val, ItemRarity rareness, int itemQuantity = 1, int newMaxStack = 1, int itemID = -1, string useAction = null, float dmg = 5.0f, double rateOF = 1.0, double range = 5.0, double arc = 90.0) : base(gui, ground, newName, newDesc, val, rareness, itemQuantity, newMaxStack, itemID, useAction, dmg, rateOF, range)
     {
-        InitAttackData(radius, arc);
+        InitAttackData(arc);
     }
 
     override public GameItem clone()
@@ -69,24 +66,7 @@ class MeleeWeapon : WeaponItem
             this.useAction,
             this.damage,
             this.rof,
-            this.radius,
             this.arc);
-    }
-
-    /// <summary>
-    /// Radius Getter and Setter.
-    /// </summary>
-    public double Radius
-    {
-        get
-        {
-            return radius;
-        }
-
-        set
-        {
-            radius = value;
-        }
     }
 
     /// <summary>
