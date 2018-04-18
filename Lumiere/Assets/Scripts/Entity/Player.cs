@@ -24,14 +24,23 @@ public class Player : Entity
 
     override public GameObject Spawn(Map map, Vector2 location)
     {
+        Debug.Log("Spawn");
         GameObject player = base.Spawn (map, location);
         player.tag = "Player";
         EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);
         this.entityObject = entityObj;
-        EntityHealthManager healthManager = player.AddComponent<EntityHealthManager> ();
-        healthManager.entityObj = entityObj;
+        EntityHealthManager healthManagerTest = player.GetComponent<EntityHealthManager> ();
+        if (healthManagerTest == null)
+        {
+            EntityHealthManager healthManager = player.AddComponent<EntityHealthManager> ();
+            healthManager.entityObj = entityObj;
+        }
+        else
+        {
+            healthManagerTest.entityObj = this.entityObject;
+        }
         player.AddComponent<EntityObjectManager>().entityObject = entityObj;
 
         return player;

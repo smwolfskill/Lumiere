@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class EntityHealthManager : MonoBehaviour 
 {
@@ -11,13 +10,6 @@ public class EntityHealthManager : MonoBehaviour
     {
         if (entityObj != null) 
         {
-        	EquipmentManager equipmentManager = entityObj.GetComponent<EquipmentManager> ();
-        	if (equipmentManager != null)
-        	{
-        		double armorRating = 0;
-        		armorRating = equipmentManager.GetArmorRating();
-        		Console.Debug(armorRating);
-        	}
             entityObj.InflictDamage (damageAmount);
         }
     }
