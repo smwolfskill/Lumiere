@@ -13,6 +13,7 @@ public class ComplexGenAlgo : GenAlgo
     public TileType pathTileType;
     public TileType wallTileType;
     public ContainerType baseContainerType;
+    public bool longButGoodGen = false;
 
     public override void GenerateMap(Map map)
     {
@@ -32,36 +33,29 @@ public class ComplexGenAlgo : GenAlgo
         
         AttemptGenPaths();
 
-        DesperateConnect();
+        if(longButGoodGen)DesperateConnect();
 
         map.GetRooms()[0].SpawnPlayer();
     }
 
     private void DesperateConnect()
     {
-        bool allConnected = true;
-        int tries = 100;
-        do
+
+        for(int i = map.containers.Count - 1; i >= 0; i--)
         {
-            for(int i = map.containers.Count - 1; i >= 0; i--)
+            Container startingContainer = map.containers[i];
+
+            for(int j = i - 1; j >= 0; j--)
             {
-                Container startingContainer = map.containers[i];
+                Container endingContainer = map.containers[j];
 
-                for(int j = map.containers.Count - 1; j >= 0; j--)
+                if (!map.AreContainersConnected(startingContainer, endingContainer))
                 {
-                    Container endingContainer = map.containers[j];
-
-                    if (!map.AreContainersConnected(startingContainer, endingContainer))
-                    {
-                        allConnected = false;
-                        TryConnect(startingContainer, endingContainer);
-                    }
+                    TryConnect(startingContainer, endingContainer);
                 }
             }
-
-            tries--;
         }
-        while (!allConnected && tries > 0);
+
     }
 
     private bool TryConnect(Container startingContainer, Container endingContainer)
@@ -79,7 +73,16 @@ public class ComplexGenAlgo : GenAlgo
                 Door endingDoor = GetValidDoor(endingTile);
                 if (endingDoor == null) continue;
 
-                if (ConnectDoors(startingDoor, endingDoor)) return true;
+                if (ConnectDoors(startingDoor, endingDoor))
+                {
+                    map.ChangeTilesInArea(startingTile.x, startingTile.y, 2, earthTileType, wallTileType, startingContainer);
+                    map.ChangeTilesInArea(startingTile.x, startingTile.y, 1, wallTileType, pathTileType, startingContainer);
+
+                    map.ChangeTilesInArea(endingTile.x, endingTile.y, 2, earthTileType, wallTileType, endingContainer);
+                    map.ChangeTilesInArea(endingTile.x, endingTile.y, 1, wallTileType, pathTileType, endingContainer);
+
+                    return true;
+                }
             }
         }
 
