@@ -284,7 +284,7 @@ public class Map
 
     public void OpenDoorArea(Door door, TileType tileType)
     {
-        CreateTileAndSetTile(door.x, door.y, door.room, tileType);
+        CreateTileAndSetTile(door.x, door.y, door.container, tileType);
 
         Pair<int, int> currLeftOfPair = new Pair<int, int>(door.x, door.y);
         Pair<int, int> currRightOfPair = new Pair<int, int>(door.x, door.y);
@@ -296,8 +296,8 @@ public class Map
             currLeftOfPair = Utilities.CordInDirection(leftOf, currLeftOfPair);
             currRightOfPair = Utilities.CordInDirection(rightOf, currRightOfPair);
 
-            CreateTileAndSetTile(currLeftOfPair, door.room, tileType);
-            CreateTileAndSetTile(currRightOfPair, door.room, tileType);
+            CreateTileAndSetTile(currLeftOfPair, door.container, tileType);
+            CreateTileAndSetTile(currRightOfPair, door.container, tileType);
         }
     }
 

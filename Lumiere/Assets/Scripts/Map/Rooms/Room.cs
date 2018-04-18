@@ -12,7 +12,6 @@ public class Room : Container
     // on centerX, centerY
     public List<Room> closestOtherRooms;
 
-    public List<Door> doors;
 
     public RoomType roomType;
 
@@ -27,7 +26,6 @@ public class Room : Container
         this.centerX = x + w / 2;
         this.centerY = y + h / 2;
 
-        this.doors = new List<Door>();
         this.closestOtherRooms = new List<Room>();
 
         this.roomType = (RoomType)this.containerType;
