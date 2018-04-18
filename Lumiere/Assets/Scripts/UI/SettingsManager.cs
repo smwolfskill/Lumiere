@@ -8,6 +8,7 @@ using System;
 public static class SettingsManager
 {
     public static volatile bool loaded = false;
+    public const string DEFAULT_PATH = "Assets/Resources/settings.txt";
     private static Settings settings;
 
     /// <summary>
@@ -16,7 +17,7 @@ public static class SettingsManager
     /// </summary>
     /// <param name="file_path">The string containing the path to the file holding settings</param>
     /// <returns>Returns true if loading from file was successful.</returns>
-    public static bool LoadSettings(string file_path) //TODO: main game loop load settings upon game launch
+    public static bool LoadSettings(string file_path = DEFAULT_PATH) //TODO: main game loop load settings upon game launch
     {
         loaded = true;
         try
@@ -43,7 +44,7 @@ public static class SettingsManager
     /// <param name="file_path">The string containing the path to the file that 
     /// settings should be written to.</param>
     /// <returns>Returns true if writing to the file was successful.</returns>
-    public static bool SaveSettings(string file_path)
+    public static bool SaveSettings(string file_path = DEFAULT_PATH)
     {
         try
         {
