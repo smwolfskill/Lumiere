@@ -24,7 +24,6 @@ public class Player : Entity
 
     override public GameObject Spawn(Map map, Vector2 location)
     {
-        Debug.Log("Spawn");
         GameObject player = base.Spawn (map, location);
         player.tag = "Player";
         EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
