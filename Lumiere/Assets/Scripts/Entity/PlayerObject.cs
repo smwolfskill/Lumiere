@@ -32,7 +32,9 @@ public class PlayerObject : EntityObject
 
     public override void InflictDamage(float damageAmount)
     {
-        base.InflictDamage(damageAmount);
+        float armor =  ((float)EquipmentManager.GetArmorRating());
+        float multiplier = (float)(1 - (0.05 * armor / (1 + 0.05 * Mathf.Abs(armor))));
+        base.InflictDamage(damageAmount * multiplier);
         //Debug.Log ("Inflicting damage! Health: " + currHealth + " Max Health: " + maxHealth);
         UpdateHealthBar();
     }
