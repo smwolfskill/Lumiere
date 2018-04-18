@@ -30,8 +30,16 @@ public class Player : Entity
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);
         this.entityObject = entityObj;
-        EntityHealthManager healthManager = player.AddComponent<EntityHealthManager> ();
-        healthManager.entityObj = entityObj;
+        EntityHealthManager healthManagerTest = player.GetComponent<EntityHealthManager> ();
+        if (healthManagerTest == null)
+        {
+            EntityHealthManager healthManager = player.AddComponent<EntityHealthManager> ();
+            healthManager.entityObj = entityObj;
+        }
+        else
+        {
+            healthManagerTest.entityObj = this.entityObject;
+        }
         player.AddComponent<EntityObjectManager>().entityObject = entityObj;
 
         return player;
