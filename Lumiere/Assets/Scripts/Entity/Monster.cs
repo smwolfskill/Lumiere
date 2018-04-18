@@ -7,10 +7,17 @@ public class Monster : NPC
 {
     public GameObject damageParticles;
 
+	public RuntimeAnimatorController animatorController;
+
     override public GameObject Spawn(Map map, Vector2 location)
     {
         GameObject monster = base.Spawn(map, location);
         GameObject particles = Instantiate(damageParticles, monster.transform);
+
+		Animator anim = monster.AddComponent<Animator> ();
+		anim.runtimeAnimatorController = animatorController;
+		MovementAnimation moveAnim = monster.AddComponent<MovementAnimation> ();
+
         particles.transform.localPosition = Vector3.back;
         monster.layer = LayerMask.NameToLayer("Enemy");
         MonsterObject obj = new MonsterObject(monster, maxHealth);
