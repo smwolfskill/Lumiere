@@ -21,7 +21,7 @@ public class EntitySpawnTest
     {
         mapGameObject = new GameObject ("Map");
         roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
-        Map map = new Map (50, 50, 1, mapGameObject, roomProperties);
+        Map map = new Map (50, 50, 1, mapGameObject, roomProperties, 1, 1);
 
         entityRoomType = Resources.Load<EntityRoomType> ("Rooms/EntityRoom");
         entityToSpawn = Resources.Load<Entity> ("Entities/Monsters/Monster 1");

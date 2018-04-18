@@ -14,7 +14,10 @@ public class Map
     public int tileOffset;
     public GameObject gameObject;
 
-    public Map(int w, int h, int tileOffset, GameObject gameObject, RoomProperties roomProperties)
+    public int levelNumber;
+    public float difficulty;
+
+    public Map(int w, int h, int tileOffset, GameObject gameObject, RoomProperties roomProperties, int levelNumber, float difficulty)
     {
         this.gameObject = gameObject;
         this.w = w;
@@ -23,6 +26,9 @@ public class Map
         this.tileMatrix = new Tile[h, w];
         this.containers = new List<Container>();
         this.roomProperties = roomProperties;
+
+        this.levelNumber = levelNumber;
+        this.difficulty = difficulty;
     }
 
     /// TODO: this description was from legacy code, change it to fit this (somewhat

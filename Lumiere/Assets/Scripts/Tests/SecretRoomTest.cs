@@ -20,7 +20,7 @@ public class SecretRoomTest
     {
         mapGameObject = new GameObject ("Map");
         roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
-        Map map = new Map (50, 50, 1, mapGameObject, roomProperties);
+        Map map = new Map (50, 50, 1, mapGameObject, roomProperties, 1, 1);
         secretRoomType = Resources.Load<SecretRoomType> ("Rooms/SecretRoom");
         secretRoom = new Room (map, 0, 0, 30, 30, secretRoomType);
         Assert.IsNotNull (map);

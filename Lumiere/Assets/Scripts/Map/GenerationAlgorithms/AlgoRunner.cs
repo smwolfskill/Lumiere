@@ -19,8 +19,8 @@ public class AlgoRunner : MonoBehaviour {
     void Start ()
     {
 
-        map = new Map(width, height, tileOffset, gameObject, roomProperties);
-        genAlgo.GenerateMap(map);
+        //map = new Map(width, height, tileOffset, gameObject, roomProperties);
+        //genAlgo.GenerateMap(map);
         
     }
 
