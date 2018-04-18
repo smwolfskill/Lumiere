@@ -17,7 +17,7 @@ public class UIBehavior : MonoBehaviour
     {
         if(!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
         {
-            SettingsManager.LoadSettings("TODO elsewhere"); //will load default settings since loading from file will fail
+            SettingsManager.LoadSettings(); //load from default path
         }
         canvas = GetComponent<Canvas>();
         //TODO in future iterations: add other methods of input which would open/close UI (e.g. Esc to open the menu).

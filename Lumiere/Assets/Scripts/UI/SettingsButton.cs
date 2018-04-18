@@ -21,7 +21,7 @@ public class SettingsButton : MonoBehaviour
         button.onClick.AddListener(OnClick);
         if(!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
         {
-            SettingsManager.LoadSettings("TODO elsewhere"); //will load default settings since loading from file will fail
+            SettingsManager.LoadSettings(); //load from default path
         }
         button.GetComponentInChildren<Text>().text = SettingsManager.GetKey(settingName).ToString();
     }
@@ -87,7 +87,7 @@ public class SettingsButton : MonoBehaviour
     {
         if(!sameClick)
         {
-            Debug.Log("pressed");
+            //Debug.Log("pressed");
             pressed = true;
             sameClick = true;
             button.onClick.RemoveListener(OnClick); //to allow mouse clicks, disable button interaction until after user presses key

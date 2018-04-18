@@ -10,7 +10,6 @@ public class UINavigationBehavior : MonoBehaviour
 	public Button button;
 	public Button[] settingsButtons;
 	public GameObject[] currentScreens;
-	private string path;
 
 	/// <summary>
     /// Initialized variables used by navigation buttons on various screens.
@@ -18,7 +17,6 @@ public class UINavigationBehavior : MonoBehaviour
 	void Start() 
 	{
 		button.onClick.AddListener(OnClick);
-		path = "Assets/Resources/settings.txt";
 	}
 
 	/// <summary>
@@ -26,21 +24,19 @@ public class UINavigationBehavior : MonoBehaviour
     /// </summary>
 	void OnClick()
 	{
-		// Deal with settings
-		if (button.tag == "UIApplyButton")
-		{
-			Save(path);
-		}
-		// Deal with settings
-		if (button.tag == "UIRevertButton")
-		{
-			SettingsManager.LoadSettings(path); //will load default settings since loading from file will fail
-			foreach(Button button in settingsButtons)
-			{
-				button.GetComponent<SettingsButton>().Reload();
-			}
-			return;
-		}
+        //Deal with settings if applicable
+        switch(button.tag)
+        {
+            case "UIApplyButton":
+                Save();
+                break;
+            case "UIRevertButton":
+                LoadSettingsToButtons();
+                return; //don't close any windows; stay on the Settings screen
+            case "UICancelButton": //same as revert, but exits Settings screen after clicking
+                LoadSettingsToButtons();
+                break;
+        }
 
 		if(nextScreen == null || (nextScreen != null && nextScreen.tag != "UISettingsScreen"))
 		{
@@ -65,9 +61,18 @@ public class UINavigationBehavior : MonoBehaviour
     /// <param name="file_path">The string containing the path to the file that 
     /// settings should be written to.</param>
     /// <returns>Returns true if writing to the file was successful.</returns>
-	void Save(string file_path)
+    void Save(string file_path = SettingsManager.DEFAULT_PATH)
 	{
 		SettingsManager.SaveSettings(file_path);
 	}
+
+    void LoadSettingsToButtons(string file_path = SettingsManager.DEFAULT_PATH)
+    {
+        SettingsManager.LoadSettings(file_path); //will load old, already saved settings
+        foreach(Button button in settingsButtons)
+        {
+            button.GetComponent<SettingsButton>().Reload();
+        }
+    }
 
 }
