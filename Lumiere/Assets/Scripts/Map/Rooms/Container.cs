@@ -16,6 +16,9 @@ public class Container
         this.map = map;
         this.containerType = containerType;
 
+        connectedContainers = new List<Container>();
+        connectedContainers.Add(this);
+
         tiles = new List<Tile>();
 
         gameObject = containerType.PopulateGameObject();
