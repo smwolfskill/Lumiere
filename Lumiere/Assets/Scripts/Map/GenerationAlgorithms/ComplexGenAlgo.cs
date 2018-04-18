@@ -43,10 +43,14 @@ public class ComplexGenAlgo : GenAlgo
         int tries = 100;
         do
         {
-            foreach(Container startingContainer in map.containers)
+            for(int i = map.containers.Count - 1; i >= 0; i--)
             {
-                foreach(Container endingContainer in map.containers)
+                Container startingContainer = map.containers[i];
+
+                for(int j = map.containers.Count - 1; j >= 0; j--)
                 {
+                    Container endingContainer = map.containers[j];
+
                     if (!map.AreContainersConnected(startingContainer, endingContainer))
                     {
                         allConnected = false;
@@ -68,9 +72,13 @@ public class ComplexGenAlgo : GenAlgo
         foreach(Tile startingTile in startingTiles)
         {
             Door startingDoor = GetValidDoor(startingTile);
+            if (startingDoor == null) continue;
+
             foreach (Tile endingTile in endingTiles)
             {
                 Door endingDoor = GetValidDoor(endingTile);
+                if (endingDoor == null) continue;
+
                 if (ConnectDoors(startingDoor, endingDoor)) return true;
             }
         }
