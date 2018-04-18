@@ -16,6 +16,7 @@ public class Room : Container
 
     public RoomType roomType;
 
+
     public Room(Map map, int x, int y, int w, int h, RoomType roomType) : base(map, roomType)
     {
         this.x = x;

@@ -314,4 +314,40 @@ public class Map
             }
         }
     }
+
+    public void ConnectContainers(Container a, Container b)
+    {
+        a.connectedContainers.Add(b);
+        b.connectedContainers.Add(a);
+    }
+
+    public bool AreContainersConnected(Container startingContainer, Container endingContainer)
+    {
+        return AreContainersConnected(startingContainer, endingContainer, new Dictionary<Container, bool>());
+    }
+
+    private bool AreContainersConnected(
+        Container startingContainer,
+        Container endingContainer,
+        Dictionary<Container, bool> hasSeenContainer
+    )
+    {
+        // This container has already been searched
+        if (hasSeenContainer.ContainsKey(startingContainer)) return false;
+
+        // This container can no longer be searched again
+        hasSeenContainer.Add(startingContainer, true);
+
+        // We have found that these two containers do connect
+        if (startingContainer == endingContainer) return true;
+
+        foreach(Container nextContainer in startingContainer.connectedContainers)
+        {
+            bool ret = AreContainersConnected(nextContainer, endingContainer, hasSeenContainer);
+
+            if (ret) return true;
+        }
+
+        return false;
+    }
 }

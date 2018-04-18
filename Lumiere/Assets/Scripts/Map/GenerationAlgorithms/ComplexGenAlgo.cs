@@ -129,7 +129,10 @@ public class ComplexGenAlgo : GenAlgo
         if (endLink != null)
         {
             //add the path to the map
-            ModifyMapWithLinks(endLink);
+            Container path = ModifyMapWithLinks(endLink);
+
+            map.ConnectContainers(door.room, path);
+            map.ConnectContainers(otherDoor.room, path);
 
 
             //add openings to the door areas
@@ -185,7 +188,7 @@ public class ComplexGenAlgo : GenAlgo
         }
     }
 
-    private void ModifyMapWithLinks(Link currLink)
+    private Container ModifyMapWithLinks(Link currLink)
     {
         // todo: choose a more specific container type for the path's container
         Container container = new Container(map, baseContainerType);
@@ -200,6 +203,8 @@ public class ComplexGenAlgo : GenAlgo
 
             currLink = currLink.parentLink;
         }
+
+        return container;
 
     }
 

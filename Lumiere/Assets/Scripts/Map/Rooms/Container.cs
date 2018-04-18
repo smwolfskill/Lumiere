@@ -9,6 +9,8 @@ public class Container
     public List<Tile> tiles;
     public ContainerType containerType;
 
+    public List<Container> connectedContainers;
+
     public Container(Map map, ContainerType containerType)
     {
         this.map = map;
