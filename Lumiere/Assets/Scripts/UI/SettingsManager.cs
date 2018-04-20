@@ -83,6 +83,11 @@ public static class SettingsManager
         return StringToKeyCode(settings.moveRight);
     }
 
+    public static KeyCode GetWalk()
+    {
+        return StringToKeyCode(settings.walk);
+    }
+
     public static KeyCode GetDropItem()
     {
         return StringToKeyCode(settings.dropItem);
@@ -124,23 +129,15 @@ public static class SettingsManager
         switch(settingName)
         {
             case "moveUp": return GetMoveUp();
-                break;
             case "moveDown": return GetMoveDown();
-                break;
             case "moveLeft": return GetMoveLeft();
-                break;
             case "moveRight": return GetMoveRight();
-                break;
+            case "walk": return GetWalk();
             case "useItem": return GetUseItem();
-                break;
             case "dropItem": return GetDropItem();
-                break;
             case "pickupItem": return GetPickupItem();
-                break;
             case "openInventory": return GetOpenInventory();
-                break;
             case "stackModifier": return GetStackModifier();
-                break;
             default: throw new ArgumentException("settingName");
         }
     }
@@ -156,23 +153,15 @@ public static class SettingsManager
         switch(settingName)
         {
             case "moveUp": return SetMoveUp(key);
-                break;
             case "moveDown": return SetMoveDown(key);
-                break;
             case "moveLeft": return SetMoveLeft(key);
-                break;
             case "moveRight": return SetMoveRight(key);
-                break;
+            case "walk": return SetWalk(key);
             case "useItem": return SetUseItem(key);
-                break;
             case "dropItem": return SetDropItem(key);
-                break;
             case "pickupItem": return SetPickupItem(key);
-                break;
             case "openInventory": return SetOpenInventory(key);
-                break;
             case "stackModifier": return SetStackModifier(key);
-                break;
             default: return false;
         }
     }
@@ -225,6 +214,16 @@ public static class SettingsManager
         if(IsValidKeyCode(key))
         {
             settings.moveRight = key;
+            return true;
+        }
+        return false;
+    }
+
+    public static bool SetWalk(string key)
+    {
+        if(IsValidKeyCode(key))
+        {
+            settings.walk = key;
             return true;
         }
         return false;

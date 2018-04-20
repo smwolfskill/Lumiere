@@ -20,6 +20,7 @@ public class Settings
     public string moveDown;
     public string moveLeft;
     public string moveRight;
+    public string walk;
     public string useItem;
     public string dropItem;
     public string pickupItem;
@@ -36,6 +37,7 @@ public class Settings
         moveDown = "S";
         moveLeft = "A";
         moveRight = "D";
+        walk = "LeftAlt";
         useItem = "E";
         dropItem = "Q";
         pickupItem = "Mouse0";
