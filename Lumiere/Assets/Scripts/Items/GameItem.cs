@@ -459,6 +459,10 @@ public class GameItem
         {
             return itemID;
         }
+        set
+        {
+            itemID = value;
+        }
     }
     #endregion
 
