@@ -6,6 +6,7 @@ using UnityEngine;
 public class Monster : NPC
 {
     public GameObject damageParticles;
+    public GameObject healthBarPrefab;
 
 	public RuntimeAnimatorController animatorController;
 
@@ -13,6 +14,8 @@ public class Monster : NPC
     {
         GameObject monster = base.Spawn(map, location);
         GameObject particles = Instantiate(damageParticles, monster.transform);
+        GameObject healthBar = Instantiate(healthBarPrefab, monster.transform, false);
+        healthBar.AddComponent<EnemyHealthBarManager>();
 
 		Animator anim = monster.AddComponent<Animator> ();
 		anim.runtimeAnimatorController = animatorController;
