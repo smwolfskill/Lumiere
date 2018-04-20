@@ -9,7 +9,7 @@ static class ItemSpawner
 {
     // Essentially a const, it lists the liklyhood an item will be a certain rarity or higher based on the scale.
     private static readonly int[] rarityWeights = {20, 10, 5, 3, 1};
-
+    private static readonly int floorRarityBoostThreshold = 5;  // How many floors before rarity increases.
     private static readonly string[] materials = { "Bronze", "Iron", "Steel", "Mythril", "Adamantium", "Luminite" };
 
     private static int lastID = 100;
@@ -45,7 +45,6 @@ static class ItemSpawner
     /// Generation function designed to build an armor item for spawning. Can fit any slot.
     /// </summary>
     /// <param name="seed">Seed to use for generation, useful for testing. Set this to system time during playtime.</param>
-    /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>A weapon item, with name and description pre-set based on the item spec.</returns>
     public static ArmorItem GenerateArmor(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
@@ -69,28 +68,68 @@ static class ItemSpawner
         Random random = new Random(seed);
 
         // Select rarity first; this determines effectiveness.
+        int totalWeight = 0;
+        for (int i = 0; i < rarityWeights.Length; i++)
+        {
+            totalWeight += rarityWeights[i];
+        }
+
+        int randRarity = random.Next(totalWeight);
+        int trueRarity = -1;
+        totalWeight = rarityWeights[0];
+        for (int i = 1; i < rarityWeights.Length && trueRarity == -1; i++)
+        {
+            if (randRarity < totalWeight)
+                trueRarity = i - 1;
+
+            totalWeight += rarityWeights[i];
+        }
+
+        // Rarity is guaurnteed to increase for every X floors of depth.
+        trueRarity += (quality / floorRarityBoostThreshold);
+        if (trueRarity > 4)
+            trueRarity = 4;
 
         // Determine slot for armor.
+        int trueSlot = random.Next(Enum.GetNames(typeof(EquipmentManager.EquipSlot)).Length);
 
-        // Determine sprite info (somehow).
+        // Determine sprite info (somehow). TODO (I'm not sure how to do this)
 
         // Calculate the armor's values.
+        double weightedMinArmor = minArmorRatings[trueSlot] * minArmorRarityRatings[trueRarity];
+        if (weightedMinArmor > maxArmorRatings[trueSlot])
+            weightedMinArmor = maxArmorRatings[trueSlot];
 
-        // Note that the quality modifier increases only the armor stat by a certain factor based on dungeon depth AFTER the value has already been calculated.
-        // It hasn't exactly been determined HOW this impacts things; but it should be relative to the monster's attack damage and health at a given depth.
+        double weightedMinSpeed = minSpeedRatings[trueSlot] * minSpeedRarityRatings[trueRarity];
+        if (weightedMinArmor > maxSpeedRatings[trueSlot])
+            weightedMinArmor = maxSpeedRatings[trueSlot];
+
+        double weightedMinDamage = minDamageRatings[trueSlot] * minDamageRarityRatings[trueRarity];
+        if (weightedMinArmor > maxDamageRatings[trueSlot])
+            weightedMinArmor = maxDamageRatings[trueSlot];
+
+        double armor = random.NextDouble() * (maxArmorRatings[trueSlot] - weightedMinArmor) + weightedMinArmor;
+        double speed = random.NextDouble() * (maxSpeedRatings[trueSlot] - weightedMinSpeed) + weightedMinSpeed;
+        double damage = random.NextDouble() * (maxDamageRatings[trueSlot] - weightedMinDamage) + weightedMinDamage;
 
         // Build the armor item.
+        ArmorItem newItem = new ArmorItem((EquipmentManager.EquipSlot)trueSlot, armor, speed, damage);
+        newItem.Rarity = (GameItem.ItemRarity)trueRarity;
 
         // Generate a name.
+        newItem.Name = GenerateArmorName(seed, newItem, minArmorRatings, maxArmorRatings, minSpeedRatings, maxSpeedRatings, minDamageRatings, maxDamageRatings);
 
         // Generate a description.
+        newItem.Description = GenerateArmorDesc(seed, newItem);
 
         // Pick a value rating. (Should probably be another utility method).
+        newItem.Value = GenerateItemValue(newItem);
 
         // Generate a unique ID (this might require some internal memory somewhere to keep track of what IDs have already been assigned, probably another utility function).
+        newItem.ItemID = GenerateItemID();
 
         // Return the finished item.
-        return null;
+        return newItem;
     }
 
     /// <summary>
@@ -615,8 +654,11 @@ static class ItemSpawner
     /// <returns>A potential description for the item.</returns>
     public static string GenerateWeaponDesc(int seed, WeaponItem item)
     {
-        Random random = new Random(seed);
-        return "";
+        // This function is decisively more lazy than the others, as generating really unique definitions isn't really neccessary and we're short on time.
+        if (item is MeleeWeapon)
+            return "A sword, you can stab monsters with it.";
+        else
+            return "A ranged weapon, you can hit things at a distance with it.";
     }
 
     /// <summary>
@@ -628,19 +670,44 @@ static class ItemSpawner
     /// <returns>A potential description for the item.</returns>
     public static string GenerateArmorDesc(int seed, ArmorItem item)
     {
+        // This function is decisively more lazy than the others, as generating really unique definitions isn't really neccessary and we're short on time.
         Random random = new Random(seed);
-        return "";
+        switch (item.Slot)
+        {
+            case EquipmentManager.EquipSlot.CHEST:
+                return "A piece of armor for your upper body and chest region. Provides defence.";
+
+            case EquipmentManager.EquipSlot.LEGS:
+                return "A piece of armor for your legs, its like pants but with more plating. Provides defence.";
+
+            case EquipmentManager.EquipSlot.NECK:
+                return "Fancy jewlery for your fancy neck; also probably protects from vampires. Provides defence.";
+
+            case EquipmentManager.EquipSlot.GLOVES:
+                return "Gauntlets, Gloves, etc, things you wear on your hands. Provides defence.";
+
+            case EquipmentManager.EquipSlot.HEAD:
+                return "A piece of armor for your head, probably a helmet, good for biking. Provides defence.";
+
+            case EquipmentManager.EquipSlot.RING:
+                return "A ring you can wear around your finger. Provides defence.";
+
+        }
+        return "A generic piece of armor, it can be used to defend you from harm.";
     }
 
     /// <summary>
     /// A function designed to determine wether or not a monster should drop an item.
     /// </summary>
     /// <param name="seed">Seed for generating the bool. Should be set to system time during live gameplay.</param>
-    /// <param name="rewardFactor">A single integer representing the likelyhood this particular enemy should drop a reward. Ideally based both on floor level and monster power.</param>
-    /// <returns></returns>
-    public static bool ShouldDropItem(int seed, int rewardFactor)
+    /// <param name="rewardFactor">A single integer representing the likelyhood this particular enemy should drop a reward. Ideally based both on floor level and monster power. Higher number = Larger Chance</param>
+    /// <returns>True if the monster should drop a potion, False otherwise.</returns>
+    public static bool DropPotion(int seed, int rewardFactor)
     {
         Random random = new Random(seed);
+        if (random.Next(100) <= 1 + rewardFactor)
+            return true;
+
         return false;
     }
 
@@ -651,6 +718,25 @@ static class ItemSpawner
     /// <returns>The value the item should logically have. Note it is not random.</returns>
     public static double GenerateItemValue(GameItem item)
     {
+        // Item value is based upon the item's rarity. TODO: Perhaps add more logic
+        switch (item.Rarity)
+        {
+            case GameItem.ItemRarity.COMMON:
+                return 50.0;
+
+            case GameItem.ItemRarity.UNCOMMON:
+                return 150.0;
+
+            case GameItem.ItemRarity.RARE:
+                return 350.0;
+
+            case GameItem.ItemRarity.EPIC:
+                return 650.0;
+
+            case GameItem.ItemRarity.LEGENDARY:
+                return 1500.0;
+        }
+
         return 0.0;
     }
 
