@@ -25,7 +25,7 @@ static class ItemSpawner
     public static GameItem GenerateItem(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
         // Some constants to use for calculations:
-        int armorWeight = 6;    // Weighted likelyhood to pick this over the other.
+        int armorWeight = 2;    // Weighted likelyhood to pick this over the other.
         int weaponWeight = 1;   // Weighted likelyhood to pick this over the other.
 
         // Note we are using the system's random, and not Unity's in order to use a seed.
@@ -55,11 +55,11 @@ static class ItemSpawner
         double[] maxArmorRatings = {20, 50, 100, 10, 5, 5};         // Maximum rating per armor slot, in enum order.
         
         double[] minSpeedRarityRatings = {1, 1.25, 1.5, 1.75, 2};   // Scaling factor for minimum based on rarity.
-        double[] minSpeedRatings = {1, 1, 1, 1, 1, 1};              // Minimum rating per armor slot, in enum order.
+        double[] minSpeedRatings = {0, 1, 0, 0, 1, 1};              // Minimum rating per armor slot, in enum order.
         double[] maxSpeedRatings = {2, 5, 2, 1, 5, 5};              // Maximum rating per armor slot, in enum order.
 
         double[] minDamageRarityRatings = {1, 1.25, 1.5, 1.75, 2};  // Scaling factor for minimum based on rarity.
-        double[] minDamageRatings = {1, 1, 1, 1, 1, 1};             // Minimum rating per armor slot, in enum order.
+        double[] minDamageRatings = {0, 0, 0, 1, 1, 1};             // Minimum rating per armor slot, in enum order.
         double[] maxDamageRatings = {2, 2, 2, 5, 5, 5};             // Maximum rating per armor slot, in enum order. 
 
         // For reference, ENUM Order: HEAD, LEGS, CHEST, GLOVES, RING, NECK.
@@ -112,9 +112,26 @@ static class ItemSpawner
         double speed = random.NextDouble() * (maxSpeedRatings[trueSlot] - weightedMinSpeed) + weightedMinSpeed;
         double damage = random.NextDouble() * (maxDamageRatings[trueSlot] - weightedMinDamage) + weightedMinDamage;
 
+
+        // Determine, based on rarity, if armor is allowed to have speed or damage.
+        if (trueRarity < 1)
+        {
+            speed = 0;
+            damage = 0;
+        }
+        else if (trueRarity < 2)
+        {
+            if (speed > damage)
+                damage = 0;
+            else
+                speed = 0;
+        }
+
         // Build the armor item.
-        ArmorItem newItem = new ArmorItem((EquipmentManager.EquipSlot)trueSlot, armor, speed, damage);
-        newItem.Rarity = (GameItem.ItemRarity)trueRarity;
+        ArmorItem newItem = new ArmorItem((EquipmentManager.EquipSlot)trueSlot, armor, speed, damage)
+        {
+            Rarity = (GameItem.ItemRarity)trueRarity
+        };
 
         // Generate a name.
         newItem.Name = GenerateArmorName(seed, newItem, minArmorRatings, maxArmorRatings, minSpeedRatings, maxSpeedRatings, minDamageRatings, maxDamageRatings);
@@ -148,14 +165,32 @@ static class ItemSpawner
         // Note we are using the system's random, and not Unity's in order to use a seed.
         Random random = new Random(seed);
 
-        // Choose what type of thing to generate, armor, or a weapon?
+        // Choose what type of thing to generate, Ranged? Melee?
         int val = random.Next(1, meleeWeight + rangedWeight);
+
+        // Generate basic stats, these apply to all weapons
+        int rareVal = (int)rarity;
+        double[] damageScale = { 1, 10, 25, 60, 135, 250 };             // Damage range dependent on rarity, For rarity i, minimum is damageScale[i]
+        double[] rofMin = { 1, 2, 3, 4, 5 };    // TODO: PLEASE BALANCE THIS
+        double[] rofMax = { 2, 4, 6, 8, 10 };
+        double rangeMin = 1;
+        double rangeMax = 5;    // Ranged weapon range is x10 this.
+
+        // Get Damage Value; utilizes quality and rarity to help it scale.
+        double damage = random.NextDouble() * (damageScale[rareVal + 1] - damageScale[rareVal]) + damageScale[rareVal];
+        damage = damage + damage * (quality / floorRarityBoostThreshold);
+
+        // Get Range Value; depdenent on nothing.
+        double range = random.NextDouble() * (rangeMax - rangeMin) + rangeMin;
+
+        // Get Rate Of Fire; higher rarities increase this value.
+        double rof = random.NextDouble() * (rofMax[rareVal] - rofMin[rareVal]) + rofMin[rareVal];
 
         // Call other generation functions based on this.
         if (val >= rangedWeight)
-            return GenerateMeleeWeapon(seed, quality, rarity);
+            return GenerateMeleeWeapon(seed, quality, damage, range, rof, (int)rarity);
         else
-            return GenerateRangedWeapon(seed, quality, rarity);
+            return GenerateRangedWeapon(seed, quality, damage, range * 10, rof, (int)rarity);
     }
 
     /// <summary>
@@ -165,11 +200,40 @@ static class ItemSpawner
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>A melee weapon with pre-set name and description.</returns>
-    public static MeleeWeapon GenerateMeleeWeapon(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
+    public static MeleeWeapon GenerateMeleeWeapon(int seed, int quality, double damage, double range, double rof, int rareVal)
     {
-        // TODO
+        // Note we are using the system's random, and not Unity's in order to use a seed.
         Random random = new Random(seed);
-        return null;
+
+        // Get Arc Value (Attacks may not even use this but do it anyways); higher rarities increase this value.
+        double[] arcMin = {30, 60, 90, 120, 150};
+        double[] arcMax = {60, 90, 120, 150, 180};
+
+        double arc = random.NextDouble() * (arcMax[rareVal] - arcMin[rareVal]) + arcMin[rareVal];
+
+        // Now assemble and do the other important steps.
+        MeleeWeapon newItem = new MeleeWeapon(arc)
+        {
+            Rarity = (GameItem.ItemRarity)rareVal,
+            Damage = (float)damage,
+            ROF = rof,
+            AttackRange = range
+        };
+
+        // Generate a name.
+        newItem.Name = GenerateWeaponName(seed, newItem);
+
+        // Generate a description.
+        newItem.Description = GenerateWeaponDesc(seed, newItem);
+
+        // Pick a value rating. (Should probably be another utility method).
+        newItem.Value = GenerateItemValue(newItem);
+
+        // Generate a unique ID (this might require some internal memory somewhere to keep track of what IDs have already been assigned, probably another utility function).
+        newItem.ItemID = GenerateItemID();
+
+        // Return the finished item.
+        return newItem;
     }
 
     /// <summary>
@@ -179,11 +243,40 @@ static class ItemSpawner
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>A ranged weapon with pre-set name and description.</returns>
-    public static RangedWeapon GenerateRangedWeapon(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
+    public static RangedWeapon GenerateRangedWeapon(int seed, int quality, double damage, double range, double rof, int rareVal)
     {
-        // TODO
+        // Note we are using the system's random, and not Unity's in order to use a seed.
         Random random = new Random(seed);
-        return null;
+
+        // Get Penetration Value (how many enemies an attack can pierce before self deleting); higher rarities increase this value.
+        int[] penMin = { 1, 1, 2, 2, 3 };
+        int[] penMax = { 2, 3, 4, 5, 6 };
+
+        int penetration = random.Next(penMin[rareVal], penMax[rareVal]+1);
+
+        // Now assemble and do the other important steps.
+        RangedWeapon newItem = new RangedWeapon(penetration)
+        {
+            Rarity = (GameItem.ItemRarity)rareVal,
+            Damage = (float)damage,
+            ROF = rof,
+            AttackRange = range
+        };
+
+        // Generate a name.
+        newItem.Name = GenerateWeaponName(seed, newItem);
+
+        // Generate a description.
+        newItem.Description = GenerateWeaponDesc(seed, newItem);
+
+        // Pick a value rating. (Should probably be another utility method).
+        newItem.Value = GenerateItemValue(newItem);
+
+        // Generate a unique ID (this might require some internal memory somewhere to keep track of what IDs have already been assigned, probably another utility function).
+        newItem.ItemID = GenerateItemID();
+
+        // Return the finished item.
+        return newItem;
     }
 
     /// <summary>
@@ -192,15 +285,26 @@ static class ItemSpawner
     /// </summary>
     /// <param name="seed">Seed to use for generation, useful for testing. Set this to system time during playtime.</param>
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
-    /// <param name="min">Minimum amount of items that are allowed to spawn.</param>
-    /// <param name="max">Maximum amount of items that are allowed to spawn.</param>
+    /// <param name="min">Minimum amount of items that are allowed to spawn, inclusive.</param>
+    /// <param name="max">Maximum amount of items that are allowed to spawn, inclusive.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>An equippable item, with name and description pre-set based on the item spec.</returns>
     public static GameItem[] GenerateLootBag(int seed, int quality, int min = 1, int max = 5, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
     {
-        // TODO
+        // Random generation seed is set before doing anyhting else, neat.
         Random random = new Random(seed);
-        return null;
+
+        // Size up the situation.
+        int size = random.Next(min, max+1);
+        GameItem[] lootBag = new GameItem[size];
+
+        // Generate and fill the bag.
+        for (int i = 0; i < size; i++)
+        {
+            lootBag[i] = GenerateItem(seed, quality, rarity);
+        }
+
+        return lootBag;
     }
     #endregion
 
