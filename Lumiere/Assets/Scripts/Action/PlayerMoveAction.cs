@@ -8,10 +8,10 @@ public class PlayerMoveAction : EntityAction
     public float speed = 1.0f;
     public float movement_multiplier = 1.5f;
     public float movement_loss_divider = 1.5f;
-    public float direction_change_delta = 0.1f;
+    public float direction_change_delta = 0.1f; //how fast player will change direction when moving diagonally
     public float movement_delta = 0.0001f;
-    public float max_dist = 1.0f;
-    public float max_dist_walking = 0.7f;
+    public float max_dist = 1.0f;         //maximum amount to scale movement
+    public float max_dist_walking = 0.7f; //maximum amount to scale movement when walking
 
     protected float m_horiz = 0.0f; //movement along horizontal axis in [-1, 1]
     protected float m_vert = 0.0f; //movement along vertical axis in [-1, 1]
@@ -42,6 +42,9 @@ public class PlayerMoveAction : EntityAction
         return true;
     }
 
+    /// <summary>
+    /// Updates amount to move along horizontal and vertical axes in reference to a radius around the player.
+    /// </summary>
     protected void UpdateMovement()
     {
         bool h_left = Input.GetKey(SettingsManager.GetMoveLeft());
@@ -56,14 +59,6 @@ public class PlayerMoveAction : EntityAction
         {
             max_d = max_dist_walking;
         }
-        /*if(h_left && h_right)
-        {
-            horiz = false;
-        }
-        if(v_up && v_down)
-        {
-            vert = false;
-        }*/
         if(horiz && vert) //move diagonally
         {
             float eq_max = Mathf.Sqrt(2) / 2;
