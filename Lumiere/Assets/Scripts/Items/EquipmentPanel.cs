@@ -176,6 +176,9 @@ public class EquipmentPanel : MonoBehaviour
         }
         else
         {
+            //hotfix
+            return null;
+
             return equipmentManager.GetEquippedItemFromIndex(selectedY);
         }
     }
