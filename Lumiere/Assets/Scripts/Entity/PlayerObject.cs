@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerObject : EntityObject
 {
     private GameObject healthBar;
+    private Animator anim;
+
     public EquipmentManager EquipmentManager
     {
         get;
@@ -28,6 +30,8 @@ public class PlayerObject : EntityObject
 
         GameObject hotbarPanel = GameObject.FindGameObjectWithTag("HotbarPanel");
         hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);
+
+        anim = this.gameObject.GetComponent<Animator>();
     }
 
     public override void InflictDamage(float damageAmount)
@@ -46,5 +50,12 @@ public class PlayerObject : EntityObject
     private void UpdateHealthBar()
     {
         this.healthBar.GetComponent<HealthBarManager>().SetHealth(currHealth / maxHealth);
+    }
+
+    protected override void Die()
+    {
+        anim.SetTrigger("TDie");
+        GameObject.Destroy(this.gameObject, 1f);
+        this.isDead = true;
     }
 }
