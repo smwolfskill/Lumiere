@@ -14,6 +14,7 @@ public class PlayerHealthTest
     GameObject invPanel;
     GameObject hotbarPanel;
     GameObject equipmentPanel;
+    Animator anim;
     PlayerObject playerObject;
     GameObject playerHealthBar;
     EntityHealthManager playerHealthManager;
@@ -53,6 +54,7 @@ public class PlayerHealthTest
         UICanvas.GetComponent<UIBehavior>().inventoryPanel = invPanel;
 
         player = new GameObject("Player", typeof(EntityHealthManager));
+        anim = player.AddComponent<Animator>();
         playerHealthManager = player.GetComponent<EntityHealthManager>();
         playerObject = new PlayerObject(player, 100.0f);
         playerHealthManager.entityObj = playerObject;
