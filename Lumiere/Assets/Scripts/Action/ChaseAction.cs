@@ -71,24 +71,27 @@ public class ChaseAction : MonsterMoveAction
             return false;
         }
 
-        if (path.Count > 1 && Vector2.Distance (ourPosition, targetPosition) < Vector2.Distance (new Vector2(path [currentPathIndex].x, path[currentPathIndex].y), targetPosition)) 
+        if ( path != null && path.Count > 1 && currentPathIndex <= (path.Count - 1) && Vector2.Distance (ourPosition, targetPosition) < Vector2.Distance (new Vector2(path [currentPathIndex].x, path[currentPathIndex].y), targetPosition)) 
         {
             currentPathIndex++;
         }
 
-        if(path.Count == 0 || currentPathIndex > path.Count - 1 || oldTargetDistance > pathfindingThreshold)
+        if(path == null || path.Count == 0 || currentPathIndex > path.Count - 1 || oldTargetDistance > pathfindingThreshold)
         {
             //Do pathfinding
             path = pathfinding.GetPath(ourPosition, targetPosition);
             currentPathIndex = 1;
         }
 
-        Vector2 direction = new Vector2 (path [currentPathIndex].x - ourPosition.x, path [currentPathIndex].y - ourPosition.y);
-        direction.Normalize ();
-        rb.velocity = direction * speed;
-        oldTargetPosition = targetPosition;
+        if(path != null)
+        {
+            Vector2 direction = new Vector2(path[currentPathIndex].x - ourPosition.x, path[currentPathIndex].y - ourPosition.y);
+            direction.Normalize();
+            rb.velocity = direction * speed;
+            oldTargetPosition = targetPosition;
+            return true;
+        }
 
-        return true;
-
+        return false;
     }
 }
