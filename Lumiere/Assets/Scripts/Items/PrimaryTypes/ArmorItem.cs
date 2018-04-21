@@ -48,6 +48,31 @@ class ArmorItem : EquippableItem
     }
 
     /// <summary>
+    /// Base Equippable Item constructor with rarity option.
+    /// <param name="armor">Armor Value.</param>
+    /// <param name="speedModifier">How much this armor affects the player's velocity. (0 = 0% boost; 100.0 = 100% boost)</param>
+    /// <param name="damageModifier">How much this armor affects the player's damage output. (0 = 0% boost; 100.0 = 100% boost)</param>
+    /// </summary>
+    public ArmorItem(ItemRarity rarity = ItemRarity.COMMON, EquipmentManager.EquipSlot slot = EquipmentManager.EquipSlot.CHEST,  double armor = 1.0, double speedModifier = 0.0, double damageModifier = 0.0) : base(slot)
+    {
+        InitArmor(armor, speedModifier, damageModifier, rarity);
+    }
+
+    /// <summary>
+    /// Initilizes the armor data.
+    /// </summary>
+    /// <param name="armor">Armor Value.</param>
+    /// <param name="speedModifier">How much this armor affects the player's velocity. (0 = 0% boost; 100.0 = 100% boost)</param>
+    /// <param name="damageModifier">How much this armor affects the player's damage output. (0 = 0% boost; 100.0 = 100% boost)</param>
+    private void InitArmor(double armor, double speedModifier, double damageModifier, ItemRarity rarity)
+    {
+        this.armor = armor;
+        this.speedModifier = speedModifier;
+        this.damageModifier = damageModifier;
+        this.rarity = rarity;
+    }
+
+    /// <summary>
     /// Constructor for an EquippableItem.
     /// Overrides the item quantity and max stack count to 1 since equippables cannot stack.
     /// </summary>
