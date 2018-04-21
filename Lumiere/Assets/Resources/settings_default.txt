@@ -4,6 +4,7 @@
     "moveDown": "S",
     "moveLeft": "A",
     "moveRight": "D",
+    "walk": "LeftAlt",
     "useItem": "E",
     "dropItem": "Q",
     "pickupItem": "Mouse0",

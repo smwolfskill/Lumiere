@@ -6,23 +6,25 @@ using UnityEngine;
 public class PlayerMoveAction : EntityAction
 {
     public float speed = 1.0f;
-    public float movement_multiplier = 1.1f;
+    public float movement_multiplier = 1.5f;
+    public float movement_loss_divider = 1.5f;
+    public float direction_change_delta = 0.1f; //how fast player will change direction when moving diagonally
     public float movement_delta = 0.0001f;
-    protected float m_left = 0.0f;      //current horizontal movement
-    protected float m_right = 0.0f;      //current vertical movement
-    protected float m_up = 0.0f;
-    protected float m_down = 0.0f;
-    protected float m_max = 1.0f;
+    public float max_dist = 1.0f;         //maximum amount to scale movement
+    public float max_dist_walking = 0.7f; //maximum amount to scale movement when walking
+
+    protected float m_horiz = 0.0f; //movement along horizontal axis in [-1, 1]
+    protected float m_vert = 0.0f; //movement along vertical axis in [-1, 1]
+    protected float m_dist = 0.0f; //amount to scale (m_horiz, m_vert)
 
     public override bool Validate(GameObject obj)
     {
-        //TODO: Replace this in future iterations
+        //Needed so that velocity can be set to 0 when no movement is occurring
         return true;
     }
 
     public override bool Execute(GameObject obj)
     {
-        //Debug.Log("exec");
         Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D> ();
 
         //Safety check for rigidbody
@@ -30,102 +32,157 @@ public class PlayerMoveAction : EntityAction
         {
             return false;
         }
-
-        //OLD:
-        /*//Get input on horizontal and vertical axes (Keybindings in project settings)
-        float h = Input.GetAxis ("Horizontal");
-        float v = Input.GetAxis ("Vertical");
-        rigidbody.velocity = new Vector2(speed * h, speed * v);*/
-
-        //NEW w/ SettingsManager:
+            
         UpdateMovement();
-        float movement_h = m_right - m_left;
-        float movement_v = m_up - m_down;
+        float movement_h = m_horiz;
+        float movement_v = m_vert;
         //Allow diagonal movement
-        rigidbody.velocity = new Vector2(speed * movement_h, speed * movement_v);
+        rigidbody.velocity = new Vector2(speed * movement_h * m_dist, speed * movement_v * m_dist);
 
         return true;
     }
 
+    /// <summary>
+    /// Updates amount to move along horizontal and vertical axes in reference to a radius around the player.
+    /// </summary>
     protected void UpdateMovement()
     {
-        //TODO: backup prev values to have smooth transitions. *2 each time?
         bool h_left = Input.GetKey(SettingsManager.GetMoveLeft());
         bool h_right = Input.GetKey(SettingsManager.GetMoveRight());
+        bool horiz = h_left ^ h_right; //XOR
         bool v_up = Input.GetKey(SettingsManager.GetMoveUp());
         bool v_down = Input.GetKey(SettingsManager.GetMoveDown());
-        if(h_left)
+        bool vert = v_up ^ v_down; //XOR
+        bool walking = Input.GetKey(SettingsManager.GetWalk());
+        float max_d = max_dist; //max movement directly along an axis (x or y)
+        if(walking)
         {
-            m_left += movement_multiplier * m_left + movement_delta;
+            max_d = max_dist_walking;
         }
-        else
+        if(horiz && vert) //move diagonally
         {
-            m_left -= m_left / movement_multiplier + movement_delta;
-        }
+            float eq_max = Mathf.Sqrt(2) / 2;
+            if(Mathf.Abs(m_horiz) < Mathf.Abs(m_vert)) //move more horizontally towards equilibrium (perfect diagonal)
+            {
+                if(h_left)
+                {
+                    m_horiz -= 2 * direction_change_delta;    
+                }
+                else
+                {
+                    m_horiz += 2 * direction_change_delta;
+                }
 
-        if(h_right)
-        {
-            m_right += movement_multiplier * m_right + movement_delta;
-        }
-        else
-        {
-            m_right -= m_right / movement_multiplier + movement_delta;
-        }
+                if(m_horiz > eq_max)
+                {
+                    m_horiz = eq_max;
+                }
+                else if(m_horiz < -eq_max)
+                {
+                    m_horiz = -eq_max;
+                }
+                m_vert = Mathf.Sign(m_vert) * Mathf.Sqrt(1 - m_horiz * m_horiz);
+            }
+            else if(Mathf.Abs(m_horiz) > Mathf.Abs(m_vert)) //move more vertically towards equilibrium (perfect diagonal)
+            {
+                if(v_down)
+                {
+                    m_vert -= 2 * direction_change_delta;    
+                }
+                else
+                {
+                    m_vert += 2 * direction_change_delta;
+                }
 
-        if(v_up)
-        {
-            m_up += movement_multiplier * m_up + movement_delta;
+                if(m_vert > eq_max)
+                {
+                    m_vert = eq_max;
+                }
+                else if(m_vert < -eq_max)
+                {
+                    m_vert = -eq_max;
+                }
+                m_horiz = Mathf.Sign(m_horiz) * Mathf.Sqrt(1 - m_vert * m_vert);
+            }
+            else
+            {
+                if(h_left)
+                {
+                    m_horiz = -eq_max;
+                }
+                else
+                {
+                    m_horiz = eq_max;
+                }
+                if(v_down)
+                {
+                    m_vert = -eq_max;
+                }
+                else
+                {
+                    m_vert = eq_max;
+                }
+            }
         }
-        else
+        else if(horiz) //only moving horizontally
         {
-            m_up -= m_up / movement_multiplier + movement_delta;
+            float old_horiz = m_horiz;
+            if(h_left)
+            {
+                m_horiz = -max_d;
+            }
+            else
+            {
+                m_horiz = max_d;
+            }
+            if(m_horiz > max_d)
+            {
+                m_horiz = max_d;
+            }
+            else if(m_horiz < -max_d)
+            {
+                m_horiz = -max_d;
+            }
+            m_vert = 0.0f;
         }
-
-        if(v_down)
+        else if(vert) //only moving vertically
         {
-            m_down += movement_multiplier * m_down + movement_delta;
+            float old_vert = m_vert;
+            if(v_down)
+            {
+                m_vert = -max_d;
+            }
+            else
+            {
+                m_vert = max_d;
+            }
+            if(m_vert > max_d)
+            {
+                m_vert = max_d;
+            }
+            else if(m_vert < -max_d)
+            {
+                m_vert = -max_d;
+            }
+            m_horiz = 0.0f;
         }
-        else
+        //2. Apply distance multiplier
+        if(!horiz && !vert) //if not moving, slow to a stop.
         {
-            m_down -= m_down / movement_multiplier + movement_delta;
+            m_dist = m_dist / movement_loss_divider - movement_delta;
         }
-
-        //Clamp to max/min values if needed
-        if(m_left > m_max)
+        else //if moving, increase distance travelled until max.
         {
-            m_left = m_max;
+            m_dist = m_dist * movement_multiplier + movement_delta;
         }
-        else if(m_left < 0.0f)
+        if(m_dist < 0.0f)
         {
-            m_left = 0.0f;
+            m_dist = 0.0f;
         }
-
-        if(m_right > m_max)
+        else if(m_dist > max_d)
         {
-            m_right = m_max;
+            m_dist = max_d;
         }
-        else if(m_right < 0.0f)
-        {
-            m_right = 0.0f;
-        }
-
-        if(m_up > m_max)
-        {
-            m_up = m_max;
-        }
-        else if(m_up < 0.0f)
-        {
-            m_up = 0.0f;
-        }
-
-        if(m_down > m_max)
-        {
-            m_down = m_max;
-        }
-        else if(m_down < 0.0f)
-        {
-            m_down = 0.0f;
-        }
-
+        //Debug.Log("m_dist = " + m_dist.ToString() + "; max_dist = " + max_dist.ToString() + "; m_d_w = " + max_dist_walking.ToString());
     }
 }
