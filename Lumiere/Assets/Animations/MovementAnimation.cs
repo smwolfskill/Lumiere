@@ -37,6 +37,9 @@ public class MovementAnimation : MonoBehaviour
         UpdateAnimation ();
 	}
 
+    /// <summary>
+    /// Update the entity's last facing direction based on velocity. Horizontal directions take priority over vertical directions.
+    /// </summary>
     void UpdateLastDirection()
     {
         velocity = rb.velocity;
@@ -58,6 +61,9 @@ public class MovementAnimation : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update the entity's movement animation state based on velocity and last facing direction.
+    /// </summary>
     void UpdateAnimation()
     {
         float speed = velocity.magnitude;
@@ -71,8 +77,6 @@ public class MovementAnimation : MonoBehaviour
             animationModifier = "Walk";    
         }
 
-        //Debug.Log ("Trigger: " + animationMapping [lastDirection] + animationModifier);
-        //anim.SetTrigger ("TReset");
         anim.SetTrigger (animationMapping [lastDirection] + animationModifier);
 
     }
