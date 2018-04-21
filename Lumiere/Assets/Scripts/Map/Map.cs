@@ -284,7 +284,7 @@ public class Map
 
     public void OpenDoorArea(Door door, TileType tileType)
     {
-        CreateTileAndSetTile(door.x, door.y, door.room, tileType);
+        CreateTileAndSetTile(door.x, door.y, door.container, tileType);
 
         Pair<int, int> currLeftOfPair = new Pair<int, int>(door.x, door.y);
         Pair<int, int> currRightOfPair = new Pair<int, int>(door.x, door.y);
@@ -296,8 +296,8 @@ public class Map
             currLeftOfPair = Utilities.CordInDirection(leftOf, currLeftOfPair);
             currRightOfPair = Utilities.CordInDirection(rightOf, currRightOfPair);
 
-            CreateTileAndSetTile(currLeftOfPair, door.room, tileType);
-            CreateTileAndSetTile(currRightOfPair, door.room, tileType);
+            CreateTileAndSetTile(currLeftOfPair, door.container, tileType);
+            CreateTileAndSetTile(currRightOfPair, door.container, tileType);
         }
     }
 
@@ -313,5 +313,41 @@ public class Map
                 }
             }
         }
+    }
+
+    public void ConnectContainers(Container a, Container b)
+    {
+        a.connectedContainers.Add(b);
+        b.connectedContainers.Add(a);
+    }
+
+    public bool AreContainersConnected(Container startingContainer, Container endingContainer)
+    {
+        return AreContainersConnected(startingContainer, endingContainer, new Dictionary<Container, bool>());
+    }
+
+    private bool AreContainersConnected(
+        Container startingContainer,
+        Container endingContainer,
+        Dictionary<Container, bool> hasSeenContainer
+    )
+    {
+        // This container has already been searched
+        if (hasSeenContainer.ContainsKey(startingContainer)) return false;
+
+        // This container can no longer be searched again
+        hasSeenContainer.Add(startingContainer, true);
+
+        // We have found that these two containers do connect
+        if (startingContainer == endingContainer) return true;
+
+        foreach(Container nextContainer in startingContainer.connectedContainers)
+        {
+            bool ret = AreContainersConnected(nextContainer, endingContainer, hasSeenContainer);
+
+            if (ret) return true;
+        }
+
+        return false;
     }
 }

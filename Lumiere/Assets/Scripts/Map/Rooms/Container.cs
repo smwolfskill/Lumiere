@@ -8,15 +8,25 @@ public class Container
     protected Map map;
     public List<Tile> tiles;
     public ContainerType containerType;
+    public List<Door> doors;
+
+
+    public List<Container> connectedContainers;
 
     public Container(Map map, ContainerType containerType)
     {
         this.map = map;
         this.containerType = containerType;
 
+        connectedContainers = new List<Container>();
+        connectedContainers.Add(this);
+
         tiles = new List<Tile>();
 
         gameObject = containerType.PopulateGameObject();
+
+        this.doors = new List<Door>();
+
     }
 
     public void AddTile(Tile tile)
@@ -44,6 +54,18 @@ public class Container
 
         return walkableTiles;
     }
+
+    public List<Tile> GetTilesOfType(TileType tileType)
+    {
+        List<Tile> tilesOfType = new List<Tile>();
+        foreach(Tile tile in tiles)
+        {
+            if (tile.tileType == tileType) tilesOfType.Add(tile);
+        }
+
+        return tilesOfType;
+    }
+
 
     public void Remove()
     {

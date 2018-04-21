@@ -13,6 +13,7 @@ public class ComplexGenAlgo : GenAlgo
     public TileType pathTileType;
     public TileType wallTileType;
     public ContainerType baseContainerType;
+    public bool longButGoodGen = false;
 
     public override void GenerateMap(Map map)
     {
@@ -29,9 +30,82 @@ public class ComplexGenAlgo : GenAlgo
 
         map.PopulateClosestOtherRooms();
 
+        
         AttemptGenPaths();
+
+        if(longButGoodGen)DesperateConnect();
+
         map.GetRooms()[0].SpawnPlayer();
     }
+
+    private void DesperateConnect()
+    {
+
+        for(int i = map.containers.Count - 1; i >= 0; i--)
+        {
+            Container startingContainer = map.containers[i];
+
+            for(int j = i - 1; j >= 0; j--)
+            {
+                Container endingContainer = map.containers[j];
+
+                if (!map.AreContainersConnected(startingContainer, endingContainer))
+                {
+                    TryConnect(startingContainer, endingContainer);
+                }
+            }
+        }
+
+    }
+
+    private bool TryConnect(Container startingContainer, Container endingContainer)
+    {
+        List<Tile> endingTiles = endingContainer.GetTilesOfType(wallTileType);
+        List<Tile> startingTiles = startingContainer.GetTilesOfType(wallTileType);
+
+        foreach(Tile startingTile in startingTiles)
+        {
+            Door startingDoor = GetValidDoor(startingTile);
+            if (startingDoor == null) continue;
+
+            foreach (Tile endingTile in endingTiles)
+            {
+                Door endingDoor = GetValidDoor(endingTile);
+                if (endingDoor == null) continue;
+
+                if (ConnectDoors(startingDoor, endingDoor))
+                {
+                    map.ChangeTilesInArea(startingTile.x, startingTile.y, 2, earthTileType, wallTileType, startingContainer);
+                    map.ChangeTilesInArea(startingTile.x, startingTile.y, 1, wallTileType, pathTileType, startingContainer);
+
+                    map.ChangeTilesInArea(endingTile.x, endingTile.y, 2, earthTileType, wallTileType, endingContainer);
+                    map.ChangeTilesInArea(endingTile.x, endingTile.y, 1, wallTileType, pathTileType, endingContainer);
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+
+    // Given a tile, get a valid door for this tile
+    private Door GetValidDoor(Tile tile)
+    {
+        foreach (Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
+        {
+            Pair<int,int> pair = Utilities.CordInDirection(direction, tile.x, tile.y);
+            Tile attemptDoorDirectionTile = map.GetTile(pair.First, pair.Second);
+            if(attemptDoorDirectionTile != null && attemptDoorDirectionTile.tileType == earthTileType)
+            {
+                return new Door(tile.x, tile.y, direction, tile.container, 1);
+            }
+        }
+
+        return null;
+    }
+
 
     private void AttemptGenPaths()
     {
@@ -72,21 +146,15 @@ public class ComplexGenAlgo : GenAlgo
     private bool ConnectDoors(Door door, Door otherDoor)
     {
 
-        // open up both door areas to prepare for the path
-        /*
-        map.OpenDoorArea(door, earthTileType);
-        map.OpenDoorArea(otherDoor, earthTileType);
-        Pair<int,int> behindPair = Utilities.CordInDirection(Utilities.Behind(otherDoor.direction), otherDoor.x, otherDoor.y);
-        map.CreateTileAndSetTile(behindPair, otherDoor.room, earthTileType);
-        */
-
         Pair<int,int> doorPushedPair = Utilities.CordInDirection(door.direction, door.x, door.y);
         Pair<int, int> otherDoorPushedPair = Utilities.CordInDirection(otherDoor.direction, otherDoor.x, otherDoor.y);
 
-        Door doorPushed = new Door(doorPushedPair.First, doorPushedPair.Second, door.direction, door.room, door.radius);
-        Door otherDoorPushed = new Door(otherDoorPushedPair.First, otherDoorPushedPair.Second, otherDoor.direction, otherDoor.room, otherDoor.radius);
+        // create psudo doors that are pushed away from Rooms
+        Door doorPushed = new Door(doorPushedPair.First, doorPushedPair.Second, door.direction, door.container, door.radius);
+        Door otherDoorPushed = new Door(otherDoorPushedPair.First, otherDoorPushedPair.Second, otherDoor.direction, otherDoor.container, otherDoor.radius);
 
-        map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.room, earthTileType);
+        //create opening for path to find
+        map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.container, earthTileType);
 
         // The pair contains the current tile and the parent tile
         Queue<Link> queue = new Queue<Link>();
@@ -100,16 +168,6 @@ public class ComplexGenAlgo : GenAlgo
 
         Link currLink = AddToQueue(currTile, null, queue, tileHasBeenSearched, doorPushed.direction);
 
-        /*
-        int halfWayInbetweenRooms = (int)Mathf.Ceil(((float)spaceBetweenRooms) / 2.0f);
-
-        for (int i = 0; i < halfWayInbetweenRooms; i++)
-        {                       
-            currLink = AddToQueue(currLink, door.direction, queue, tileHasBeenSearched, false, true);
-        }
-        queue.Enqueue(currLink);
-        */
-
         Link endLink = null;
 
         while(endLink == null && queue.Count != 0)
@@ -117,24 +175,22 @@ public class ComplexGenAlgo : GenAlgo
             endLink = BFSStep(queue, tileHasBeenSearched, otherDoorPushed);
         }
 
-        /*
-        // close the door area
-        map.OpenDoorArea(door, wallTileType);
-        map.OpenDoorArea(otherDoor, wallTileType);
-        */
-
-        map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.room, wallTileType);
+        // close up opening whether path found it or not
+        map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.container, wallTileType);
 
         // successful path found
         if (endLink != null)
         {
             //add the path to the map
-            ModifyMapWithLinks(endLink);
+            Container path = ModifyMapWithLinks(endLink);
+
+            map.ConnectContainers(door.container, path);
+            map.ConnectContainers(otherDoor.container, path);
 
 
             //add openings to the door areas
-            map.CreateTileAndSetTile(door.x, door.y, door.room, pathTileType);
-            map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.room, pathTileType);
+            map.CreateTileAndSetTile(door.x, door.y, door.container, pathTileType);
+            map.CreateTileAndSetTile(otherDoor.x, otherDoor.y, otherDoor.container, pathTileType);
 
             // never use the doors again
             door.Destroy();
@@ -185,7 +241,7 @@ public class ComplexGenAlgo : GenAlgo
         }
     }
 
-    private void ModifyMapWithLinks(Link currLink)
+    private Container ModifyMapWithLinks(Link currLink)
     {
         // todo: choose a more specific container type for the path's container
         Container container = new Container(map, baseContainerType);
@@ -200,6 +256,8 @@ public class ComplexGenAlgo : GenAlgo
 
             currLink = currLink.parentLink;
         }
+
+        return container;
 
     }
 

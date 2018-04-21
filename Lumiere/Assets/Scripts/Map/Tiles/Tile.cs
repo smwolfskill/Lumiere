@@ -8,7 +8,7 @@ public class Tile
 
     public GameObject gameObject;
     private Map map;
-    private Container container;
+    public Container container;
     public int x, y;
     public TileType tileType;
 
