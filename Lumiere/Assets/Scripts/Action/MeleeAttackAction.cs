@@ -15,7 +15,12 @@ public class MeleeAttackAction : EntityAction
     /// </summary>
     public float attackSpeed;
 
-    private float lastAttackTime = 0f;
+    private float lastAttackTime;
+
+    private void Awake()
+    {
+        lastAttackTime = 0f;
+    }
 
     /// <summary>
     /// Checks whether this entity can attack or not.
