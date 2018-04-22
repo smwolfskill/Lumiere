@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 
 /// <summary>
 /// Specialized static class designed to handle item generation algorithms.
 /// </summary>
 static class ItemSpawner
 {
+    public static SpriteListCollection itemSpriteLists = null;
+
     private static readonly Random RANDOM = new Random(); //needed since recreation of Random class tends to give deterministic results
     // Essentially a const, it lists the liklyhood an item will be a certain rarity or higher based on the scale.
     private static readonly int[] rarityWeights = {20, 10, 5, 3, 1};
@@ -14,6 +17,18 @@ static class ItemSpawner
     private static readonly string[] materials = { "Bronze", "Iron", "Steel", "Mythril", "Adamantium", "Luminite" };
 
     private static int lastID = 100;
+
+    /// <summary>
+    /// Loads the item sprite lists from a path inside the Resources folder.
+    /// </summary>
+    /// <param name="path">Path.</param>
+    /// <returns> true if success.</returns>
+    public static bool LoadItemSprites(string path = "Items/ItemGenSprites")
+    {
+        itemSpriteLists = UnityEngine.Resources.Load<SpriteListCollection>(path);
+        //UnityEngine.Debug.Log(itemSpriteLists.ToString());
+        return (itemSpriteLists != null);
+    }
 
     private static Random GetRandom(int seed, bool useSeed)
     {
@@ -315,10 +330,6 @@ static class ItemSpawner
         for (int i = 0; i < size; i++)
         {
             lootBag[i] = GenerateItem(seed, quality, rarity, useSeed);
-            UnityEngine.GameObject TEMP = UnityEngine.Resources.Load<UnityEngine.GameObject>("Prefabs/Item");
-            UnityEngine.Sprite tempSprite = TEMP.GetComponent<ItemManager>().item.GroundSprite;
-            lootBag[i].GroundSprite = tempSprite;
-            lootBag[i].GuiSprite = tempSprite;
         }
 
         return lootBag;
@@ -689,7 +700,7 @@ static class ItemSpawner
         // Get Dominant Trait.
         if (item.SpeedModifier > 1 && item.DamageModifier > 1)
         {
-            return new string[] {"Equalibrium", "Prowess", "True Power", "The King" };
+            return new string[] {"Equilibrium", "Prowess", "True Power", "The King" };
         }
         else if (item.SpeedModifier > 1)
         {
@@ -766,6 +777,18 @@ static class ItemSpawner
             // Combine and return.
             return prefix + " " + type + " " + suffix;
         }
+
+        //Set the sprites for the object using a sprite list dictionary
+        SpriteList typeSpriteList = itemSpriteLists.GetSpriteList(type);
+        int numSprites = typeSpriteList.namedSprites.Length;
+        string key = random.Next(0, numSprites).ToString(); //(incl, excl]
+        UnityEngine.Sprite itemSprite = typeSpriteList.GetSprite(key);
+        if(itemSprite == null)
+        {
+            throw new Exception("ApplyNameModifiers: invalid key '" + key + "'");
+        }
+        item.GroundSprite = itemSprite;
+        item.GuiSprite = itemSprite;
 
         return prefix + " " + type;
     }

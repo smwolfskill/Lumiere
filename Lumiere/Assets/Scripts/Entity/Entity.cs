@@ -22,6 +22,7 @@ public abstract class Entity : BaseObject
         entity.transform.position = location;
 
         SpriteRenderer renderer = entity.AddComponent<SpriteRenderer> ();
+        renderer.sortingLayerName = "Entities";
         renderer.sortingOrder = 1;
 
         EntitySpriteManager entitySpriteManager = entity.AddComponent<EntitySpriteManager> ();
