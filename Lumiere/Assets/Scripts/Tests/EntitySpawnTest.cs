@@ -87,8 +87,8 @@ public class EntitySpawnTest
     public void TestEntitiesSpawned()
     {
         entityRoom.GenRoom (5 / 2);
-        int minEntities = entityRoomType.minimumEntities;
-        int maxEntities = entityRoomType.maximumEntities;
+        int minEntities = entityRoomType.GetMinEntities(map);
+        int maxEntities = entityRoomType.GetMaxEntities(map);
         int entitiesSpawned = entityRoomType.GetEntitiesSpawned ();
         Assert.IsTrue (entitiesSpawned >= minEntities);
         Assert.IsTrue (entitiesSpawned <= maxEntities);

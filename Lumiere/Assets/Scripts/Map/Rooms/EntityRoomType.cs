@@ -6,8 +6,8 @@ using UnityEngine;
 public class EntityRoomType : RoomType 
 {
     public Entity[] entities;
-    public int minimumEntities;
-    public int maximumEntities;
+    public float minimumEntitiesRatio;
+    public float maximumEntitiesRatio;
     public TileType floorTile;
     public TileType wallTile;
     private int entitiesSpawned;
@@ -19,7 +19,11 @@ public class EntityRoomType : RoomType
     {
         List<Tile> walkableTiles = room.GetWalkableTiles ();
         List<Vector2Int> spawnLocations = new List<Vector2Int> ();
-        int numEntities = Utilities.RandomIntInRange (minimumEntities, maximumEntities);
+
+        int minimunEntities = GetMinEntities(map);
+        int maximumEntities = GetMaxEntities(map);
+
+        int numEntities = Utilities.RandomIntInRange (minimunEntities, maximumEntities);
         entitiesSpawned = 0;
 
         while (entitiesSpawned < numEntities) 
@@ -40,6 +44,15 @@ public class EntityRoomType : RoomType
             }
         }
 
+    }
+
+    public int GetMinEntities(Map map)
+    {
+        return (int)(minimumEntitiesRatio * map.difficulty * map.levelNumber);
+    }
+    public int GetMaxEntities(Map map)
+    {
+        return (int)(maximumEntitiesRatio * map.difficulty * map.levelNumber);
     }
 
     /// <summary>

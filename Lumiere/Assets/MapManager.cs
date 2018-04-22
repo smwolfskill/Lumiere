@@ -33,7 +33,6 @@ public class MapManager : MonoBehaviour
         complexGenAlgo.roomAttempts = 1000;
         complexGenAlgo.spaceBetweenRooms = 5;
 
-
         Map map = new Map(width, height, 1, currMap, roomProperties, levelNumber, difficulty);
         complexGenAlgo.GenerateMap(map);
 
