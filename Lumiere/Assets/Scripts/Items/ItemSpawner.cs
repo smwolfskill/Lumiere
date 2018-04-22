@@ -7,12 +7,25 @@ using System;
 /// </summary>
 static class ItemSpawner
 {
+    private static readonly Random RANDOM = new Random(); //needed since recreation of Random class tends to give deterministic results
     // Essentially a const, it lists the liklyhood an item will be a certain rarity or higher based on the scale.
     private static readonly int[] rarityWeights = {20, 10, 5, 3, 1};
     private static readonly int floorRarityBoostThreshold = 5;  // How many floors before rarity increases.
     private static readonly string[] materials = { "Bronze", "Iron", "Steel", "Mythril", "Adamantium", "Luminite" };
 
     private static int lastID = 100;
+
+    private static Random GetRandom(int seed, bool useSeed)
+    {
+        if(useSeed)
+        {
+            return new Random(seed);
+        }
+        else
+        {
+            return RANDOM;
+        }
+    }
 
     #region Item Generators
     /// <summary>
@@ -22,14 +35,14 @@ static class ItemSpawner
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>An item, with name and description pre-set based on the item spec.</returns>
-    public static GameItem GenerateItem(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
+    public static GameItem GenerateItem(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON, bool useSeed = true)
     {
         // Some constants to use for calculations:
         int armorWeight = 2;    // Weighted likelyhood to pick this over the other.
         int weaponWeight = 1;   // Weighted likelyhood to pick this over the other.
 
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Choose what type of thing to generate, armor, or a weapon?
         int val = random.Next(1, armorWeight + weaponWeight + 1);
@@ -47,7 +60,7 @@ static class ItemSpawner
     /// <param name="seed">Seed to use for generation, useful for testing. Set this to system time during playtime.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>A weapon item, with name and description pre-set based on the item spec.</returns>
-    public static ArmorItem GenerateArmor(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
+    public static ArmorItem GenerateArmor(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON, bool useSeed = true)
     {
         // Some constants to use for calculations:
         double[] minArmorRarityRatings = {1, 2, 3, 4, 5};           // Scaling factor for minimum based on rarity. Min * RarityRating = Absolute Minimum
@@ -65,7 +78,7 @@ static class ItemSpawner
         // For reference, ENUM Order: HEAD, LEGS, CHEST, GLOVES, RING, NECK.
 
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Select rarity first; this determines effectiveness.
         int totalWeight = 0;
@@ -134,10 +147,10 @@ static class ItemSpawner
         };
 
         // Generate a name.
-        newItem.Name = GenerateArmorName(seed, newItem, minArmorRatings, maxArmorRatings, minSpeedRatings, maxSpeedRatings, minDamageRatings, maxDamageRatings);
+        newItem.Name = GenerateArmorName(seed, newItem, minArmorRatings, maxArmorRatings, minSpeedRatings, maxSpeedRatings, minDamageRatings, maxDamageRatings, useSeed);
 
         // Generate a description.
-        newItem.Description = GenerateArmorDesc(seed, newItem);
+        newItem.Description = GenerateArmorDesc(seed, newItem, useSeed);
 
         // Pick a value rating. (Should probably be another utility method).
         newItem.Value = GenerateItemValue(newItem);
@@ -156,14 +169,14 @@ static class ItemSpawner
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>A weapon item, with name and description pre-set based on the item spec.</returns>
-    public static WeaponItem GenerateWeapon(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
+    public static WeaponItem GenerateWeapon(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON, bool useSeed = true)
     {
         // Some constants to use for calculations:
         int meleeWeight = 1;    // Weighted likelyhood to pick this over the other.
         int rangedWeight = 0;   // Weighted likelyhood to pick this over the other.
 
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Choose what type of thing to generate, Ranged? Melee?
         int val = random.Next(1, meleeWeight + rangedWeight);
@@ -188,9 +201,9 @@ static class ItemSpawner
 
         // Call other generation functions based on this.
         if (val >= rangedWeight)
-            return GenerateMeleeWeapon(seed, quality, damage, range, rof, (int)rarity);
+            return GenerateMeleeWeapon(seed, quality, damage, range, rof, (int)rarity, useSeed);
         else
-            return GenerateRangedWeapon(seed, quality, damage, range * 10, rof, (int)rarity);
+            return GenerateRangedWeapon(seed, quality, damage, range * 10, rof, (int)rarity, useSeed);
     }
 
     /// <summary>
@@ -200,10 +213,10 @@ static class ItemSpawner
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>A melee weapon with pre-set name and description.</returns>
-    public static MeleeWeapon GenerateMeleeWeapon(int seed, int quality, double damage, double range, double rof, int rareVal)
+    public static MeleeWeapon GenerateMeleeWeapon(int seed, int quality, double damage, double range, double rof, int rareVal, bool useSeed = true)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Get Arc Value (Attacks may not even use this but do it anyways); higher rarities increase this value.
         double[] arcMin = {30, 60, 90, 120, 150};
@@ -221,10 +234,10 @@ static class ItemSpawner
         };
 
         // Generate a name.
-        newItem.Name = GenerateWeaponName(seed, newItem);
+        newItem.Name = GenerateWeaponName(seed, newItem, useSeed);
 
         // Generate a description.
-        newItem.Description = GenerateWeaponDesc(seed, newItem);
+        newItem.Description = GenerateWeaponDesc(seed, newItem, useSeed);
 
         // Pick a value rating. (Should probably be another utility method).
         newItem.Value = GenerateItemValue(newItem);
@@ -243,10 +256,10 @@ static class ItemSpawner
     /// <param name="quality">Quality modifier for items. Essentially represents how deep in the dungeon the player is. Pass this from the map class ideally.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>A ranged weapon with pre-set name and description.</returns>
-    public static RangedWeapon GenerateRangedWeapon(int seed, int quality, double damage, double range, double rof, int rareVal)
+    public static RangedWeapon GenerateRangedWeapon(int seed, int quality, double damage, double range, double rof, int rareVal, bool useSeed = true)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Get Penetration Value (how many enemies an attack can pierce before self deleting); higher rarities increase this value.
         int[] penMin = { 1, 1, 2, 2, 3 };
@@ -264,10 +277,10 @@ static class ItemSpawner
         };
 
         // Generate a name.
-        newItem.Name = GenerateWeaponName(seed, newItem);
+        newItem.Name = GenerateWeaponName(seed, newItem, useSeed);
 
         // Generate a description.
-        newItem.Description = GenerateWeaponDesc(seed, newItem);
+        newItem.Description = GenerateWeaponDesc(seed, newItem, useSeed);
 
         // Pick a value rating. (Should probably be another utility method).
         newItem.Value = GenerateItemValue(newItem);
@@ -289,10 +302,10 @@ static class ItemSpawner
     /// <param name="max">Maximum amount of items that are allowed to spawn, inclusive.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
     /// <returns>An equippable item, with name and description pre-set based on the item spec.</returns>
-    public static GameItem[] GenerateLootBag(int seed, int quality, int min = 1, int max = 5, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON)
+    public static GameItem[] GenerateLootBag(int seed, int quality, int min = 1, int max = 5, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON, bool useSeed = true)
     {
         // Random generation seed is set before doing anyhting else, neat.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Size up the situation.
         int size = random.Next(min, max+1);
@@ -301,7 +314,11 @@ static class ItemSpawner
         // Generate and fill the bag.
         for (int i = 0; i < size; i++)
         {
-            lootBag[i] = GenerateItem(seed, quality, rarity);
+            lootBag[i] = GenerateItem(seed, quality, rarity, useSeed);
+            UnityEngine.GameObject TEMP = UnityEngine.Resources.Load<UnityEngine.GameObject>("Prefabs/Item");
+            UnityEngine.Sprite tempSprite = TEMP.GetComponent<ItemManager>().item.GroundSprite;
+            lootBag[i].GroundSprite = tempSprite;
+            lootBag[i].GuiSprite = tempSprite;
         }
 
         return lootBag;
@@ -315,13 +332,13 @@ static class ItemSpawner
     /// <param name="seed">Seed for generating the name. Should be set to system time during live gameplay.</param>
     /// <param name="item">The item data to find a name for. Name should fit the data.</param>
     /// <returns>A potential name for the item.</returns>
-    public static string GenerateWeaponName(int seed, WeaponItem item)
+    public static string GenerateWeaponName(int seed, WeaponItem item, bool useSeed = true)
     {
         // Use the other name generator functions based on what item we have.
         if (item is MeleeWeapon)
-            return GenerateMeleeName(seed, item as MeleeWeapon);
+            return GenerateMeleeName(seed, item as MeleeWeapon, useSeed);
         else
-            return GenerateRangedName(seed, item as RangedWeapon);
+            return GenerateRangedName(seed, item as RangedWeapon, useSeed);
     }
 
     /// <summary>
@@ -330,7 +347,7 @@ static class ItemSpawner
     /// <param name="seed">Seed for the generator.</param>
     /// <param name="item">The item that needs a name.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateMeleeName(int seed, MeleeWeapon item)
+    private static string GenerateMeleeName(int seed, MeleeWeapon item, bool useSeed)
     {
         // Name Pool.
         string[] types = { "Dagger", "Shortsword", "Longsword", "Two-Handed Sword" };
@@ -349,7 +366,7 @@ static class ItemSpawner
         int[] suffixThreshold = { 90, 75, 40, 0, 0 };
         string[] suffixs = { "Fabulousness", "Coolness", "Swagger", "The Monk", "The Dragon", "The Burrito", "Dangerousness", "Pointyness", "Aggressiveness", "Revengence" };
 
-        return CompileWeaponName(seed, item, types, typeCutoffRange, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs);
+        return CompileWeaponName(seed, item, types, typeCutoffRange, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
     }
 
     /// <summary>
@@ -358,7 +375,7 @@ static class ItemSpawner
     /// <param name="seed">Seed for the generator.</param>
     /// <param name="item">The item that needs a name.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateRangedName(int seed, RangedWeapon item)
+    private static string GenerateRangedName(int seed, RangedWeapon item, bool useSeed)
     {
         // Name Pool.
         string[] types = { "Shortbow, Crossbow, Composite Bow, Longbow" };
@@ -377,7 +394,7 @@ static class ItemSpawner
         int[] suffixThreshold = { 90, 75, 40, 0, 0 };
         string[] suffixs = { "Fabulousness", "Shootyness", "Swagger", "The Ninja", "The Dragon", "The Cactus", "Dangerousness", "Rangedness", "Aggressiveness", "Revengence" };
 
-        return CompileWeaponName(seed, item, types, typeCutoffRange, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs);
+        return CompileWeaponName(seed, item, types, typeCutoffRange, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
     }
 
     /// <summary>
@@ -395,10 +412,12 @@ static class ItemSpawner
     /// <param name="suffixThreshold">Threshold based on rarity that a suffix will actually be placed onto an item. Must be size of rarity enum count.</param>
     /// <param name="suffixs">List of possible suffixes.</param>
     /// <returns>Name for the compiled item.</returns>
-    private static string CompileWeaponName(int seed, WeaponItem item, string[] types, double[] typeCutoffRange, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic, string[] prefixesLegend, int[] suffixThreshold, string[] suffixs)
+    private static string CompileWeaponName(int seed, WeaponItem item, string[] types, double[] typeCutoffRange, 
+                                            string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic, 
+                                            string[] prefixesLegend, int[] suffixThreshold, string[] suffixs, bool useSeed)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Generate the type;
         string type = "NOPE";
@@ -413,7 +432,7 @@ static class ItemSpawner
             }
         }
 
-        return ApplyNameModifiers(seed, item, type, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs);
+        return ApplyNameModifiers(seed, item, type, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
     }
 
     /// <summary>
@@ -422,7 +441,7 @@ static class ItemSpawner
     /// <param name="seed">Seed for generating the name. Should be set to system time during live gameplay.</param>
     /// <param name="item">The item data to find a name for. Name should fit the data.</param>
     /// <returns>A potential name for the item.</returns>
-    public static string GenerateArmorName(int seed, ArmorItem item, double[] minArm, double[] maxArm, double[] minSpd, double[] maxSpd, double[] minDmg, double[] maxDmg)
+    public static string GenerateArmorName(int seed, ArmorItem item, double[] minArm, double[] maxArm, double[] minSpd, double[] maxSpd, double[] minDmg, double[] maxDmg, bool useSeed = true)
     {
         // Name of object.
         string name = "";
@@ -431,27 +450,27 @@ static class ItemSpawner
         switch (item.Slot)
         {
             case EquipmentManager.EquipSlot.CHEST:
-                name = GenerateNameChestPlate(seed, item, minArm[2], maxArm[2]);
+                name = GenerateNameChestPlate(seed, item, minArm[2], maxArm[2], useSeed);
                 break;
 
             case EquipmentManager.EquipSlot.GLOVES:
-                name = GenerateNameGloves(seed, item, minArm[3], maxArm[3]);
+                name = GenerateNameGloves(seed, item, minArm[3], maxArm[3], useSeed);
                 break;
 
             case EquipmentManager.EquipSlot.HEAD:
-                name = GenerateNameHead(seed, item, minArm[0], maxArm[0]);
+                name = GenerateNameHead(seed, item, minArm[0], maxArm[0], useSeed);
                 break;
 
             case EquipmentManager.EquipSlot.LEGS:
-                name = GenerateNameLegs(seed, item, minArm[1], maxArm[1]);
+                name = GenerateNameLegs(seed, item, minArm[1], maxArm[1], useSeed);
                 break;
 
             case EquipmentManager.EquipSlot.NECK:
-                name = GenerateNameNeck(seed, item, minArm[5], maxArm[5]);
+                name = GenerateNameNeck(seed, item, minArm[5], maxArm[5], useSeed);
                 break;
 
             case EquipmentManager.EquipSlot.RING:
-                name = GenerateNameRing(seed, item, minArm[4], maxArm[4]);
+                name = GenerateNameRing(seed, item, minArm[4], maxArm[4], useSeed);
                 break;
         }
 
@@ -466,7 +485,7 @@ static class ItemSpawner
     /// <param name="minArmor">Minimum possible armor value for this item.</param>
     /// <param name="maxArmor">Maximum possible armor value for this item.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateNameChestPlate(int seed, ArmorItem item, double minArmor, double maxArmor)
+    private static string GenerateNameChestPlate(int seed, ArmorItem item, double minArmor, double maxArmor, bool useSeed)
     {
         // Types.
         string[] types = { "Chainmail", "Chestplate", "Platemail" };
@@ -478,7 +497,7 @@ static class ItemSpawner
         string[] prefixesEpic = { "Hero's", "Extremely Strong", "Proud" };
         string[] prefixesLegend = { "King's", "Titan's", "Gorgeous", "Godly" };
 
-        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend);
+        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, useSeed);
     }
 
     /// <summary>
@@ -489,7 +508,7 @@ static class ItemSpawner
     /// <param name="minArmor">Minimum possible armor value for this item.</param>
     /// <param name="maxArmor">Maximum possible armor value for this item.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateNameGloves(int seed, ArmorItem item, double minArmor, double maxArmor)
+    private static string GenerateNameGloves(int seed, ArmorItem item, double minArmor, double maxArmor, bool useSeed)
     {
         // Types.
         string[] types = { "Gloves", "Gauntlets", "Bracers" };
@@ -501,7 +520,7 @@ static class ItemSpawner
         string[] prefixesEpic = { "Hero's", "Extremely Strong", "Proud" };
         string[] prefixesLegend = { "King's", "Titan's", "Gorgeous", "Godly" };
 
-        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend);
+        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, useSeed);
     }
 
     /// <summary>
@@ -512,7 +531,7 @@ static class ItemSpawner
     /// <param name="minArmor">Minimum possible armor value for this item.</param>
     /// <param name="maxArmor">Maximum possible armor value for this item.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateNameLegs(int seed, ArmorItem item, double minArmor, double maxArmor)
+    private static string GenerateNameLegs(int seed, ArmorItem item, double minArmor, double maxArmor, bool useSeed)
     {
         // Types.
         string[] types = { "Chainleggings", "Plateleggings", "Chaps" };
@@ -524,7 +543,7 @@ static class ItemSpawner
         string[] prefixesEpic = { "Hero's", "Extremely Strong", "Proud" };
         string[] prefixesLegend = { "King's", "Titan's", "Gorgeous", "Godly" };
 
-        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend);
+        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, useSeed);
     }
 
     /// <summary>
@@ -535,7 +554,7 @@ static class ItemSpawner
     /// <param name="minArmor">Minimum possible armor value for this item.</param>
     /// <param name="maxArmor">Maximum possible armor value for this item.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateNameRing(int seed, ArmorItem item, double minArmor, double maxArmor)
+    private static string GenerateNameRing(int seed, ArmorItem item, double minArmor, double maxArmor, bool useSeed)
     {
         // Types.
         string[] types = { "Ring", "Diamond Ring", "Sapphire Ring", "Ruby Ring", "Emerald Ring" };
@@ -547,7 +566,7 @@ static class ItemSpawner
         string[] prefixesEpic = { "Hero's", "Extremely Strong", "Proud" };
         string[] prefixesLegend = { "King's", "Titan's", "Gorgeous", "Godly" };
 
-        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend);
+        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, useSeed);
     }
 
     /// <summary>
@@ -558,7 +577,7 @@ static class ItemSpawner
     /// <param name="minArmor">Minimum possible armor value for this item.</param>
     /// <param name="maxArmor">Maximum possible armor value for this item.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateNameNeck(int seed, ArmorItem item, double minArmor, double maxArmor)
+    private static string GenerateNameNeck(int seed, ArmorItem item, double minArmor, double maxArmor, bool useSeed)
     {
         // Types.
         string[] types = { "Necklace", "Amulet", "Diamond Encrusted Amulet", "Sapphire Encrusted Amulet", "Ruby Encrusted Amulet", "Emerald Encrusted Amulet" };
@@ -570,7 +589,7 @@ static class ItemSpawner
         string[] prefixesEpic = { "Hero's", "Extremely Strong", "Proud" };
         string[] prefixesLegend = { "King's", "Titan's", "Gorgeous", "Godly" };
 
-        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend);
+        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, useSeed);
     }
 
     /// <summary>
@@ -581,7 +600,7 @@ static class ItemSpawner
     /// <param name="minArmor">Minimum possible armor value for this item.</param>
     /// <param name="maxArmor">Maximum possible armor value for this item.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string GenerateNameHead(int seed, ArmorItem item, double minArmor, double maxArmor)
+    private static string GenerateNameHead(int seed, ArmorItem item, double minArmor, double maxArmor, bool useSeed)
     {
         // Types.
         string[] types = { "Helmet", "Coif", "Platehelm", "Mask" };
@@ -593,7 +612,7 @@ static class ItemSpawner
         string[] prefixesEpic = { "Hero's", "Extremely Strong", "Proud" };
         string[] prefixesLegend = { "King's", "Titan's", "Gorgeous", "Godly" };
 
-        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend);
+        return NameArmor(seed, item, minArmor, maxArmor, types, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, useSeed);
     }
 
     /// <summary>
@@ -610,10 +629,11 @@ static class ItemSpawner
     /// <param name="prefixesEpic">Prefixes for epic armors.</param>
     /// <param name="prefixesLegend">Prefixes for legendary armors.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string NameArmor(int seed, ArmorItem item, double minArmor, double maxArmor, string[] types, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic, string[] prefixesLegend)
+    private static string NameArmor(int seed, ArmorItem item, double minArmor, double maxArmor, string[] types, string[] prefixesCommon, 
+                                    string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic, string[] prefixesLegend, bool useSeed)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Material appliances.
         string name = types[random.Next(0, types.Length)];
@@ -632,7 +652,7 @@ static class ItemSpawner
         else
             suffixThreshold = new int[] { 0, 0, 0, 0, 0 };
 
-        return ApplyNameModifiers(seed, item, name, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs);
+        return ApplyNameModifiers(seed, item, name, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
     }
 
     /// <summary>
@@ -699,10 +719,11 @@ static class ItemSpawner
     /// <param name="suffixThreshold">Threshold based on rarity that a suffix will actually be placed onto an item. Must be size of rarity enum count.</param>
     /// <param name="suffixs">List of possible suffixes.</param>
     /// <returns>Name for the compiled item.</returns>
-    private static string ApplyNameModifiers(int seed, GameItem item, string type, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic, string[] prefixesLegend, int[] suffixThreshold, string[] suffixs)
+    private static string ApplyNameModifiers(int seed, GameItem item, string type, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, 
+                                             string[] prefixesEpic, string[] prefixesLegend, int[] suffixThreshold, string[] suffixs, bool useSeed)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
 
         // Pick a prefix and determine if a suffix is neccessary.
         string prefix;
@@ -756,7 +777,7 @@ static class ItemSpawner
     /// <param name="seed">Seed for generating the description. Should be set to system time during live gameplay.</param>
     /// <param name="item">The item data to find a description for. Description should fit the data.</param>
     /// <returns>A potential description for the item.</returns>
-    public static string GenerateWeaponDesc(int seed, WeaponItem item)
+    public static string GenerateWeaponDesc(int seed, WeaponItem item, bool useSeed = true)
     {
         // This function is decisively more lazy than the others, as generating really unique definitions isn't really neccessary and we're short on time.
         if (item is MeleeWeapon)
@@ -772,10 +793,10 @@ static class ItemSpawner
     /// <param name="seed">Seed for generating the description. Should be set to system time during live gameplay.</param>
     /// <param name="item">The item data to find a description for. Description should fit the data.</param>
     /// <returns>A potential description for the item.</returns>
-    public static string GenerateArmorDesc(int seed, ArmorItem item)
+    public static string GenerateArmorDesc(int seed, ArmorItem item, bool useSeed = true)
     {
         // This function is decisively more lazy than the others, as generating really unique definitions isn't really neccessary and we're short on time.
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
         switch (item.Slot)
         {
             case EquipmentManager.EquipSlot.CHEST:
@@ -806,9 +827,9 @@ static class ItemSpawner
     /// <param name="seed">Seed for generating the bool. Should be set to system time during live gameplay.</param>
     /// <param name="rewardFactor">A single integer representing the likelyhood this particular enemy should drop a reward. Ideally based both on floor level and monster power. Higher number = Larger Chance</param>
     /// <returns>True if the monster should drop a potion, False otherwise.</returns>
-    public static bool DropPotion(int seed, int rewardFactor)
+    public static bool DropPotion(int seed, int rewardFactor, bool useSeed = true)
     {
-        Random random = new Random(seed);
+        Random random = GetRandom(seed, useSeed);
         if (random.Next(100) <= 1 + rewardFactor)
             return true;
 
