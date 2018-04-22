@@ -8,9 +8,17 @@ public class Monster : NPC
     override public GameObject Spawn(Map map, Vector2 location)
     {
         GameObject monster = base.Spawn(map, location);
-        MonsterObject obj = new MonsterObject(monster, maxHealth);
+        MonsterObject obj = new MonsterObject(monster, CalcMaxHealth(map));
         monster.GetComponent<EntityHealthManager>().entityObj = obj;
+
+
+
         return monster;
+    }
+
+    public float CalcMaxHealth(Map map)
+    {
+        return (float)(maxHealth + maxHealth * (float)(map.levelNumber) * map.difficulty * .1f);
     }
   
 }
