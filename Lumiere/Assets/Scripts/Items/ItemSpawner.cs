@@ -443,7 +443,7 @@ static class ItemSpawner
             }
         }
 
-        return ApplyNameModifiers(seed, item, type, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
+        return ApplyNameModifiers(seed, item, type, "", prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
     }
 
     /// <summary>
@@ -651,7 +651,7 @@ static class ItemSpawner
 
         string material = GetMaterial(item, minArmor, maxArmor);
 
-        name = material + " " + name;
+        //name = material + " " + name; //now passed in as parameter extraPrefix to ApplyNameModifiers
 
         string[] suffixs = GetArmorSuffixs(item);
 
@@ -663,7 +663,7 @@ static class ItemSpawner
         else
             suffixThreshold = new int[] { 0, 0, 0, 0, 0 };
 
-        return ApplyNameModifiers(seed, item, name, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
+        return ApplyNameModifiers(seed, item, name, material, prefixesCommon, prefixesUncommon, prefixesRare, prefixesEpic, prefixesLegend, suffixThreshold, suffixs, useSeed);
     }
 
     /// <summary>
@@ -717,11 +717,12 @@ static class ItemSpawner
     }
 
     /// <summary>
-    /// Helper function for generating weapon names.
+    /// Helper function for generating weapon names, and sets the item sprites based on its type.
     /// </summary>
     /// <param name="seed">Seed for generation.</param>
     /// <param name="item">Item data for the name.</param>
     /// <param name="type">Item's base name, described by another function.</param>
+    /// <param name="extraPrefix>Extra prefix to enter after the rarity prefix. (e.g. in 'bronze' for armor)</param>
     /// <param name="prefixesCommon">Prefixes for common weapons.</param>
     /// <param name="prefixesUncommon">Prefixes for uncommon weapons.</param>
     /// <param name="prefixesRare">Prefixes for rare weapons.</param>
@@ -730,7 +731,7 @@ static class ItemSpawner
     /// <param name="suffixThreshold">Threshold based on rarity that a suffix will actually be placed onto an item. Must be size of rarity enum count.</param>
     /// <param name="suffixs">List of possible suffixes.</param>
     /// <returns>Name for the compiled item.</returns>
-    private static string ApplyNameModifiers(int seed, GameItem item, string type, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, 
+    private static string ApplyNameModifiers(int seed, GameItem item, string type, string extraPrefix, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, 
                                              string[] prefixesEpic, string[] prefixesLegend, int[] suffixThreshold, string[] suffixs, bool useSeed)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
@@ -739,7 +740,6 @@ static class ItemSpawner
         // Pick a prefix and determine if a suffix is neccessary.
         string prefix;
         bool suffixReq = false;
-
         switch (item.Rarity)
         {
             case GameItem.ItemRarity.UNCOMMON:
@@ -766,6 +766,13 @@ static class ItemSpawner
                 suffixReq = (random.Next(0, 101) >= suffixThreshold[0]);
                 break;
         }
+        if(extraPrefix != "")
+        {
+            prefix += " " + extraPrefix;
+        }
+
+        //Set item sprites
+        SetItemSprites(seed, type, item, useSeed);
 
         // Pick a suffix (if there should be one).
         string suffix = "";
@@ -778,19 +785,35 @@ static class ItemSpawner
             return prefix + " " + type + " " + suffix;
         }
 
+        return prefix + " " + type;
+    }
+
+    /// <summary>
+    /// Sets the item sprites by calling the SpriteList dictionary with key as the item type.
+    /// </summary>
+    /// <returns><c>true</c>, if item sprites was set, <c>false</c> otherwise.</returns>
+    /// <param name="seed">Seed.</param>
+    /// <param name="type">Type.</param>
+    /// <param name="item">Item.</param>
+    /// <param name="useSeed">If set to <c>true</c> uses seed.</param>
+    private static void SetItemSprites(int seed, string type, GameItem item, bool useSeed)
+    {
+        Random random = GetRandom(seed, useSeed);
         //Set the sprites for the object using a sprite list dictionary
         SpriteList typeSpriteList = itemSpriteLists.GetSpriteList(type);
+        if(typeSpriteList == null)
+        {
+            throw new Exception("ApplyNameModifiers: invalid sprite list key (type): '" + type + "'");
+        }
         int numSprites = typeSpriteList.namedSprites.Length;
         string key = random.Next(0, numSprites).ToString(); //(incl, excl]
         UnityEngine.Sprite itemSprite = typeSpriteList.GetSprite(key);
         if(itemSprite == null)
         {
-            throw new Exception("ApplyNameModifiers: invalid key '" + key + "'");
+            throw new Exception("ApplyNameModifiers: invalid sprite key '" + key + "'");
         }
         item.GroundSprite = itemSprite;
         item.GuiSprite = itemSprite;
-
-        return prefix + " " + type;
     }
 
     /// <summary>

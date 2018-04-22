@@ -15,7 +15,10 @@ public class ItemSpawnerTest
     [SetUp]
     public void Init()
     {
-
+        if(ItemSpawner.itemSpriteLists == null)
+        {
+            ItemSpawner.LoadItemSprites();
+        }
     }
 
     /// <summary>
