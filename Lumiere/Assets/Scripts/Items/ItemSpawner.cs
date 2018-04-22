@@ -49,9 +49,9 @@ static class ItemSpawner
 
         // Call other generation functions based on this.
         if (val >= weaponWeight)
-            return GenerateWeapon(seed, quality, rarity);
+            return GenerateWeapon(seed, quality, rarity, useSeed);
         else
-            return GenerateArmor(seed, quality, rarity);
+            return GenerateArmor(seed, quality, rarity, useSeed);
     }
 
     /// <summary>
