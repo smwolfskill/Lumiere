@@ -69,6 +69,9 @@ public class PlayerAnimationTest
         Assert.IsTrue(anim.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdleDown"));
     }
 
+    /// <summary>
+    /// Tests whether the player animation transitions properly left.
+    /// </summary>
     [UnityTest]
     public IEnumerator TestMoveLeft()
     {
@@ -80,6 +83,9 @@ public class PlayerAnimationTest
         Assert.IsTrue(anim.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdleLeft"));
     }
 
+    /// <summary>
+    /// Tests whether the player animation transitions properly right.
+    /// </summary>
     [UnityTest]
     public IEnumerator TestMoveRight()
     {
