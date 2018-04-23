@@ -27,6 +27,9 @@ public class MonsterObject : NPCObject
 
     protected override void Die()
     {
+        //Drop random loot items if any
+        DropLootAroundGameObject();
+        //Disable animations and die
         this.gameObject.GetComponent<MovementAnimation>().enabled = false;
         anim.SetTrigger("TDie");
         this.isDead = true;
