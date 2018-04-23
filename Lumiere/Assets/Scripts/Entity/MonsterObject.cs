@@ -16,13 +16,13 @@ public class MonsterObject : NPCObject
     public override void InflictDamage(float damageAmount)
     {
         base.InflictDamage(damageAmount);
-        healthManager.SetHealth(currHealth / maxHealth);
+        healthManager.SetHealth(Mathf.Max(0f, currHealth / maxHealth));
     }
 
     public override void Heal(float healAmount)
     {
         base.Heal(healAmount);
-        healthManager.SetHealth(currHealth / maxHealth);
+        healthManager.SetHealth(Mathf.Max(0f, currHealth / maxHealth));
     }
 
     protected override void Die()

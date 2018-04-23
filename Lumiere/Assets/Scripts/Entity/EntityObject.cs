@@ -32,7 +32,7 @@ public abstract class EntityObject
     virtual public void InflictDamage(float damageAmount)
     {
         this.currHealth -= damageAmount;
-        if (currHealth <= 0)
+        if (currHealth <= 0 && !isDead)
             this.Die();
     }
 
