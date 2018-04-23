@@ -9,7 +9,7 @@ using UnityEngine;
 /// <summary>
 /// Class that represents a weapon of some description, weapons by default have damage and a rate of fire, everything else is determined by the specific weapon.
 /// </summary>
-class WeaponItem : UsableItem
+public class WeaponItem : UsableItem
 {
     // Proximity within which a player can attack a monster with this item
     protected double attackRange;

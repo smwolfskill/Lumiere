@@ -7,6 +7,8 @@ public class PlayerAttack : EntityAction
 {
     private WeaponItem weapon;
     private EntityHealthManager targetHM;
+	private Transform targetTransform;
+	private float animationSpeed = 2;
 
     /// <summary>
     /// Checks whether the player can attack a monster
@@ -28,17 +30,23 @@ public class PlayerAttack : EntityAction
 
         if (attack)
         {
-            // Gather 3D mouse position and raycasting information
-            Ray ray = main.ScreenPointToRay(mousePosition);
-            Vector3 origin = _player.transform.position;
-            Vector3 worldPointClicked = main.ScreenToWorldPoint(mousePosition);
+            Vector2 origin = _player.transform.position;
+            Vector2 worldPointClicked = main.ScreenToWorldPoint(mousePosition);
+            Vector2 direction = (worldPointClicked - origin);
+            direction.Normalize();
+            float attackRange = 1f; // melee range (no weapon)
+            UsableItem selected = equips.GetSelectedItem();
+            WeaponItem weapon = selected is WeaponItem ?
+                (WeaponItem)selected : null;
 
-            // Convert to 2D and detect any raycast hits on 2D colliders
-            Ray2D ray2D =
-                new Ray2D(new Vector2(ray.origin.x, ray.origin.y),
-                          new Vector2(ray.direction.x, ray.direction.y));
-            RaycastHit2D hit2D = Physics2D.Raycast(ray2D.origin,
-                                                   ray2D.direction);
+            // check if hotbar is a weapon and update the attack range
+            if (weapon != null && weapon.SetYet())
+            {
+                attackRange = Mathf.Max((float) weapon.AttackRange, attackRange);
+            }
+
+            RaycastHit2D hit2D = Physics2D.Raycast(origin, direction, attackRange, 1 << LayerMask.NameToLayer("Enemy"));
+            Debug.DrawLine(origin, worldPointClicked, Color.green, 0.5f);
             if (hit2D.collider != null)
             {
                 GameObject target = hit2D.collider.gameObject;
@@ -46,30 +54,12 @@ public class PlayerAttack : EntityAction
                 Entity ent = em != null ? em.entity : null;
                 if (ent != null && ent is Monster)
                 {
-                    BoxCollider2D objCollider =
-                        _player.GetComponent<BoxCollider2D>();
-                    double dist = Physics2D.Distance(objCollider,
-                                                     hit2D.collider).distance;
-                    double attackRange = 0.0f; // melee range (no weapon)
-                    UsableItem selected = equips.GetSelectedItem();
-                    WeaponItem weapon = selected is WeaponItem ?
-                        (WeaponItem)selected : null;
+                    this.weapon = weapon;
+                    this.target = ent;
+                    this.targetHM = target.GetComponent<EntityHealthManager>();
+                    this.targetTransform = target.transform;
+                    return true;
 
-                    // check if hotbar is a weapon and update the attack range
-                    if (weapon != null && weapon.SetYet())
-                    {
-                        attackRange = weapon.AttackRange;
-                    }
- 
-                    if (dist <= attackRange)
-                    {
-                        // we are within the attack range
-                        this.weapon = weapon;
-                        this.target = ent;
-                        this.targetHM =
-                            target.GetComponent<EntityHealthManager>();
-                        return true;
-                    }
                 }
             }
         }
@@ -88,8 +78,19 @@ public class PlayerAttack : EntityAction
 
         player = (Player)_player.GetComponent<EntitySpriteManager>().entity;
         dmg = weapon == null ? player.FisticuffDamage : weapon.Damage;
+
+		GameObject attackAnimationObj = player.AttackAnimationObject;
+
+		//attackAnim.CreateAnimation(player, attackAnimationObj, weapon, targetTransform, animationSpeed);
+		attackAnimationObj.GetComponent<AttackAnimation>().CreateAnimation(player, attackAnimationObj, this.weapon, this.targetTransform, this.animationSpeed);
+		attackAnimationObj.GetComponent<Animation>().Play("attack");
+
         targetHM.InflictDamage(dmg);
+
+		//Debug.Log(tmpSprite.GetInstanceID());
         
         return true;
     }
+
+
 }

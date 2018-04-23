@@ -58,7 +58,7 @@ public class Pathfinding
             closedSet.Add(current);
             foreach(Tile neighbor in current.GetNeighbors())
             {
-                if(!closedSet.Contains(neighbor))
+                if(!closedSet.Contains(neighbor) && neighbor.IsWalkable())
                 {
                     if(!openSet.Contains(neighbor))
                     {
