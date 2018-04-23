@@ -4,12 +4,13 @@ using UnityEngine;
 
 public abstract class EntityObject
 {
-
     public GameObject gameObject;
+    public Entity.EntityDropGen entityDropGen;
     protected float maxHealth;
     protected float currHealth;
     protected bool isDead;
 	protected Inventory inventory;
+
 
     /*
     public EntityObject(float maxHealth)
@@ -18,7 +19,7 @@ public abstract class EntityObject
     }
     */
 
-    public EntityObject(GameObject existingGameObject, float maxHealth)
+    public EntityObject(GameObject existingGameObject, float maxHealth)//, EntityDropGen entityDropGen)
     {
         this.gameObject = existingGameObject;
         this.maxHealth = maxHealth;
@@ -58,6 +59,12 @@ public abstract class EntityObject
 
     virtual protected void Die()
     {
+        //Drop random loot items if any
+        if(entityDropGen != null && entityDropGen.maxItems > 0)
+        {
+            DropItemsAroundGameObject(entityDropGen.GenerateLoot());
+        }
+        //Destroy the GameObject
         Object.Destroy(gameObject);
         this.isDead = true;
     }
@@ -65,5 +72,19 @@ public abstract class EntityObject
     virtual public bool IsDead()
     {
         return this.isDead;
+    }
+
+    /// <summary>
+    /// Drops the items around the entity's game object.
+    /// </summary>
+    /// <param name="itemsToDrop">Items to drop.</param>
+    /// <param name="spacing">Spacing between items.</param>
+    virtual public void DropItemsAroundGameObject(GameItem[] itemsToDrop)//, float spacing = 0.5f)
+    {
+        //For now, just drop items all on same location b/c don't want any items getting stuck in walls if entity is against one
+        foreach(GameItem itemToDrop in itemsToDrop)
+        {
+            itemToDrop.CreateGameObject(gameObject.transform.position);
+        }
     }
 }

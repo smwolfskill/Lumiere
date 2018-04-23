@@ -50,7 +50,7 @@ public class ItemSpawnerTest
     /// <summary>
     /// Test bool of DropPotion by choosing values that force it to return true or false
     /// </summary>
-    [Test]
+    /*[Test]
     [TestCase(1, 100, true)]
     [TestCase(1000, -2, false)]
     [TestCase(1000, 100, true)]
@@ -58,7 +58,7 @@ public class ItemSpawnerTest
     public void TestDropPoption(int seed, int reqardFactor, bool returnValue)
     {
     	Assert.AreEqual(returnValue, ItemSpawner.DropPotion(seed, reqardFactor));
-    }
+    }*/
 
     /// <summary>
     /// Test the correct armor description is given based on the slot the armor holds

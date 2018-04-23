@@ -9,13 +9,42 @@ public abstract class Entity : BaseObject
     public Inventory inventory;
     public LinkedList<GameObject> nearbyItems = new LinkedList<GameObject>(); //list of items that this entity could pickup if desired. Will be used by AI mainly
     public EntityObject entityObject;
+    public EntityDropGen entityDropGen;
+
+    /// <summary>
+    /// Holds fields governing type, quality and quantity of items dropped upon entity death.
+    /// </summary>
+    [System.Serializable]
+    public class EntityDropGen
+    {
+        public int quality = 1;
+        public int minItems;
+        public int maxItems;
+        public GameItem.ItemRarity minRarity;
+        public double healthPotionChance; //percentage chance of one item dropped being a health potion, in range [0, 1] inclusive.
+
+        public EntityDropGen(int quality, int minItems, int maxItems, GameItem.ItemRarity minRarity, double healthPotionChance)
+        {
+            this.quality = quality;
+            this.minItems = minItems;
+            this.maxItems = maxItems;
+            this.minRarity = minRarity;
+            this.healthPotionChance = healthPotionChance;
+        }
+
+        public GameItem[] GenerateLoot()
+        {
+            return ItemSpawner.GenerateLootBag(-1, quality, minItems, maxItems, minRarity, false, healthPotionChance);
+        }
+    }
+
 
     /// <summary>
     /// Spawn the entity at the specified location.
     /// </summary>
     /// <param name="location">Location to spawn this entity.</param>
     /// <returns>Returns the GameObject representing this entity.</returns>
-    virtual public GameObject Spawn (Map map, Vector2 location)
+    virtual public GameObject Spawn(Map map, Vector2 location)
     {
 
         GameObject entity = new GameObject (this.name);
@@ -23,7 +52,7 @@ public abstract class Entity : BaseObject
 
         SpriteRenderer renderer = entity.AddComponent<SpriteRenderer> ();
         renderer.sortingLayerName = "Entities";
-        renderer.sortingOrder = 1;
+        renderer.sortingOrder = 0;//1; //1 prevents player from picking up items that they are directly on top of
 
         EntitySpriteManager entitySpriteManager = entity.AddComponent<EntitySpriteManager> ();
         entitySpriteManager.entity = this;

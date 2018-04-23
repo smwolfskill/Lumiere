@@ -11,14 +11,13 @@ public abstract class NPC : Entity
     
     override public GameObject Spawn (Map map, Vector2 location)
     {
-        //TODO: add EntityObjectManager, instantiate a entityObject, attach the entityObject
-        //      to the EntityObjectManager, somewhere else keep track of the entityObject.
-
         GameObject npc = base.Spawn (map, location);
         StateController stateController = npc.AddComponent<StateController> ();
         stateController.currentState = this.initialState;
         stateController.map = map;
         NPCObject obj = new NPCObject(npc, maxHealth);
+        obj.entityDropGen = entityDropGen;
+        this.entityObject = obj;
         npc.GetComponent<EntityHealthManager>().entityObj = obj;
         return npc;
     }

@@ -316,8 +316,9 @@ static class ItemSpawner
     /// <param name="min">Minimum amount of items that are allowed to spawn, inclusive.</param>
     /// <param name="max">Maximum amount of items that are allowed to spawn, inclusive.</param>
     /// <param name="rarity">Minimum item rarity, defaults to common. Higher rarity items have better stats implicitly.</param>
+    /// <param name="healthPotionChance"> % chance from [0, 1] inclusive that any item dropped will be a health potion.</param></param>
     /// <returns>An equippable item, with name and description pre-set based on the item spec.</returns>
-    public static GameItem[] GenerateLootBag(int seed, int quality, int min = 1, int max = 5, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON, bool useSeed = true)
+    public static GameItem[] GenerateLootBag(int seed, int quality, int min = 1, int max = 5, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON, bool useSeed = true, double healthPotionChance = 0.0)
     {
         // Random generation seed is set before doing anyhting else, neat.
         Random random = GetRandom(seed, useSeed);
@@ -329,10 +330,36 @@ static class ItemSpawner
         // Generate and fill the bag.
         for (int i = 0; i < size; i++)
         {
-            lootBag[i] = GenerateItem(seed, quality, rarity, useSeed);
+            if(random.NextDouble() <= healthPotionChance)
+            {
+                lootBag[i] = GenerateHealthPotion(seed, quality, rarity, useSeed);
+            }
+            else
+            {
+                lootBag[i] = GenerateItem(seed, quality, rarity, useSeed);
+            }
         }
 
         return lootBag;
+    }
+
+    /// <summary>
+    /// Generates a health potion.
+    /// </summary>
+    /// <returns>The health potion.</returns>
+    /// <param name="seed">Seed.</param>
+    /// <param name="quality">Quality.</param>
+    /// <param name="rarity">Rarity.</param>
+    /// <param name="useSeed">If set to <c>true</c> use seed.</param>
+    public static UsableItem GenerateHealthPotion(int seed, int quality, GameItem.ItemRarity rarity, bool useSeed = false)
+    {
+        //TODO: incorporate quality more by allowing custom healing amounts
+        Random random = GetRandom(seed, useSeed);
+        int potionMaxStack = 5;
+        int quantity = random.Next(1, potionMaxStack - 1);
+        UsableItem healthPotion = new UsableItem(null, null, "Health Potion", "A health potion.", 1, rarity, quantity, potionMaxStack, 100, "HealthPotionAction");
+        SetItemSprites(seed, "Health Potion", healthPotion, useSeed);
+        return healthPotion;
     }
     #endregion
 
@@ -873,14 +900,14 @@ static class ItemSpawner
     /// <param name="seed">Seed for generating the bool. Should be set to system time during live gameplay.</param>
     /// <param name="rewardFactor">A single integer representing the likelyhood this particular enemy should drop a reward. Ideally based both on floor level and monster power. Higher number = Larger Chance</param>
     /// <returns>True if the monster should drop a potion, False otherwise.</returns>
-    public static bool DropPotion(int seed, int rewardFactor, bool useSeed = true)
+    /*public static bool DropPotion(int seed, int rewardFactor, bool useSeed = true)
     {
         Random random = GetRandom(seed, useSeed);
         if (random.Next(100) <= 1 + rewardFactor)
             return true;
 
         return false;
-    }
+    }*/
 
     /// <summary>
     /// Generates the value for a given item.
