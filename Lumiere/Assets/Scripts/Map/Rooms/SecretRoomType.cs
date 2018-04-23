@@ -13,10 +13,6 @@ public class SecretRoomType : RoomType
 
     public override void GenRoom(Room room, Map map)
     {
-        if(ItemSpawner.itemSpriteLists == null)
-        {
-            ItemSpawner.LoadItemSprites();
-        }
         map.FillAreaWithBorder(room.x, room.y, room.w, room.h, sandTile, wallTile, room);
 
         //Generate loot in secret room

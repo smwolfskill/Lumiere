@@ -22,6 +22,22 @@ public class Death : StateMachineBehaviour
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
     {
+        EntityHealthManager ehm = animator.gameObject.GetComponent<EntityHealthManager>();
+        if(ehm != null)
+        {
+            EntityObject entityObject = ehm.entityObj;
+            if(entityObject == null)
+            {
+                throw new System.Exception("Dead entity's EntityHealthManager.entityObject field was null!");
+            }
+            //Drop random loot items if any
+            entityObject.DropLootAroundGameObject();
+        }
+        else
+        {
+            Debug.Log("WARNING: Dead entity GameObject had no EntityHealthManager component!");
+        }
+        //Destroy entity's GameObject
         Destroy(animator.gameObject);
     }
 
