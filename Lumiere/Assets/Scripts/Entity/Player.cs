@@ -30,6 +30,7 @@ public class Player : Entity
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);
         this.entityObject = entityObj;
+        entityObj.entityDropGen = entityDropGen;
         EntityHealthManager healthManagerTest = player.GetComponent<EntityHealthManager> ();
         if (healthManagerTest == null)
         {
