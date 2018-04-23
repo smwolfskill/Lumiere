@@ -33,7 +33,7 @@ public abstract class EntityObject
     virtual public void InflictDamage(float damageAmount)
     {
         this.currHealth -= damageAmount;
-        if (currHealth <= 0)
+        if (currHealth <= 0 && !isDead)
             this.Die();
     }
 
@@ -60,10 +60,7 @@ public abstract class EntityObject
     virtual protected void Die()
     {
         //Drop random loot items if any
-        if(entityDropGen != null && entityDropGen.maxItems > 0)
-        {
-            DropItemsAroundGameObject(entityDropGen.GenerateLoot());
-        }
+        DropLootAroundGameObject();
         //Destroy the GameObject
         Object.Destroy(gameObject);
         this.isDead = true;
@@ -75,7 +72,18 @@ public abstract class EntityObject
     }
 
     /// <summary>
-    /// Drops the items around the entity's game object.
+    /// Drop random loot items around the entity's GameObject, if any.
+    /// </summary>
+    virtual public void DropLootAroundGameObject()
+    {
+        if(entityDropGen != null && entityDropGen.maxItems > 0)
+        {
+            DropItemsAroundGameObject(entityDropGen.GenerateLoot());
+        }
+    }
+
+    /// <summary>
+    /// Drops the items around the entity's GameObject.
     /// </summary>
     /// <param name="itemsToDrop">Items to drop.</param>
     /// <param name="spacing">Spacing between items.</param>

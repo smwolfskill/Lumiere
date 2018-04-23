@@ -9,28 +9,14 @@ public class SecretRoomType : RoomType
     public TileType wallTile;
     public float itemPadding = 1.5f;         //dist from secret room walls
     public float healthPotionChance = 0.5f;  //TODO: update later w/ difficulty, etc.
-
-    public int maxLootCap = 8; //regardless of level & difficulty, no more items than this cap can ever be generated in a loot room.
     //TODO: incorporate current level & difficulty
 
     public override void GenRoom(Room room, Map map)
     {
-        //1. Load standard item sprite lists if not already
-        if(ItemSpawner.itemSpriteLists == null)
-        {
-            ItemSpawner.LoadItemSprites();
-        }
-
-        //2. Make the room inside the map
         map.FillAreaWithBorder(room.x, room.y, room.w, room.h, sandTile, wallTile, room);
 
-        //3. Set loot parameters depending on map level and difficulty
-        //Tougher monsters => same loot? less loot? or better loot? wouldn't actually be that much harder if 
-        //higher difficulty => tougher monsters => but better loot.
-        //TODO
-
-        //4. Generate loot in secret room
-        GameItem[] loot = ItemSpawner.GenerateLootBag((int)Time.time, 1, 1, 9, 0, false, healthPotionChance);
+        //Generate loot in secret room
+        GameItem[] loot = ItemSpawner.GenerateLootBag((int)Time.time, 1, 1, 4, GameItem.ItemRarity.COMMON, false, healthPotionChance);
         if(loot.Length == 0)
         {
             return;

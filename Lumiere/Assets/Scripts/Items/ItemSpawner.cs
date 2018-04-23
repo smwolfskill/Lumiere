@@ -829,6 +829,10 @@ static class ItemSpawner
     {
         Random random = GetRandom(seed, useSeed);
         //Set the sprites for the object using a sprite list dictionary
+        if(itemSpriteLists == null) //load default sprites if not set yet
+        {
+            LoadItemSprites();
+        }
         SpriteList typeSpriteList = itemSpriteLists.GetSpriteList(type);
         if(typeSpriteList == null)
         {
