@@ -47,10 +47,10 @@ public class PlayerAnimationTest
     public IEnumerator TestMoveUp()
     {
         rigidbody.velocity = new Vector2(0.0f, 10.0f);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1.1f);
         Assert.IsTrue(anim.GetCurrentAnimatorStateInfo(0).IsName("PlayerWalkUp"));
         rigidbody.velocity = new Vector2(0.0f, 0.05f);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1.1f);
         Assert.IsTrue(anim.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdleUp"));
 
     }
