@@ -24,12 +24,19 @@ public class Monster : NPC
         particles.transform.localPosition = Vector3.back;
         monster.layer = LayerMask.NameToLayer("Enemy");
 
-        MonsterObject obj = new MonsterObject(monster, maxHealth);
+        MonsterObject obj = new MonsterObject(monster, CalcMaxHealth(map));
+
         this.entityObject = obj;
         obj.entityDropGen = entityDropGen;
 
         monster.GetComponent<EntityHealthManager>().entityObj = obj;
+
         return monster;
+    }
+
+    public float CalcMaxHealth(Map map)
+    {
+        return (float)(maxHealth + maxHealth * (float)(map.levelNumber) * map.difficulty * .1f);
     }
   
 }

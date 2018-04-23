@@ -173,7 +173,11 @@ public class HotbarPanel : MonoBehaviour
         }
         else
         {
-            Debug.Log(equipmentManager);
+            //Debug.Log(equipmentManager);
+
+            //hotfix
+            return null;
+
             return equipmentManager.GetHotbarItem(selectedX);
         }
     }

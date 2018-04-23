@@ -21,7 +21,7 @@ public class EntitySpawnTest
     {
         mapGameObject = new GameObject ("Map");
         roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
-        Map map = new Map (50, 50, 1, mapGameObject, roomProperties);
+        map = new Map (50, 50, 1, mapGameObject, roomProperties, 1, 1);
 
         entityRoomType = Resources.Load<EntityRoomType> ("Rooms/EntityRoom");
         entityToSpawn = Resources.Load<Entity> ("Entities/Monsters/Monster 1");
@@ -87,10 +87,15 @@ public class EntitySpawnTest
     public void TestEntitiesSpawned()
     {
         entityRoom.GenRoom (5 / 2);
-        int minEntities = entityRoomType.minimumEntities;
-        int maxEntities = entityRoomType.maximumEntities;
+        int minEntities = entityRoomType.GetMinEntities(map);
+        int maxEntities = entityRoomType.GetMaxEntities(map);
         int entitiesSpawned = entityRoomType.GetEntitiesSpawned ();
-        Assert.IsTrue (entitiesSpawned >= minEntities);
+
+        // We cannot guarentee any enemies will spawn due to the fact that
+        // there may not be room for enemies to spawn in a given room. We
+        // can assure that there will be no more than a certain amount of
+        // enemies spawn though.
+        //Assert.IsTrue (entitiesSpawned >= minEntities);
         Assert.IsTrue (entitiesSpawned <= maxEntities);
     }
 
@@ -100,6 +105,11 @@ public class EntitySpawnTest
     [Test]
     public void TestEntitiesInGame()
     {
+        // Must make the game sufficiently hard in order to assure
+        // that it'll be likely some enemies spawn.
+        map.difficulty = 1000;
+        map.levelNumber = 1000;
+        
         entityRoom.GenRoom (5 / 2);
         string monster1Name = "Monster 1";
         string monster2Name = "Monster 2";

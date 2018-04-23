@@ -136,7 +136,7 @@ public class InventoryPanel : MonoBehaviour
         nWidth = inv.GetWidth();
         nHeight = inv.GetHeight();
         capacity = nWidth * nHeight;
-        Debug.Log(capacity.ToString());
+        //Debug.Log(capacity.ToString());
         gridLayout.constraintCount = nWidth; //# of columns
         InventoryItemButton[] childrenScripts = GetComponentsInChildren<InventoryItemButton>(); //used to access the children game objects
         //Set or create each GameItem's UI element

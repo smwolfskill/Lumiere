@@ -20,7 +20,7 @@ public class HideoutRoomTest
     {
         mapGameObject = new GameObject ("Map");
         roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
-        Map map = new Map (50, 50, 1, mapGameObject, roomProperties);
+        Map map = new Map (50, 50, 1, mapGameObject, roomProperties, 1, 1);
         hideoutRoomType = Resources.Load<HideoutRoomType> ("Rooms/HideoutRoom");
         hideoutRoom = new Room (map, 0, 0, 30, 30, hideoutRoomType);
         Assert.IsNotNull (map);
