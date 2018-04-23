@@ -21,8 +21,10 @@ public class ExitButton : MonoBehaviour
     void OnClick()
     {
         Application.Quit();
-        Debug.Log("Exiting game...");
-        UnityEditor.EditorApplication.isPlaying = false;
+        //Quit the game if running in Unity Editor. Comment out to build correctly for deployment.
+        //(references to UnityEditor not allowed!)
+        /*Debug.Log("Exiting game...");
+        UnityEditor.EditorApplication.isPlaying = false;*/
     }
 
 }

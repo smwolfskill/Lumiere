@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
-using UnityEditor.VersionControl;
+//using UnityEditor.VersionControl;
 using NUnit.Framework.Internal;
 using System.IO;
 
