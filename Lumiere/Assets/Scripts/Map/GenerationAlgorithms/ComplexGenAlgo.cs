@@ -51,40 +51,56 @@ public class ComplexGenAlgo : GenAlgo
     private void ConnectAllContainers()
     {
 
+        // Continually attempt to connect two containers with a path
+        // until there are no more possible connections to be made
         while (AttemptConnectTwoContainers()) ;
 
         Debug.Log(map.AreAllContainersConnected());
     }
 
+    // connect ANY two containers
     private bool AttemptConnectTwoContainers()
     {
         for (int i = map.containers.Count - 1; i >= 0; i--)
         {
             Container startingContainer = map.containers[i];
 
-            for (int j = i - 1; j >= 0; j--)
+            // possible optimization
+            for (int j = /*i - 1*/map.containers.Count - 1; j >= 0; j--)
             {
                 Container endingContainer = map.containers[j];
 
+                // if the two containers are not connected
                 if (!map.AreContainersConnected(startingContainer, endingContainer))
                 {
+
+                    // try connecting them
                     if (ConnectContainers(startingContainer, endingContainer))
                     {
+
+                        // if the containers can be connected, then this function's purpose
+                        // has been satisfied; two containers were connected
                         return true;
                     }
                 }
             }
         }
+
+        // this function's purpose was not satisfied
         return false;
     }
 
     private bool ConnectContainers(Container startingContainer, Container endingContainer)
     {
+        // use all the outter tiles of a container to try to connect to the
+        // other container
         List<Tile> startingTiles = startingContainer.GetTilesOfType(wallTileType);
         //List<Tile> endingTiles = endingContainer.GetTilesOfType(wallTileType);
 
         foreach (Tile startingTile in startingTiles)
         {
+            // try connecting a tile from startingContainer to any
+            // tile in endingContainer
             if(ConnectTileToContainer(startingTile, endingContainer))
             {
                 return true;
@@ -106,6 +122,7 @@ public class ComplexGenAlgo : GenAlgo
         {
             Link currLink = queue.Dequeue();
 
+            // if this tile has been searched, do not search again
             if(seenTileDict.ContainsKey(currLink.currTile))
             {
                 continue;
@@ -120,7 +137,7 @@ public class ComplexGenAlgo : GenAlgo
 
             //Need to see if any neighbors are walls, then if so
             //use those walls as possible endpoints
-            foreach(Tile wallTile in link.currTile.GetNeighbors(wallTileTypeList))
+            foreach(Tile wallTile in currLink.currTile.GetNeighbors())
             {
                 //If the container has one of those neighboring wall tiles
                 if (container.HasTile(wallTile))
@@ -130,6 +147,8 @@ public class ComplexGenAlgo : GenAlgo
                     currLink = new Link(wallTile, currLink);
 
                     Container newContainer = ApplyLinkChain(currLink);
+
+                    map.AddContainer(newContainer);
 
                     map.ConnectContainers(container, newContainer);
                     map.ConnectContainers(tile.container, newContainer);
@@ -164,6 +183,8 @@ public class ComplexGenAlgo : GenAlgo
         if (link == null) return;
 
         map.CreateTileAndSetTile(link.currTile.x, link.currTile.y, container, pathTileType);
+        map.ChangeTilesInArea(link.currTile.x, link.currTile.y, 1, earthTileType, wallTileType, container);
+
 
         ApplyLinkChain(link.parentLink, container);
 
