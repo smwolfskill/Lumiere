@@ -74,13 +74,16 @@ public class Tile
     /// Gets all the valid neighbors of the tile specified and enumerates them in a list.
     /// </summary>
     /// <returns>The list of neighbors of the tile specified.</returns>
-    public List<Tile> GetNeighbors()
+    public List<Tile> GetNeighbors(List<TileType> allowedTileTypes = null)
     {
         List<Tile> neighbors = new List<Tile>();
         foreach(Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
         {
             Tile neighbor = this.GetNeighbor (direction);
-            if (neighbor != null) 
+            if (
+                neighbor != null &&
+                (allowedTileTypes == null || allowedTileTypes.Contains(neighbor.tileType))
+            ) 
             {
                 neighbors.Add(neighbor);
             }
@@ -89,4 +92,5 @@ public class Tile
 
         return neighbors;
     }
+
 }

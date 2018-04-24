@@ -356,4 +356,28 @@ public class Map
 
         return false;
     }
+
+    public bool AreAllContainersConnected()
+    {
+        foreach (Container currContainer in containers)
+        {
+            //Containers contain themselves
+            foreach (Container compareContainer in containers)
+            {
+                if(!AreContainersConnected(currContainer, compareContainer))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /*
+    public List<List<Container>> GetConnectedContainerGroups()
+    {
+
+    }
+    */
 }
+
