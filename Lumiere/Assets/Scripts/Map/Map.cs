@@ -313,7 +313,7 @@ public class Map
         {
             for(int currY = y - radius; currY <= y + radius; currY++)
             {
-                if(GetTile(currX,currY).tileType == targetTileType)
+                if(GetTile(currX, currY) != null && GetTile(currX,currY).tileType == targetTileType)
                 {
                     CreateTileAndSetTile(currX, currY, container, newTileType);
                 }
@@ -349,11 +349,33 @@ public class Map
 
         foreach(Container nextContainer in startingContainer.connectedContainers)
         {
-            bool ret = AreContainersConnected(nextContainer, endingContainer, hasSeenContainer);
-
-            if (ret) return true;
+            if (AreContainersConnected(nextContainer, endingContainer, hasSeenContainer)) return true;
         }
 
         return false;
     }
+
+    public bool AreAllContainersConnected()
+    {
+        foreach (Container currContainer in containers)
+        {
+            //Containers contain themselves
+            foreach (Container compareContainer in containers)
+            {
+                if(!AreContainersConnected(currContainer, compareContainer))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /*
+    public List<List<Container>> GetConnectedContainerGroups()
+    {
+
+    }
+    */
 }
+

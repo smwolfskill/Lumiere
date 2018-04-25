@@ -72,4 +72,20 @@ public class Container
         map.RemoveContainer(this);
         Object.Destroy(gameObject);
     }
+
+    public bool HasTile(Tile tile)
+    {
+        return tiles.Contains(tile);
+    }
+
+    public bool HasTileType(TileType tileType)
+    {
+        foreach(Tile tile in tiles)
+        {
+            if (tile.tileType == tileType)
+                return true;
+        }
+
+        return false;
+    }
 }

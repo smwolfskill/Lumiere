@@ -15,8 +15,16 @@ public class ComplexGenAlgo : GenAlgo
     public ContainerType baseContainerType;
     public bool longButGoodGen = false;
 
+    List<TileType> earthTileTypeList;
+    List<TileType> wallTileTypeList;
+
     public override void GenerateMap(Map map)
     {
+        earthTileTypeList = new List<TileType>();
+        earthTileTypeList.Add(earthTileType);
+        wallTileTypeList = new List<TileType>();
+        wallTileTypeList.Add(wallTileType);
+
         this.map = map;
 
         Container baseContainer = new Container(map, baseContainerType);
@@ -33,11 +41,170 @@ public class ComplexGenAlgo : GenAlgo
         
         AttemptGenPaths();
 
-        if(longButGoodGen)DesperateConnect();
+        //if(longButGoodGen)DesperateConnect();
+
+        ConnectAllContainers();
 
         map.GetRooms()[0].SpawnPlayer();
     }
 
+    private void ConnectAllContainers()
+    {
+
+        // Continually attempt to connect two containers with a path
+        // until there are no more possible connections to be made
+        while (AttemptConnectTwoContainers()) ;
+
+        Debug.Log(map.AreAllContainersConnected());
+    }
+
+    // connect ANY two containers
+    private bool AttemptConnectTwoContainers()
+    {
+        for (int i = map.containers.Count - 1; i >= 0; i--)
+        {
+            Container startingContainer = map.containers[i];
+
+            // possible optimization
+            for (int j = /*i - 1*/map.containers.Count - 1; j >= 0; j--)
+            {
+                Container endingContainer = map.containers[j];
+
+                // if the two containers are not connected
+                if (!map.AreContainersConnected(startingContainer, endingContainer))
+                {
+
+                    // try connecting them
+                    if (ConnectContainers(startingContainer, endingContainer))
+                    {
+
+                        // if the containers can be connected, then this function's purpose
+                        // has been satisfied; two containers were connected
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // this function's purpose was not satisfied
+        return false;
+    }
+
+    private bool ConnectContainers(Container startingContainer, Container endingContainer)
+    {
+        // use all the outter tiles of a container to try to connect to the
+        // other container
+        List<Tile> startingTiles = startingContainer.GetTilesOfType(wallTileType);
+        //List<Tile> endingTiles = endingContainer.GetTilesOfType(wallTileType);
+
+        foreach (Tile startingTile in startingTiles)
+        {
+            // try connecting a tile from startingContainer to any
+            // tile in endingContainer
+            if(ConnectTileToContainer(startingTile, endingContainer))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool ConnectTileToContainer(Tile tile, Container container)
+    {
+        Link link = new Link(tile, null);
+
+        Dictionary<Tile, bool> seenTileDict = new Dictionary<Tile, bool>();
+        Queue<Link> queue = new Queue<Link>();
+        queue.Enqueue(link);
+
+        while(queue.Count > 0)
+        {
+            Link currLink = queue.Dequeue();
+
+            // if this tile has been searched, do not search again
+            if(seenTileDict.ContainsKey(currLink.currTile))
+            {
+                continue;
+            }
+
+            /*
+            if(container.HasTileType(wallTileType))
+            {
+                link.currTileDirection = Utilities.Direction.EAST;
+            }
+            */
+
+            //Need to see if any neighbors are walls, then if so
+            //use those walls as possible endpoints
+            foreach(Tile wallTile in currLink.currTile.GetNeighbors())
+            {
+                //If the container has one of those neighboring wall tiles
+                if (container.HasTile(wallTile))
+                {
+
+                    //use the neighboring wall tile as the last link
+                    currLink = new Link(wallTile, currLink);
+
+                    Container newContainer = ApplyLinkChain(currLink);
+
+                    map.AddContainer(newContainer);
+
+                    map.ConnectContainers(container, newContainer);
+                    map.ConnectContainers(tile.container, newContainer);
+
+                    return true;
+                }
+            }
+
+            seenTileDict.Add(currLink.currTile, true);
+
+            foreach(Tile nextTile in currLink.currTile.GetNeighbors(earthTileTypeList))
+            {
+                queue.Enqueue(new Link(nextTile, currLink));
+            }
+        }
+
+        return false;
+
+    }
+
+    private Container ApplyLinkChain(Link link)
+    {
+        Container container = new Container(map, baseContainerType);
+
+        ApplyLinkChain(link, container);
+
+        return container;
+    }
+
+    private void ApplyLinkChain(Link link, Container container)
+    {
+        if (link == null) return;
+
+        map.CreateTileAndSetTile(link.currTile.x, link.currTile.y, container, pathTileType);
+        map.ChangeTilesInArea(link.currTile.x, link.currTile.y, 1, earthTileType, wallTileType, container);
+
+
+        ApplyLinkChain(link.parentLink, container);
+
+    }
+
+
+    /*
+    private bool ConnectTiles(Tile startingTile, Tile endingTile)
+    {
+        Link link = new Link(startingTile, null);
+
+    }
+
+    private bool ConntectTiles(Tile startingTile, Tile endingTile)
+    {
+
+    }
+    */
+
+    /*
     private void DesperateConnect()
     {
 
@@ -57,55 +224,59 @@ public class ComplexGenAlgo : GenAlgo
         }
 
     }
+    */
 
-    private bool TryConnect(Container startingContainer, Container endingContainer)
+    /*
+private bool TryConnect(Container startingContainer, Container endingContainer)
+{
+    List<Tile> endingTiles = endingContainer.GetTilesOfType(wallTileType);
+    List<Tile> startingTiles = startingContainer.GetTilesOfType(wallTileType);
+
+    foreach(Tile startingTile in startingTiles)
     {
-        List<Tile> endingTiles = endingContainer.GetTilesOfType(wallTileType);
-        List<Tile> startingTiles = startingContainer.GetTilesOfType(wallTileType);
+        Door startingDoor = GetValidDoor(startingTile);
+        if (startingDoor == null) continue;
 
-        foreach(Tile startingTile in startingTiles)
+        foreach (Tile endingTile in endingTiles)
         {
-            Door startingDoor = GetValidDoor(startingTile);
-            if (startingDoor == null) continue;
+            Door endingDoor = GetValidDoor(endingTile);
+            if (endingDoor == null) continue;
 
-            foreach (Tile endingTile in endingTiles)
+            if (ConnectDoors(startingDoor, endingDoor))
             {
-                Door endingDoor = GetValidDoor(endingTile);
-                if (endingDoor == null) continue;
+                map.ChangeTilesInArea(startingTile.x, startingTile.y, 2, earthTileType, wallTileType, startingContainer);
+                map.ChangeTilesInArea(startingTile.x, startingTile.y, 1, wallTileType, pathTileType, startingContainer);
 
-                if (ConnectDoors(startingDoor, endingDoor))
-                {
-                    map.ChangeTilesInArea(startingTile.x, startingTile.y, 2, earthTileType, wallTileType, startingContainer);
-                    map.ChangeTilesInArea(startingTile.x, startingTile.y, 1, wallTileType, pathTileType, startingContainer);
+                map.ChangeTilesInArea(endingTile.x, endingTile.y, 2, earthTileType, wallTileType, endingContainer);
+                map.ChangeTilesInArea(endingTile.x, endingTile.y, 1, wallTileType, pathTileType, endingContainer);
 
-                    map.ChangeTilesInArea(endingTile.x, endingTile.y, 2, earthTileType, wallTileType, endingContainer);
-                    map.ChangeTilesInArea(endingTile.x, endingTile.y, 1, wallTileType, pathTileType, endingContainer);
-
-                    return true;
-                }
+                return true;
             }
         }
-
-        return false;
-
     }
 
-    // Given a tile, get a valid door for this tile
-    private Door GetValidDoor(Tile tile)
+    return false;
+
+}
+*/
+
+    /*
+// Given a tile, get a valid door for this tile
+private Door GetValidDoor(Tile tile)
+{
+    foreach (Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
     {
-        foreach (Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
+        Pair<int,int> pair = Utilities.CordInDirection(direction, tile.x, tile.y);
+        Tile attemptDoorDirectionTile = map.GetTile(pair.First, pair.Second);
+        if(attemptDoorDirectionTile != null && attemptDoorDirectionTile.tileType == earthTileType)
         {
-            Pair<int,int> pair = Utilities.CordInDirection(direction, tile.x, tile.y);
-            Tile attemptDoorDirectionTile = map.GetTile(pair.First, pair.Second);
-            if(attemptDoorDirectionTile != null && attemptDoorDirectionTile.tileType == earthTileType)
-            {
-                return new Door(tile.x, tile.y, direction, tile.container, 1);
-            }
+            return new Door(tile.x, tile.y, direction, tile.container, 1);
         }
-
-        return null;
     }
 
+    return null;
+}
+*/
 
     private void AttemptGenPaths()
     {
@@ -210,7 +381,6 @@ public class ComplexGenAlgo : GenAlgo
 
         foreach(Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
         {
-            if (!CanTakeThisDirection(link, direction)) continue;
 
             Link newLink = AddToQueue(link, direction, queue, tileHasBeenSearched);
 
@@ -224,6 +394,7 @@ public class ComplexGenAlgo : GenAlgo
         return null;
     }
 
+    /*
     private bool CanTakeThisDirection(Link link, Utilities.Direction direction)
     {
         return true;
@@ -237,9 +408,9 @@ public class ComplexGenAlgo : GenAlgo
             case Utilities.Turn.LEFT:
                 turnsToCheck.Add(Utilities.Turn.FORWARD);
 
-
         }
     }
+    */
 
     private Container ModifyMapWithLinks(Link currLink)
     {
@@ -443,7 +614,7 @@ public class Link
     public Link parentLink;
     public Utilities.Direction currTileDirection;
 
-    public Link(Tile currTile, Link parentLink, Utilities.Direction currTileDirection)
+    public Link(Tile currTile, Link parentLink, Utilities.Direction currTileDirection = Utilities.Direction.EAST)
     {
         this.currTile = currTile;
         this.parentLink = parentLink;
