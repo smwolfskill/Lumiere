@@ -15,7 +15,7 @@ public class SimpleGenAlgo : GenAlgo
     public RoomType blankRoomType;
     public RoomType pathRoomType;
 
-    public override void GenerateMap(Map map)
+    public override void GenerateMap(Map map, GameObject ExitDoor)
     {
         //Needs refactoring before can be functional again.
         /*

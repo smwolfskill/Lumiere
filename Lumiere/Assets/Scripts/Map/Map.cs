@@ -145,8 +145,17 @@ public class Map
         SetTile(x + w - 1, y + h - 1, new Tile(x + w - 1, y + h - 1, this, borderTileType), container);
 
     }
+    
+    public void CreateBorder(int x, int y, int w, int h, TileType borderTileType, Container container)
+    {
+        FillLine(x, y, w, Utilities.Direction.EAST, borderTileType, container);
+        FillLine(x, y, h, Utilities.Direction.SOUTH, borderTileType, container);
+        FillLine(x, y + h - 1, w, Utilities.Direction.EAST, borderTileType, container);
+        FillLine(x + w - 1, y, h, Utilities.Direction.SOUTH, borderTileType, container);
+        SetTile(x + w - 1, y + h - 1, new Tile(x + w - 1, y + h - 1, this, borderTileType), container);
+    }
 
-    public Tile GetTile(int x, int y)
+public Tile GetTile(int x, int y)
     {
         if (!ValidTileSpace(x, y))
             return null;
@@ -321,6 +330,20 @@ public class Map
         }
     }
 
+    public void ChangeTilesInArea(int x, int y, int radius, TileType newTileType, Container container)
+    {
+        for (int currX = x - radius; currX <= x + radius; currX++)
+        {
+            for (int currY = y - radius; currY <= y + radius; currY++)
+            {
+                if (GetTile(currX, currY) != null)
+                {
+                    CreateTileAndSetTile(currX, currY, container, newTileType);
+                }
+            }
+        }
+    }
+
     public void ConnectContainers(Container a, Container b)
     {
         a.connectedContainers.Add(b);
@@ -370,6 +393,8 @@ public class Map
         }
         return true;
     }
+
+    
 
     /*
     public List<List<Container>> GetConnectedContainerGroups()
