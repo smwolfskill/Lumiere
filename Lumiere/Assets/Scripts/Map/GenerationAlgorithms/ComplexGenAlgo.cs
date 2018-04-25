@@ -18,7 +18,7 @@ public class ComplexGenAlgo : GenAlgo
     List<TileType> earthTileTypeList;
     List<TileType> wallTileTypeList;
 
-    public override void GenerateMap(Map map)
+    public override void GenerateMap(Map map, GameObject ExitDoor)
     {
         earthTileTypeList = new List<TileType>();
         earthTileTypeList.Add(earthTileType);
@@ -41,11 +41,18 @@ public class ComplexGenAlgo : GenAlgo
         
         AttemptGenPaths();
 
-        //if(longButGoodGen)DesperateConnect();
-
         ConnectAllContainers();
 
+        if(map.GetRooms().Count < 2)
+        {
+            GenerateMap(map, ExitDoor);
+        }
+
         map.GetRooms()[0].SpawnPlayer();
+
+        map.GetRooms()[1].SpawnExitDoor(ExitDoor);
+        
+        
     }
 
     private void ConnectAllContainers()
@@ -54,8 +61,6 @@ public class ComplexGenAlgo : GenAlgo
         // Continually attempt to connect two containers with a path
         // until there are no more possible connections to be made
         while (AttemptConnectTwoContainers()) ;
-
-        Debug.Log(map.AreAllContainersConnected());
     }
 
     // connect ANY two containers
@@ -152,6 +157,9 @@ public class ComplexGenAlgo : GenAlgo
 
                     map.ConnectContainers(container, newContainer);
                     map.ConnectContainers(tile.container, newContainer);
+
+                    map.ChangeTilesInArea(wallTile.x, wallTile.y, 1, pathTileType, newContainer);
+                    map.ChangeTilesInArea(tile.x, tile.y, 1, pathTileType, newContainer);
 
                     return true;
                 }

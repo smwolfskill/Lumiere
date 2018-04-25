@@ -321,6 +321,20 @@ public class Map
         }
     }
 
+    public void ChangeTilesInArea(int x, int y, int radius, TileType newTileType, Container container)
+    {
+        for (int currX = x - radius; currX <= x + radius; currX++)
+        {
+            for (int currY = y - radius; currY <= y + radius; currY++)
+            {
+                if (GetTile(currX, currY) != null)
+                {
+                    CreateTileAndSetTile(currX, currY, container, newTileType);
+                }
+            }
+        }
+    }
+
     public void ConnectContainers(Container a, Container b)
     {
         a.connectedContainers.Add(b);

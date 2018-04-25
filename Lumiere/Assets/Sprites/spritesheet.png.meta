@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 965c7c2dcb3598c4198a935951e2e9ce
-timeCreated: 1518539261
+timeCreated: 1524682340
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -36,7 +36,7 @@ TextureImporter:
     21300058: spritesheet_29
     21300060: spritesheet_30
     21300062: spritesheet_31
-    21300064: spritesheet_32
+    21300064: exit_door
     21300066: spritesheet_33
     21300068: spritesheet_34
     21300070: spritesheet_35
@@ -628,7 +628,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet_32
+      name: exit_door
       rect:
         serializedVersion: 2
         x: 64

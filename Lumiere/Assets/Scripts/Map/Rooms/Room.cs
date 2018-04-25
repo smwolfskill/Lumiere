@@ -107,4 +107,15 @@ public class Room : Container
         return (PlayerObject)playerGameObject.GetComponent<EntityObjectManager>().entityObject;
     }
 
+    public void SpawnExitDoor(GameObject ExitDoor)
+    {
+        GameObject exitDoorClone = Object.Instantiate(ExitDoor);
+
+        exitDoorClone.transform.position = new Vector3(
+            centerX,
+            centerY,
+            exitDoorClone.transform.position.z
+        );
+    }
+
 }
