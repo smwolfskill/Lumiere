@@ -51,8 +51,8 @@ public class ComplexGenAlgo : GenAlgo
         map.GetRooms()[0].SpawnPlayer();
 
         map.GetRooms()[1].SpawnExitDoor(ExitDoor);
-        
-        
+
+        map.CreateBorder(-2, -2, map.w + 2, map.h + 2, wallTileType, baseContainer);
     }
 
     private void ConnectAllContainers()

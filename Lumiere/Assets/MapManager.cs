@@ -7,11 +7,11 @@ public class MapManager : MonoBehaviour
 
     public bool GenMapOnStart = false;
 
-    public int levelNumber = 1;
-    public float difficulty = 1.5f;
+    private int levelNumber = 1;
+    private const float difficulty = 1.5f;
 
-    public int initalMapSize;
-    public float mapSizeIncreaseFactor;
+    private const int initalMapSize = 40;
+    private const float mapSizeIncreaseFactor = 3;
 
 
     public ComplexGenAlgo complexGenAlgo;
@@ -23,6 +23,8 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
+        levelNumber = 1;
+
         if(GenMapOnStart)
         {
             GenMap();
@@ -35,8 +37,8 @@ public class MapManager : MonoBehaviour
     {
         currMap = new GameObject();
 
-        int width = (int)(initalMapSize + levelNumber * mapSizeIncreaseFactor);
-        int height = (int)(initalMapSize + levelNumber * mapSizeIncreaseFactor);
+        int width = (int)(initalMapSize + 1 * mapSizeIncreaseFactor);
+        int height = (int)(initalMapSize + 1 * mapSizeIncreaseFactor);
 
         complexGenAlgo.roomAttempts = 1000;
         complexGenAlgo.spaceBetweenRooms = 5;
