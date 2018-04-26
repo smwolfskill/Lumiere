@@ -11,14 +11,15 @@ public class UIScreenManager : MonoBehaviour
     /// Switches to the screen whose tag matches screenTag, or throws an ArgumentException if not found.
     /// </summary>
     /// <param name="screenTag">Tag of screen GameObject to switch to (set active).</param>
-    public void SwitchTo(string screenTag)
+    /// <returns>GameObject of screen switched to.</returns>
+    public GameObject SwitchTo(string screenTag)
     {
-        bool found = false;
+        GameObject found = null;
         foreach (GameObject screen in screens)
         {
             if (screen.tag == screenTag)
             {
-                found = true;
+                found = screen;
                 screen.SetActive(true);
             }
             else
@@ -26,9 +27,10 @@ public class UIScreenManager : MonoBehaviour
                 screen.SetActive(false);
             }
         }
-        if (!found)
+        if (found == null)
         {
             throw new ArgumentException("UIScreenManager: tag '" + screenTag + "' did not match any screens!");
         }
+        return found;
     }
 }

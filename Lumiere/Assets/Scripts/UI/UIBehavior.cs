@@ -152,7 +152,20 @@ public class UIBehavior : MonoBehaviour
         else
         {
             uiScreensPanel.SetActive(true);
-            screenManager.SwitchTo("UIGameOverScreen");
+            GameObject gameOverScreen = screenManager.SwitchTo("UIGameOverScreen");
+
+            //Set Game Over stats
+            GameOverStats gameOverStats = gameOverScreen.GetComponent<GameOverStats>();
+            GameObject mapManagerObj = GameObject.FindGameObjectWithTag("MapManager");
+            if (mapManagerObj != null)
+            {
+                MapManager mapManager = mapManagerObj.GetComponent<MapManager>();
+                gameOverStats.SetStats(mapManager.LevelNumber - 1);
+            }
+            else
+            {
+                gameOverStats.SetStats(1);
+            }
         }
     }
 }

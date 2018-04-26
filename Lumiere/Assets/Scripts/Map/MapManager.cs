@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
-
     public bool GenMapOnStart = false;
 
     private int levelNumber = 1;
@@ -22,6 +21,14 @@ public class MapManager : MonoBehaviour
     private GameObject currMap;
 
     public GameObject ExitDoor;
+
+    public int LevelNumber
+    {
+        get
+        {
+            return levelNumber;    
+        }
+    }
 
     void Awake()
     {
@@ -86,6 +93,6 @@ public class MapManager : MonoBehaviour
             levelText = GameObject.FindGameObjectWithTag ("UILevel").GetComponent<Text>();
         }
 
-        levelText.text = "Current level: " + levelNumber;
+        levelText.text = "Level " + levelNumber;
     }
 }
