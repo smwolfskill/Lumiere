@@ -10,7 +10,7 @@ using System;
 [System.Serializable]
 public class GameItem
 {
-    public static GameItem UNSET_ITEM = new GameItem ();
+    public static GameItem UNSET_ITEM = new GameItem();
 
     [SerializeField]
     protected Sprite guiSprite;       // Item in GUI.
@@ -88,7 +88,7 @@ public class GameItem
 
     virtual public GameItem clone()
     {
-        return new GameItem (this);
+        return new GameItem(this);
     }
 
     /// <summary>
@@ -145,8 +145,8 @@ public class GameItem
     /// <param name="copy">Copy.</param>
     private void FillData(GameItem copy)
     {
-        FillData(null, copy.groundSprite, copy.name, 
-                 copy.description, copy.value, copy.rarity, 
+        FillData(null, copy.groundSprite, copy.name,
+                 copy.description, copy.value, copy.rarity,
                  copy.quantity, copy.maxStacks, copy.itemID);
         //Copy the gui sprites and textures here to avoid duplicating texture generation.
         this.guiSprite = copy.guiSprite;
@@ -169,8 +169,8 @@ public class GameItem
         }
         else
         {
-            guiSpritesEqual = 
-                EqualityComparer<Sprite>.Default.Equals (guiSprite, item.guiSprite);
+            guiSpritesEqual =
+                EqualityComparer<Sprite>.Default.Equals(guiSprite, item.guiSprite);
         }
 
         if (groundSprite == null && item.groundSprite == null)
@@ -179,8 +179,8 @@ public class GameItem
         }
         else
         {
-            groundSpritesEqual = 
-                EqualityComparer<Sprite>.Default.Equals (groundSprite, item.groundSprite);
+            groundSpritesEqual =
+                EqualityComparer<Sprite>.Default.Equals(groundSprite, item.groundSprite);
         }
 
         return item != null &&
@@ -200,7 +200,7 @@ public class GameItem
     /// <returns><c>true</c>, if set.<c>false</c> if this GameItem is UNSET_ITEM.</returns>
     public bool SetYet()
     {
-        if(itemID == UNSET_ITEM.itemID)
+        if (itemID == UNSET_ITEM.itemID)
         {
             return false;
         }
@@ -216,7 +216,7 @@ public class GameItem
         {
             guiTexture = TextureFromSprite(guiSprite);
         }
-        else 
+        else
         {
             guiTexture = null;
         }
@@ -255,7 +255,7 @@ public class GameItem
     /// <param name="position">Position to spawn the dropped item at.</param>
     public GameObject CreateGameObject(Vector3 position)
     {
-        GameObject droppedItem = (GameObject) GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Item"));
+        GameObject droppedItem = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Item"));
         droppedItem.transform.position = position;
         ItemManager itemManager = droppedItem.GetComponent<ItemManager>();
         itemManager.item = this;

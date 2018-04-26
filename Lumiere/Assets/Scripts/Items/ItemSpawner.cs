@@ -13,7 +13,7 @@ static class ItemSpawner
 
     private static readonly Random RANDOM = new Random(); //needed since recreation of Random class tends to give deterministic results
     // Essentially a const, it lists the liklyhood an item will be a certain rarity or higher based on the scale.
-    private static readonly int[] rarityWeights = {20, 10, 5, 3, 1};
+    private static readonly int[] rarityWeights = { 20, 10, 5, 3, 1 };
     private static readonly int floorRarityBoostThreshold = 5;  // How many floors before rarity increases.
     private static readonly string[] materials = { "Bronze", "Iron", "Steel", "Mythril", "Adamantium", "Luminite" };
 
@@ -33,7 +33,7 @@ static class ItemSpawner
 
     private static Random GetRandom(int seed, bool useSeed)
     {
-        if(useSeed)
+        if (useSeed)
         {
             return new Random(seed);
         }
@@ -79,17 +79,17 @@ static class ItemSpawner
     public static ArmorItem GenerateArmor(int seed, int quality, GameItem.ItemRarity rarity = GameItem.ItemRarity.COMMON, bool useSeed = true)
     {
         // Some constants to use for calculations:
-        double[] minArmorRarityRatings = {1, 2, 3, 4, 5};           // Scaling factor for minimum based on rarity. Min * RarityRating = Absolute Minimum
-        double[] minArmorRatings = {5, 10, 15, 5, 1, 1};            // Minimum rating per armor slot, in enum order.
-        double[] maxArmorRatings = {20, 50, 100, 10, 5, 5};         // Maximum rating per armor slot, in enum order.
-        
-        double[] minSpeedRarityRatings = {1, 1.25, 1.5, 1.75, 2};   // Scaling factor for minimum based on rarity.
-        double[] minSpeedRatings = {0, 1, 0, 0, 1, 1};              // Minimum rating per armor slot, in enum order.
-        double[] maxSpeedRatings = {2, 5, 2, 1, 5, 5};              // Maximum rating per armor slot, in enum order.
+        double[] minArmorRarityRatings = { 1, 2, 3, 4, 5 };           // Scaling factor for minimum based on rarity. Min * RarityRating = Absolute Minimum
+        double[] minArmorRatings = { 5, 10, 15, 5, 1, 1 };            // Minimum rating per armor slot, in enum order.
+        double[] maxArmorRatings = { 20, 50, 100, 10, 5, 5 };         // Maximum rating per armor slot, in enum order.
 
-        double[] minDamageRarityRatings = {1, 1.25, 1.5, 1.75, 2};  // Scaling factor for minimum based on rarity.
-        double[] minDamageRatings = {0, 0, 0, 1, 1, 1};             // Minimum rating per armor slot, in enum order.
-        double[] maxDamageRatings = {2, 2, 2, 5, 5, 5};             // Maximum rating per armor slot, in enum order. 
+        double[] minSpeedRarityRatings = { 1, 1.25, 1.5, 1.75, 2 };   // Scaling factor for minimum based on rarity.
+        double[] minSpeedRatings = { 0, 1, 0, 0, 1, 1 };              // Minimum rating per armor slot, in enum order.
+        double[] maxSpeedRatings = { 2, 5, 2, 1, 5, 5 };              // Maximum rating per armor slot, in enum order.
+
+        double[] minDamageRarityRatings = { 1, 1.25, 1.5, 1.75, 2 };  // Scaling factor for minimum based on rarity.
+        double[] minDamageRatings = { 0, 0, 0, 1, 1, 1 };             // Minimum rating per armor slot, in enum order.
+        double[] maxDamageRatings = { 2, 2, 2, 5, 5, 5 };             // Maximum rating per armor slot, in enum order. 
 
         // For reference, ENUM Order: HEAD, LEGS, CHEST, GLOVES, RING, NECK.
 
@@ -235,8 +235,8 @@ static class ItemSpawner
         Random random = GetRandom(seed, useSeed);
 
         // Get Arc Value (Attacks may not even use this but do it anyways); higher rarities increase this value.
-        double[] arcMin = {30, 60, 90, 120, 150};
-        double[] arcMax = {60, 90, 120, 150, 180};
+        double[] arcMin = { 30, 60, 90, 120, 150 };
+        double[] arcMax = { 60, 90, 120, 150, 180 };
 
         double arc = random.NextDouble() * (arcMax[rareVal] - arcMin[rareVal]) + arcMin[rareVal];
 
@@ -281,7 +281,7 @@ static class ItemSpawner
         int[] penMin = { 1, 1, 2, 2, 3 };
         int[] penMax = { 2, 3, 4, 5, 6 };
 
-        int penetration = random.Next(penMin[rareVal], penMax[rareVal]+1);
+        int penetration = random.Next(penMin[rareVal], penMax[rareVal] + 1);
 
         // Now assemble and do the other important steps.
         RangedWeapon newItem = new RangedWeapon(penetration)
@@ -325,13 +325,13 @@ static class ItemSpawner
         Random random = GetRandom(seed, useSeed);
 
         // Size up the situation.
-        int size = random.Next(min, max+1);
+        int size = random.Next(min, max + 1);
         GameItem[] lootBag = new GameItem[size];
 
         // Generate and fill the bag.
         for (int i = 0; i < size; i++)
         {
-            if(random.NextDouble() <= healthPotionChance)
+            if (random.NextDouble() <= healthPotionChance)
             {
                 lootBag[i] = GenerateHealthPotion(seed, quality, rarity, useSeed);
             }
@@ -358,7 +358,7 @@ static class ItemSpawner
         //Allow 1 more potential potion every 5 levels, up to the max stack of course.
         Random random = GetRandom(seed, useSeed);
         int potionMaxStack = 5;
-        int maxAmount = UnityEngine.Mathf.Min((int) (quality / 5) + 1, potionMaxStack);
+        int maxAmount = UnityEngine.Mathf.Min((int)(quality / 5) + 1, potionMaxStack);
         int quantity = random.Next(1, maxAmount + 1);
         UsableItem healthPotion = new UsableItem(null, null, "Health Potion", "A health potion.", 1, rarity, quantity, potionMaxStack, 100, "HealthPotionAction");
         SetItemSprites(seed, "Health Potion", healthPotion, useSeed);
@@ -453,8 +453,8 @@ static class ItemSpawner
     /// <param name="suffixThreshold">Threshold based on rarity that a suffix will actually be placed onto an item. Must be size of rarity enum count.</param>
     /// <param name="suffixs">List of possible suffixes.</param>
     /// <returns>Name for the compiled item.</returns>
-    private static string CompileWeaponName(int seed, WeaponItem item, string[] types, double[] typeCutoffRange, 
-                                            string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic, 
+    private static string CompileWeaponName(int seed, WeaponItem item, string[] types, double[] typeCutoffRange,
+                                            string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic,
                                             string[] prefixesLegend, int[] suffixThreshold, string[] suffixs, bool useSeed)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
@@ -490,29 +490,29 @@ static class ItemSpawner
         // Determined based on the slot the item occupies.
         switch (item.Slot)
         {
-            case EquipmentManager.EquipSlot.CHEST:
-                name = GenerateNameChestPlate(seed, item, minArm[2], maxArm[2], useSeed);
-                break;
+        case EquipmentManager.EquipSlot.CHEST:
+            name = GenerateNameChestPlate(seed, item, minArm[2], maxArm[2], useSeed);
+            break;
 
-            case EquipmentManager.EquipSlot.GLOVES:
-                name = GenerateNameGloves(seed, item, minArm[3], maxArm[3], useSeed);
-                break;
+        case EquipmentManager.EquipSlot.GLOVES:
+            name = GenerateNameGloves(seed, item, minArm[3], maxArm[3], useSeed);
+            break;
 
-            case EquipmentManager.EquipSlot.HEAD:
-                name = GenerateNameHead(seed, item, minArm[0], maxArm[0], useSeed);
-                break;
+        case EquipmentManager.EquipSlot.HEAD:
+            name = GenerateNameHead(seed, item, minArm[0], maxArm[0], useSeed);
+            break;
 
-            case EquipmentManager.EquipSlot.LEGS:
-                name = GenerateNameLegs(seed, item, minArm[1], maxArm[1], useSeed);
-                break;
+        case EquipmentManager.EquipSlot.LEGS:
+            name = GenerateNameLegs(seed, item, minArm[1], maxArm[1], useSeed);
+            break;
 
-            case EquipmentManager.EquipSlot.NECK:
-                name = GenerateNameNeck(seed, item, minArm[5], maxArm[5], useSeed);
-                break;
+        case EquipmentManager.EquipSlot.NECK:
+            name = GenerateNameNeck(seed, item, minArm[5], maxArm[5], useSeed);
+            break;
 
-            case EquipmentManager.EquipSlot.RING:
-                name = GenerateNameRing(seed, item, minArm[4], maxArm[4], useSeed);
-                break;
+        case EquipmentManager.EquipSlot.RING:
+            name = GenerateNameRing(seed, item, minArm[4], maxArm[4], useSeed);
+            break;
         }
 
         return name;
@@ -670,7 +670,7 @@ static class ItemSpawner
     /// <param name="prefixesEpic">Prefixes for epic armors.</param>
     /// <param name="prefixesLegend">Prefixes for legendary armors.</param>
     /// <returns>A potential name for the given item.</returns>
-    private static string NameArmor(int seed, ArmorItem item, double minArmor, double maxArmor, string[] types, string[] prefixesCommon, 
+    private static string NameArmor(int seed, ArmorItem item, double minArmor, double maxArmor, string[] types, string[] prefixesCommon,
                                     string[] prefixesUncommon, string[] prefixesRare, string[] prefixesEpic, string[] prefixesLegend, bool useSeed)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
@@ -717,7 +717,7 @@ static class ItemSpawner
             }
         }
 
-         return materials[0];
+        return materials[0];
     }
 
     /// <summary>
@@ -730,7 +730,7 @@ static class ItemSpawner
         // Get Dominant Trait.
         if (item.SpeedModifier > 1 && item.DamageModifier > 1)
         {
-            return new string[] {"Equilibrium", "Prowess", "True Power", "The King" };
+            return new string[] { "Equilibrium", "Prowess", "True Power", "The King" };
         }
         else if (item.SpeedModifier > 1)
         {
@@ -742,8 +742,8 @@ static class ItemSpawner
         }
         else
 
-        // No Dominant Traits.
-        return null;
+            // No Dominant Traits.
+            return null;
     }
 
     /// <summary>
@@ -761,7 +761,7 @@ static class ItemSpawner
     /// <param name="suffixThreshold">Threshold based on rarity that a suffix will actually be placed onto an item. Must be size of rarity enum count.</param>
     /// <param name="suffixs">List of possible suffixes.</param>
     /// <returns>Name for the compiled item.</returns>
-    private static string ApplyNameModifiers(int seed, GameItem item, string type, string extraPrefix, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare, 
+    private static string ApplyNameModifiers(int seed, GameItem item, string type, string extraPrefix, string[] prefixesCommon, string[] prefixesUncommon, string[] prefixesRare,
                                              string[] prefixesEpic, string[] prefixesLegend, int[] suffixThreshold, string[] suffixs, bool useSeed)
     {
         // Note we are using the system's random, and not Unity's in order to use a seed.
@@ -772,31 +772,31 @@ static class ItemSpawner
         bool suffixReq = false;
         switch (item.Rarity)
         {
-            case GameItem.ItemRarity.UNCOMMON:
-                prefix = prefixesUncommon[random.Next(0, prefixesUncommon.Length)];
-                suffixReq = (random.Next(0, 101) >= suffixThreshold[1]);
-                break;
-            case GameItem.ItemRarity.RARE:
-                prefix = prefixesRare[random.Next(0, prefixesRare.Length)];
-                suffixReq = (random.Next(0, 101) >= suffixThreshold[2]);
-                break;
+        case GameItem.ItemRarity.UNCOMMON:
+            prefix = prefixesUncommon[random.Next(0, prefixesUncommon.Length)];
+            suffixReq = (random.Next(0, 101) >= suffixThreshold[1]);
+            break;
+        case GameItem.ItemRarity.RARE:
+            prefix = prefixesRare[random.Next(0, prefixesRare.Length)];
+            suffixReq = (random.Next(0, 101) >= suffixThreshold[2]);
+            break;
 
-            case GameItem.ItemRarity.EPIC:
-                prefix = prefixesEpic[random.Next(0, prefixesEpic.Length)];
-                suffixReq = (random.Next(0, 101) >= suffixThreshold[3]);
-                break;
+        case GameItem.ItemRarity.EPIC:
+            prefix = prefixesEpic[random.Next(0, prefixesEpic.Length)];
+            suffixReq = (random.Next(0, 101) >= suffixThreshold[3]);
+            break;
 
-            case GameItem.ItemRarity.LEGENDARY:
-                prefix = prefixesLegend[random.Next(0, prefixesLegend.Length)];
-                suffixReq = (random.Next(0, 101) >= suffixThreshold[4]);
-                break;
+        case GameItem.ItemRarity.LEGENDARY:
+            prefix = prefixesLegend[random.Next(0, prefixesLegend.Length)];
+            suffixReq = (random.Next(0, 101) >= suffixThreshold[4]);
+            break;
 
-            default:
-                prefix = prefixesCommon[random.Next(0, prefixesCommon.Length)];
-                suffixReq = (random.Next(0, 101) >= suffixThreshold[0]);
-                break;
+        default:
+            prefix = prefixesCommon[random.Next(0, prefixesCommon.Length)];
+            suffixReq = (random.Next(0, 101) >= suffixThreshold[0]);
+            break;
         }
-        if(extraPrefix != "")
+        if (extraPrefix != "")
         {
             prefix += " " + extraPrefix;
         }
@@ -830,19 +830,19 @@ static class ItemSpawner
     {
         Random random = GetRandom(seed, useSeed);
         //Set the sprites for the object using a sprite list dictionary
-        if(itemSpriteLists == null) //load default sprites if not set yet
+        if (itemSpriteLists == null) //load default sprites if not set yet
         {
             LoadItemSprites();
         }
         SpriteList typeSpriteList = itemSpriteLists.GetSpriteList(type);
-        if(typeSpriteList == null)
+        if (typeSpriteList == null)
         {
             throw new Exception("ApplyNameModifiers: invalid sprite list key (type): '" + type + "'");
         }
         int numSprites = typeSpriteList.namedSprites.Length;
         string key = random.Next(0, numSprites).ToString(); //(incl, excl]
         UnityEngine.Sprite itemSprite = typeSpriteList.GetSprite(key);
-        if(itemSprite == null)
+        if (itemSprite == null)
         {
             throw new Exception("ApplyNameModifiers: invalid sprite key '" + key + "'");
         }
@@ -879,23 +879,23 @@ static class ItemSpawner
         Random random = GetRandom(seed, useSeed);
         switch (item.Slot)
         {
-            case EquipmentManager.EquipSlot.CHEST:
-                return "A piece of armor for your upper body and chest region. Provides defence.";
+        case EquipmentManager.EquipSlot.CHEST:
+            return "A piece of armor for your upper body and chest region. Provides defence.";
 
-            case EquipmentManager.EquipSlot.LEGS:
-                return "A piece of armor for your legs, its like pants but with more plating. Provides defence.";
+        case EquipmentManager.EquipSlot.LEGS:
+            return "A piece of armor for your legs, its like pants but with more plating. Provides defence.";
 
-            case EquipmentManager.EquipSlot.NECK:
-                return "Fancy jewlery for your fancy neck; also probably protects from vampires. Provides defence.";
+        case EquipmentManager.EquipSlot.NECK:
+            return "Fancy jewlery for your fancy neck; also probably protects from vampires. Provides defence.";
 
-            case EquipmentManager.EquipSlot.GLOVES:
-                return "Gauntlets, Gloves, etc, things you wear on your hands. Provides defence.";
+        case EquipmentManager.EquipSlot.GLOVES:
+            return "Gauntlets, Gloves, etc, things you wear on your hands. Provides defence.";
 
-            case EquipmentManager.EquipSlot.HEAD:
-                return "A piece of armor for your head, probably a helmet, good for biking. Provides defence.";
+        case EquipmentManager.EquipSlot.HEAD:
+            return "A piece of armor for your head, probably a helmet, good for biking. Provides defence.";
 
-            case EquipmentManager.EquipSlot.RING:
-                return "A ring you can wear around your finger. Provides defence.";
+        case EquipmentManager.EquipSlot.RING:
+            return "A ring you can wear around your finger. Provides defence.";
 
         }
         return "A generic piece of armor, it can be used to defend you from harm.";
@@ -926,20 +926,20 @@ static class ItemSpawner
         // Item value is based upon the item's rarity. TODO: Perhaps add more logic
         switch (item.Rarity)
         {
-            case GameItem.ItemRarity.COMMON:
-                return 50.0;
+        case GameItem.ItemRarity.COMMON:
+            return 50.0;
 
-            case GameItem.ItemRarity.UNCOMMON:
-                return 150.0;
+        case GameItem.ItemRarity.UNCOMMON:
+            return 150.0;
 
-            case GameItem.ItemRarity.RARE:
-                return 350.0;
+        case GameItem.ItemRarity.RARE:
+            return 350.0;
 
-            case GameItem.ItemRarity.EPIC:
-                return 650.0;
+        case GameItem.ItemRarity.EPIC:
+            return 650.0;
 
-            case GameItem.ItemRarity.LEGENDARY:
-                return 1500.0;
+        case GameItem.ItemRarity.LEGENDARY:
+            return 1500.0;
         }
 
         return 0.0;

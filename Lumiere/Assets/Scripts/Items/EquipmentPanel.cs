@@ -63,7 +63,8 @@ public class EquipmentPanel : MonoBehaviour
         }
     }
 
-    public bool Visible {
+    public bool Visible
+    {
         get
         {
             return visible;
@@ -72,20 +73,20 @@ public class EquipmentPanel : MonoBehaviour
 
     public EquipmentManager Manager
     {
-        get 
+        get
         {
             return equipmentManager;
         }
 
-        set 
+        set
         {
             equipmentManager = value;
-            Initialize ();
+            Initialize();
         }
     }
     #endregion
 
-    void Start ()
+    void Start()
     {
 
         //if(!initialized)
@@ -121,15 +122,15 @@ public class EquipmentPanel : MonoBehaviour
         EquipmentItemButton[] childrenScripts = GetComponentsInChildren<EquipmentItemButton>(); //used to access the children game objects
         //Set or create each GameItem's UI element
         //TODO: understand how/why duplicate 
-        for(int location = 0; location < capacity; location++)
+        for (int location = 0; location < capacity; location++)
         {
             int[] gridLocation = ItemLocationInGrid(location);
             int locX = gridLocation[0];
             int locY = gridLocation[1];
             EquipmentItemButton childScript;
-            if(location >= childrenScripts.Length) //Equipment panel grew in size; create more UI items.
+            if (location >= childrenScripts.Length) //Equipment panel grew in size; create more UI items.
             {
-                GameObject child = (GameObject) GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation));
+                GameObject child = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation));
                 child.transform.SetParent(gameObject.transform, false);
                 childScript = child.GetComponent<EquipmentItemButton>();
                 childScript.SetGUIReferences(this);
@@ -139,11 +140,11 @@ public class EquipmentPanel : MonoBehaviour
                 childScript = childrenScripts[location];
             }
 
-            if(locX < 0 || locX >= nWidth || locY < 0 || locY >= nHeight)
+            if (locX < 0 || locX >= nWidth || locY < 0 || locY >= nHeight)
             {
                 Debug.Log("Set new item wrong params: (" + locX + "/ " + nWidth + ", " + locY + "/ " + nHeight + ")");
             }
-                
+
             GameItem tmpItem = equipmentManager.GetEquippedItemFromIndex(locY);
             //TODO is this something to fix?
             if (tmpItem == null)
@@ -154,7 +155,7 @@ public class EquipmentPanel : MonoBehaviour
         }
 
         //If equipment panel shrank in size, delete extra UI slot elements
-        for(int overIndex = capacity; overIndex < childrenScripts.Length; overIndex++)
+        for (int overIndex = capacity; overIndex < childrenScripts.Length; overIndex++)
         {
             GameObject.Destroy(childrenScripts[overIndex].gameObject);
         }
@@ -171,7 +172,8 @@ public class EquipmentPanel : MonoBehaviour
 
     public GameItem GetSelectedItem()
     {
-        if (visible == false || selectedX < 0 || selectedY < 0) {
+        if (visible == false || selectedX < 0 || selectedY < 0)
+        {
             return null;
         }
         else
@@ -224,6 +226,6 @@ public class EquipmentPanel : MonoBehaviour
     /// <param name="locationID">Location I.</param>
     public int[] ItemLocationInGrid(int locationID)
     {
-        return new int[] {locationID % nWidth, locationID / nWidth};
+        return new int[] { locationID % nWidth, locationID / nWidth };
     }
 }

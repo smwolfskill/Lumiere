@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu (menuName = "Lumiere/Actions/EntityActions/MonsterMoveActions/ChaseAction")]
-public class ChaseAction : MonsterMoveAction 
+[CreateAssetMenu(menuName = "Lumiere/Actions/EntityActions/MonsterMoveActions/ChaseAction")]
+public class ChaseAction : MonsterMoveAction
 {
     /// <summary>
     /// The distance to stop chasing the target.
@@ -15,7 +15,7 @@ public class ChaseAction : MonsterMoveAction
     private Vector2 targetPosition;
     private Vector2 oldTargetPosition = new Vector2(int.MaxValue, int.MaxValue);
     private Pathfinding pathfinding = null;
-    private List<Tile> path = new List<Tile> ();
+    private List<Tile> path = new List<Tile>();
     private int currentPathIndex = 1;
 
     /// <summary>
@@ -23,15 +23,15 @@ public class ChaseAction : MonsterMoveAction
     /// </summary>
     /// <param name="obj">The GameObject that wants to execute this action.</param>
     /// <returns>Returns true if this action should be executed, false otherwise.</returns>
-    public override bool Validate (GameObject obj)
+    public override bool Validate(GameObject obj)
     {
         StateController stateController = obj.GetComponent<StateController>();
-        if(stateController == null)
+        if (stateController == null)
         {
             return false;
         }
 
-        if(pathfinding == null)
+        if (pathfinding == null)
         {
             pathfinding = new Pathfinding(stateController.map);
         }
@@ -44,46 +44,46 @@ public class ChaseAction : MonsterMoveAction
     /// </summary>
     /// <param name="obj">The GameObject that wants to execute this action.</param>
     /// <returns>Returns true if this action is executed successfully, false otherwise.</returns>
-    public override bool Execute (GameObject obj)
+    public override bool Execute(GameObject obj)
     {
         ourPosition = obj.transform.position;
         GameObject target = GameObject.FindGameObjectWithTag("Player");
         targetPosition = target.transform.position;
         float oldTargetDistance = Vector2.Distance(targetPosition, oldTargetPosition);
-        Rigidbody2D rb = obj.GetComponent<Rigidbody2D> ();
-        float targetDistance = Vector2.Distance (targetPosition, ourPosition);
+        Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+        float targetDistance = Vector2.Distance(targetPosition, ourPosition);
 
-        if (rb == null) 
+        if (rb == null)
         {
             return false;
         }
 
-        if (targetDistance <= stoppingDistance) 
+        if (targetDistance <= stoppingDistance)
         {
             rb.velocity = Vector2.zero;
             return false;
         }
 
-        if (Vector2.Distance (ourPosition, targetPosition) <= stoppingDistance) 
+        if (Vector2.Distance(ourPosition, targetPosition) <= stoppingDistance)
         {
             rb.velocity = Vector2.zero;
             currentPathIndex = 1;
             return false;
         }
 
-        if ( path != null && path.Count > 1 && currentPathIndex <= (path.Count - 1) && Vector2.Distance (ourPosition, targetPosition) < Vector2.Distance (new Vector2(path [currentPathIndex].x, path[currentPathIndex].y), targetPosition)) 
+        if (path != null && path.Count > 1 && currentPathIndex <= (path.Count - 1) && Vector2.Distance(ourPosition, targetPosition) < Vector2.Distance(new Vector2(path[currentPathIndex].x, path[currentPathIndex].y), targetPosition))
         {
             currentPathIndex++;
         }
 
-        if(path == null || path.Count == 0 || currentPathIndex > path.Count - 1 || oldTargetDistance > pathfindingThreshold)
+        if (path == null || path.Count == 0 || currentPathIndex > path.Count - 1 || oldTargetDistance > pathfindingThreshold)
         {
             //Do pathfinding
             path = pathfinding.GetPath(ourPosition, targetPosition);
             currentPathIndex = 1;
         }
 
-        if(path != null)
+        if (path != null)
         {
             Vector2 direction = new Vector2(path[currentPathIndex].x - ourPosition.x, path[currentPathIndex].y - ourPosition.y);
             direction.Normalize();

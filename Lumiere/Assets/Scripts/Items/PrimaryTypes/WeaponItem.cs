@@ -54,7 +54,7 @@ public class WeaponItem : UsableItem
 
     override public GameItem clone()
     {
-        return new WeaponItem (
+        return new WeaponItem(
             this.guiSprite,
             this.groundSprite,
             this.name,

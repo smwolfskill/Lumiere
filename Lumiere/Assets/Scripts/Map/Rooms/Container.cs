@@ -58,9 +58,10 @@ public class Container
     public List<Tile> GetTilesOfType(TileType tileType)
     {
         List<Tile> tilesOfType = new List<Tile>();
-        foreach(Tile tile in tiles)
+        foreach (Tile tile in tiles)
         {
-            if (tile.tileType == tileType) tilesOfType.Add(tile);
+            if (tile.tileType == tileType)
+                tilesOfType.Add(tile);
         }
 
         return tilesOfType;
@@ -80,7 +81,7 @@ public class Container
 
     public bool HasTileType(TileType tileType)
     {
-        foreach(Tile tile in tiles)
+        foreach (Tile tile in tiles)
         {
             if (tile.tileType == tileType)
                 return true;

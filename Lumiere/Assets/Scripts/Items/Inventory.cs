@@ -52,7 +52,7 @@ public class Inventory
     /// </summary>
     public void UpdateUI()
     {
-        if(uiPanel != null)
+        if (uiPanel != null)
         {
             uiPanel.DrawInventory();
         }
@@ -65,7 +65,7 @@ public class Inventory
     /// <param name="y">Location to be updated (y).</param>
     public void UpdateUIQuantityText(int x, int y)
     {
-        if(uiPanel != null)
+        if (uiPanel != null)
         {
             uiPanel.UpdateItemQuantityText(x, y);
         }
@@ -112,7 +112,7 @@ public class Inventory
         GameItem currItem = this.items[x, y];
         if (currItem == null)   //set to UNSET_ITEM instead
         {
-            this.items [x, y] = GameItem.UNSET_ITEM;
+            this.items[x, y] = GameItem.UNSET_ITEM;
             currItem = this.items[x, y];
         }
         return currItem;
@@ -126,7 +126,7 @@ public class Inventory
     /// <param name="item">The item to set this grid item to.</param>
     protected void SetItem(int x, int y, GameItem item)
     {
-        this.items [x, y] = item;
+        this.items[x, y] = item;
         UpdateUI();
     }
 
@@ -177,7 +177,7 @@ public class Inventory
          * -> Reduce quantity of old stack.
          */
     }
-        
+
     /// <summary>
     /// Removes however many of the item at the given grid location from the inventory.
     /// </summary>
@@ -186,7 +186,7 @@ public class Inventory
     /// <param name="quantity">Quantity of items to remove.</param>
     public GameItem RemoveItem(int x, int y, int quantity)
     {
-        GameItem itemInSlot = GetItem (x, y);
+        GameItem itemInSlot = GetItem(x, y);
         GameItem removedItem = itemInSlot.clone();
         if (!itemInSlot.SetYet())
         {
@@ -199,10 +199,10 @@ public class Inventory
         else if (quantity == itemInSlot.Quantity)
         {
             itemInSlot.Quantity = 0;
-            SetItem (x, y, GameItem.UNSET_ITEM);
+            SetItem(x, y, GameItem.UNSET_ITEM);
             UpdateUI();
             return removedItem;
-        } 
+        }
         else
         {
             removedItem.Quantity = quantity;
@@ -220,7 +220,8 @@ public class Inventory
     /// <returns>If there are enough items in the inventory to remove this many items from the inventory.</returns>
     public bool RemoveItem(GameItem item, int quantity = -1)
     {
-        if(!item.SetYet()) {    //cannot remove UNSET_ITEM from inventory.
+        if (!item.SetYet())
+        {    //cannot remove UNSET_ITEM from inventory.
             return false;
         }
 
@@ -232,16 +233,16 @@ public class Inventory
         }
         int currXPos = 0, currYPos = 0;
 
-        List<int[]> itemsToReset = new List<int[]> (); //list of [x,y] positions of items to remove
+        List<int[]> itemsToReset = new List<int[]>(); //list of [x,y] positions of items to remove
 
         while (quantityLeft > 0)
         {
-            int[] tmpItemLoc = FindItem (currItemID, true, currXPos, currYPos);
+            int[] tmpItemLoc = FindItem(currItemID, true, currXPos, currYPos);
             if (tmpItemLoc == null)
             {
                 return false;
             }
-            GameItem tmpItem = GetItem(tmpItemLoc [0], tmpItemLoc [1]);
+            GameItem tmpItem = GetItem(tmpItemLoc[0], tmpItemLoc[1]);
             if (tmpItem.Quantity > quantityLeft)
             {
                 tmpItem.Quantity -= quantityLeft;
@@ -250,7 +251,7 @@ public class Inventory
             }
             else     //add to list of slots to clear
             {
-                itemsToReset.Add (tmpItemLoc);
+                itemsToReset.Add(tmpItemLoc);
                 currXPos = tmpItemLoc[0] + 1;  //start the search **after** where we left off
                 currYPos = tmpItemLoc[1];   //since the search iterates all X for a given Y, if currXPos 'overflows' it will start the next Y
                 quantityLeft -= tmpItem.Quantity;
@@ -262,7 +263,7 @@ public class Inventory
         {
             SetItem(resetItemLoc[0], resetItemLoc[1], GameItem.UNSET_ITEM);
         }
-        if(itemsToReset.Count > 0)
+        if (itemsToReset.Count > 0)
         {
             UpdateUI();
         }
@@ -289,16 +290,16 @@ public class Inventory
             while (item_cpy.Quantity > 0)
             {
                 //Try to find an item that is already in the inventory and whose stack is not full
-                int[] existingItemInfo = FindItem (item_cpy.ItemID, false, currXPos, currYPos);
+                int[] existingItemInfo = FindItem(item_cpy.ItemID, false, currXPos, currYPos);
 
                 //If such an item is found, add as many items as needed or possible to the existing item's quantity
                 if (existingItemInfo != null)
                 {
-                    currXPos = existingItemInfo [0];
-                    currYPos = existingItemInfo [1];
-                    int maxAvailable = existingItemInfo [2];
-                    GameItem foundItem = GetItem (currXPos, currYPos);
-                    int amountToPut = Mathf.Min (maxAvailable, item_cpy.Quantity);
+                    currXPos = existingItemInfo[0];
+                    currYPos = existingItemInfo[1];
+                    int maxAvailable = existingItemInfo[2];
+                    GameItem foundItem = GetItem(currXPos, currYPos);
+                    int amountToPut = Mathf.Min(maxAvailable, item_cpy.Quantity);
                     foundItem.Quantity = foundItem.Quantity + amountToPut;
                     item_cpy.Quantity -= amountToPut;
                     UpdateUIQuantityText(currXPos, currYPos);
@@ -315,7 +316,7 @@ public class Inventory
             return AddItemToEmptySlot(item_cpy);
         }
     }
-        
+
     /// <summary>
     /// Adds the item to the first available empty slot, disregarding stacking on other instances of the item.
     /// </summary>
@@ -323,12 +324,12 @@ public class Inventory
     /// <param name="toAdd">To add.</param>
     protected GameItem AddItemToEmptySlot(GameItem toAdd)
     {
-        int[] emptySlot = FindItem (GameItem.UNSET_ITEM.ItemID);
+        int[] emptySlot = FindItem(GameItem.UNSET_ITEM.ItemID);
         if (emptySlot == null)
         {
             return toAdd;   //no empty slots found; inventory full!
         }
-        SetItem (emptySlot [0], emptySlot [1], toAdd);
+        SetItem(emptySlot[0], emptySlot[1], toAdd);
         UpdateUI();
         return null;
     }
@@ -341,13 +342,13 @@ public class Inventory
     /// <param name="startX">The X position from where to start searching.</param>
     /// <param name="startY">The Y position from where to start searching.</param>
     /// <returns>An integer array containing [xPos, yPos, (conditionally)emptySlots] of the item slot found.</returns>
-    protected int[] FindItem(int itemID, bool includeFull = true, int startX = 0, int startY= 0)
+    protected int[] FindItem(int itemID, bool includeFull = true, int startX = 0, int startY = 0)
     {
         for (int yPos = startY; yPos < this.height; yPos++)
         {
             for (int xPos = startX; xPos < this.width; xPos++)
             {
-                GameItem currItem = GetItem (xPos, yPos);
+                GameItem currItem = GetItem(xPos, yPos);
                 if (currItem.ItemID == itemID)
                 {
                     if (!includeFull)   //don't include slots that are full to their max stack.

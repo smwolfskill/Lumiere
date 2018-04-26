@@ -49,7 +49,7 @@ class RangedWeapon : WeaponItem
 
     override public GameItem clone()
     {
-        return new RangedWeapon (
+        return new RangedWeapon(
             this.guiSprite,
             this.groundSprite,
             this.name,

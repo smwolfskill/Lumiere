@@ -53,7 +53,7 @@ class MeleeWeapon : WeaponItem
 
     override public GameItem clone()
     {
-        return new MeleeWeapon (
+        return new MeleeWeapon(
             this.guiSprite,
             this.groundSprite,
             this.name,

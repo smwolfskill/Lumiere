@@ -24,7 +24,7 @@ public class PickupItem : EntityAction
 
         bool pickupItemInput = Input.GetKeyDown(SettingsManager.GetPickupItem());
         bool clickedOnItem = false;
-        if(pickupItemInput)
+        if (pickupItemInput)
         {
             //Still uses mouse click because otherwise cannot know which item(s) in radius to pickup!
             //Gather 3D mouse position and raycasting information
@@ -35,15 +35,15 @@ public class PickupItem : EntityAction
             //Convert to 2D and detect any raycast hits on 2D colliders
             Ray2D ray2D = new Ray2D(new Vector2(ray.origin.x, ray.origin.y), new Vector2(ray.direction.x, ray.direction.y));
             RaycastHit2D hit2D = Physics2D.Raycast(ray2D.origin, ray2D.direction);
-            if(hit2D.collider != null)
+            if (hit2D.collider != null)
             {
                 itemObj = hit2D.collider.gameObject;
                 itemManager = itemObj.GetComponent<ItemManager>();
-                if(itemManager != null)     //hit an item on the ground
+                if (itemManager != null)     //hit an item on the ground
                 {
                     BoxCollider2D objCollider = obj.GetComponent<BoxCollider2D>();
                     float dist = Physics2D.Distance(objCollider, hit2D.collider).distance;
-                    if(dist <= 0.0f)    //within collision range (so within pickup range)
+                    if (dist <= 0.0f)    //within collision range (so within pickup range)
                     {
                         toPickup = itemManager.item;
                         EntityActionManager actionManager = obj.GetComponent<EntityActionManager>();

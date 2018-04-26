@@ -37,7 +37,7 @@ public class Pathfinding
         List<Tile> openSet = new List<Tile>();
         openSet.Add(startTile);
         Dictionary<Tile, Tile> cameFrom = new Dictionary<Tile, Tile>();
-        Dictionary<Tile, int> gScores = new Dictionary<Tile, int> ();
+        Dictionary<Tile, int> gScores = new Dictionary<Tile, int>();
         Dictionary<Tile, int> fScores = new Dictionary<Tile, int>();
 
         InitializeScores(gScores);
@@ -45,10 +45,10 @@ public class Pathfinding
         InitializeScores(fScores);
         fScores[startTile] = GetHeuristicCost(startTile, endTile);
 
-        while(openSet.Count > 0)
+        while (openSet.Count > 0)
         {
             Tile current = GetLowestScoreTile(openSet, fScores);
-            if(current == endTile)
+            if (current == endTile)
             {
                 //reconstruct path
                 return ReconstructPath(cameFrom, current);
@@ -56,17 +56,17 @@ public class Pathfinding
 
             openSet.Remove(current);
             closedSet.Add(current);
-            foreach(Tile neighbor in current.GetNeighbors())
+            foreach (Tile neighbor in current.GetNeighbors())
             {
-                if(!closedSet.Contains(neighbor) && neighbor.IsWalkable())
+                if (!closedSet.Contains(neighbor) && neighbor.IsWalkable())
                 {
-                    if(!openSet.Contains(neighbor))
+                    if (!openSet.Contains(neighbor))
                     {
                         openSet.Add(neighbor);
                     }
 
                     int tentativeGScore = gScores[current] + GetDistance(current, neighbor);
-                    if(tentativeGScore < gScores[neighbor])
+                    if (tentativeGScore < gScores[neighbor])
                     {
                         cameFrom[neighbor] = current;
                         gScores[neighbor] = tentativeGScore;
@@ -91,7 +91,7 @@ public class Pathfinding
     {
         List<Tile> totalPath = new List<Tile>();
         totalPath.Add(current);
-        while(cameFrom.ContainsKey(current))
+        while (cameFrom.ContainsKey(current))
         {
             current = cameFrom[current];
             totalPath.Add(current);
@@ -109,9 +109,9 @@ public class Pathfinding
     private Tile GetLowestScoreTile(List<Tile> openSet, Dictionary<Tile, int> scores)
     {
         Tile lowestTile = openSet[0];
-        foreach(Tile tile in openSet)
+        foreach (Tile tile in openSet)
         {
-            if(scores[lowestTile] < scores[tile])
+            if (scores[lowestTile] < scores[tile])
             {
                 lowestTile = tile;
             }
@@ -127,7 +127,7 @@ public class Pathfinding
     /// <param name="location">Location in world-space.</param>
     private Tile GetNearestTile(Vector2 location)
     {
-        return map.GetTile((int)(location.x/map.tileOffset), (int)(location.y/map.tileOffset));
+        return map.GetTile((int)(location.x / map.tileOffset), (int)(location.y / map.tileOffset));
     }
 
     /// <summary>
@@ -140,7 +140,7 @@ public class Pathfinding
     {
         Vector2 start = new Vector2(startTile.x * map.tileOffset, startTile.y * map.tileOffset);
         Vector2 end = new Vector2(endTile.x * map.tileOffset, endTile.y * map.tileOffset);
-        return (int) Vector2.Distance(start, end);
+        return (int)Vector2.Distance(start, end);
     }
 
     /// <summary>
@@ -151,7 +151,7 @@ public class Pathfinding
     /// <param name="endTile">End tile.</param>
     private int GetDistance(Tile startTile, Tile endTile)
     {
-        if (!endTile.IsWalkable ()) 
+        if (!endTile.IsWalkable())
         {
             return int.MaxValue;
         }
@@ -165,7 +165,7 @@ public class Pathfinding
     private void InitializeScores(Dictionary<Tile, int> scores)
     {
         List<Tile> tiles = map.GetTiles();
-        foreach(Tile tile in tiles)
+        foreach (Tile tile in tiles)
         {
             scores[tile] = int.MaxValue;
         }

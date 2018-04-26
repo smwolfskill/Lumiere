@@ -32,7 +32,7 @@ class AIBehaviorTest
 
         chaseState = Resources.Load<State>("States/ChaseTest");
         attackState = Resources.Load<State>("States/AttackTest");
-        idleState = Resources.Load<State> ("States/IdleTest");
+        idleState = Resources.Load<State>("States/IdleTest");
 
         Assert.IsNotNull(player);
         Assert.IsNotNull(monster);
@@ -142,7 +142,7 @@ class AIBehaviorTest
         // 5. Is returned to chase state. Attack decision succeeds. Is now in attack state.
         monster.transform.position = new Vector2(5, 14);
         handler.currentState.UpdateState(handler);
-        monster.transform.position = new Vector2 (5, 11);
+        monster.transform.position = new Vector2(5, 11);
         handler.currentState.UpdateState(handler);
 
         Assert.AreSame(attackState, handler.currentState);

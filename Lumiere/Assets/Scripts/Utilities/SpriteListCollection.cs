@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[CreateAssetMenu (menuName = "Lumiere/Utilities/SpriteListCollection")]
+[CreateAssetMenu(menuName = "Lumiere/Utilities/SpriteListCollection")]
 public class SpriteListCollection : ScriptableObject
 {
     public SpriteListDict[] namedSpriteLists;
@@ -17,9 +17,9 @@ public class SpriteListCollection : ScriptableObject
 
     public SpriteList GetSpriteList(string key)
     {
-        foreach(SpriteListDict spriteListDict in namedSpriteLists)
+        foreach (SpriteListDict spriteListDict in namedSpriteLists)
         {
-            if(spriteListDict.key == key)
+            if (spriteListDict.key == key)
             {
                 return spriteListDict.value;
             }

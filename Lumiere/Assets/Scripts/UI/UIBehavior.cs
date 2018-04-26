@@ -16,26 +16,26 @@ public class UIBehavior : MonoBehaviour
     private UIScreenManager screenManager = null;
     private float menu_restoreTime = 1.0f;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
-        if(!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
+        if (!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
         {
             SettingsManager.LoadSettings(); //load from default path
         }
         canvas = GetComponent<Canvas>();
-        if(uiScreensPanel != null)
+        if (uiScreensPanel != null)
         {
             screenManager = uiScreensPanel.GetComponent<UIScreenManager>();
         }
 
         //Have UI inputs of greatest precedence (e.g. opening menu) at beginning of conditional 
         //so they will be performed first if there are multiple inputs.
-        if(menuVisible)
+        if (menuVisible)
         {
             ToggleMenu(true);
         }
-        else if(inventoryVisible)
+        else if (inventoryVisible)
         {
             ToggleInventory(true);
         }
@@ -46,25 +46,25 @@ public class UIBehavior : MonoBehaviour
             HideUI();
         }
 
-	}
-	
-	// Update is called once per frame
-    void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         //Have UI inputs of greatest precedence (e.g. opening menu) at beginning of conditional 
         //so they will be performed first if there are multiple inputs.
 
         bool toggleMenu = ToggleMenuInput();
         bool toggleInventory = ToggleInventoryInput();
-        if(toggleMenu)
+        if (toggleMenu)
         {
             ToggleMenu(!menuVisible);
         }
-        else if(toggleInventory && !menuVisible) //don't respond to other input if menu is showing
+        else if (toggleInventory && !menuVisible) //don't respond to other input if menu is showing
         {
             ToggleInventory(!inventoryVisible);
         }
-	}
+    }
 
     public bool ToggleInventoryInput()
     {
@@ -74,7 +74,7 @@ public class UIBehavior : MonoBehaviour
 
     public void ToggleInventory(bool show)
     {
-        if(show)
+        if (show)
         {
             ShowUI();
             SetAllInactive();
@@ -95,7 +95,7 @@ public class UIBehavior : MonoBehaviour
 
     public void ToggleMenu(bool show)
     {
-        if(show)
+        if (show)
         {
             ShowUI();
             SetAllInactive();
@@ -145,12 +145,12 @@ public class UIBehavior : MonoBehaviour
 
     public void GameOver()
     {
-        if(uiScreensPanel == null)
+        if (uiScreensPanel == null)
         {
             Debug.Log("UIBehavior: Error: No GameOver screen to show; uiScreensPanel is null!");
-        } 
+        }
         else
-        {    
+        {
             uiScreensPanel.SetActive(true);
             screenManager.SwitchTo("UIGameOverScreen");
         }

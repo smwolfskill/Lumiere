@@ -29,7 +29,7 @@ public class ComplexGenAlgo : GenAlgo
 
         Container baseContainer = new Container(map, baseContainerType);
         map.AddContainer(baseContainer);
-        map.FillArea(0, 0, map.w, map.h, earthTileType, baseContainer); 
+        map.FillArea(0, 0, map.w, map.h, earthTileType, baseContainer);
 
         for (int roomAttempt = 0; roomAttempt < roomAttempts; roomAttempt++)
         {
@@ -38,12 +38,12 @@ public class ComplexGenAlgo : GenAlgo
 
         map.PopulateClosestOtherRooms();
 
-        
+
         AttemptGenPaths();
 
         ConnectAllContainers();
 
-        if(map.GetRooms().Count < 2)
+        if (map.GetRooms().Count < 2)
         {
             GenerateMap(map, ExitDoor);
         }
@@ -60,7 +60,8 @@ public class ComplexGenAlgo : GenAlgo
 
         // Continually attempt to connect two containers with a path
         // until there are no more possible connections to be made
-        while (AttemptConnectTwoContainers()) ;
+        while (AttemptConnectTwoContainers())
+            ;
     }
 
     // connect ANY two containers
@@ -106,7 +107,7 @@ public class ComplexGenAlgo : GenAlgo
         {
             // try connecting a tile from startingContainer to any
             // tile in endingContainer
-            if(ConnectTileToContainer(startingTile, endingContainer))
+            if (ConnectTileToContainer(startingTile, endingContainer))
             {
                 return true;
             }
@@ -123,12 +124,12 @@ public class ComplexGenAlgo : GenAlgo
         Queue<Link> queue = new Queue<Link>();
         queue.Enqueue(link);
 
-        while(queue.Count > 0)
+        while (queue.Count > 0)
         {
             Link currLink = queue.Dequeue();
 
             // if this tile has been searched, do not search again
-            if(seenTileDict.ContainsKey(currLink.currTile))
+            if (seenTileDict.ContainsKey(currLink.currTile))
             {
                 continue;
             }
@@ -142,7 +143,7 @@ public class ComplexGenAlgo : GenAlgo
 
             //Need to see if any neighbors are walls, then if so
             //use those walls as possible endpoints
-            foreach(Tile wallTile in currLink.currTile.GetNeighbors())
+            foreach (Tile wallTile in currLink.currTile.GetNeighbors())
             {
                 //If the container has one of those neighboring wall tiles
                 if (container.HasTile(wallTile))
@@ -167,7 +168,7 @@ public class ComplexGenAlgo : GenAlgo
 
             seenTileDict.Add(currLink.currTile, true);
 
-            foreach(Tile nextTile in currLink.currTile.GetNeighbors(earthTileTypeList))
+            foreach (Tile nextTile in currLink.currTile.GetNeighbors(earthTileTypeList))
             {
                 queue.Enqueue(new Link(nextTile, currLink));
             }
@@ -188,7 +189,8 @@ public class ComplexGenAlgo : GenAlgo
 
     private void ApplyLinkChain(Link link, Container container)
     {
-        if (link == null) return;
+        if (link == null)
+            return;
 
         map.CreateTileAndSetTile(link.currTile.x, link.currTile.y, container, pathTileType);
         map.ChangeTilesInArea(link.currTile.x, link.currTile.y, 1, earthTileType, wallTileType, container);
@@ -289,7 +291,7 @@ private Door GetValidDoor(Tile tile)
     private void AttemptGenPaths()
     {
         // connect all doors for all rooms
-        for(int i = map.GetRooms().Count - 1; i >= 0; i--)
+        for (int i = map.GetRooms().Count - 1; i >= 0; i--)
         {
             Room room = map.GetRooms()[i];
 
@@ -302,18 +304,21 @@ private Door GetValidDoor(Tile tile)
                 // try connecting to the cloest otherRooms first
                 foreach (Room otherRoom in room.closestOtherRooms)
                 {
-                    foreach(Door otherDoor in otherRoom.doors)
+                    foreach (Door otherDoor in otherRoom.doors)
                     {
                         // On a successful door connection, stop trying to find a path for this
                         // door. This means that not only should we stop looking at all otherDoors
                         // for this otherRoom, but we should stop looking at all otherRooms for this
                         // door to connect to.
-                        if (ConnectDoors(door, otherDoor)) nextDoor = true;
+                        if (ConnectDoors(door, otherDoor))
+                            nextDoor = true;
 
-                        if (nextDoor) break;
+                        if (nextDoor)
+                            break;
                     }
 
-                    if (nextDoor) break;
+                    if (nextDoor)
+                        break;
                 }
 
             }
@@ -325,7 +330,7 @@ private Door GetValidDoor(Tile tile)
     private bool ConnectDoors(Door door, Door otherDoor)
     {
 
-        Pair<int,int> doorPushedPair = Utilities.CordInDirection(door.direction, door.x, door.y);
+        Pair<int, int> doorPushedPair = Utilities.CordInDirection(door.direction, door.x, door.y);
         Pair<int, int> otherDoorPushedPair = Utilities.CordInDirection(otherDoor.direction, otherDoor.x, otherDoor.y);
 
         // create psudo doors that are pushed away from Rooms
@@ -349,8 +354,8 @@ private Door GetValidDoor(Tile tile)
 
         Link endLink = null;
 
-        while(endLink == null && queue.Count != 0)
-        {                                    
+        while (endLink == null && queue.Count != 0)
+        {
             endLink = BFSStep(queue, tileHasBeenSearched, otherDoorPushed);
         }
 
@@ -387,13 +392,13 @@ private Door GetValidDoor(Tile tile)
     {
         Link link = queue.Dequeue();
 
-        foreach(Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
+        foreach (Utilities.Direction direction in Utilities.Direction.GetValues(typeof(Utilities.Direction)))
         {
 
             Link newLink = AddToQueue(link, direction, queue, tileHasBeenSearched);
 
             // Check to see if the goal has been reached
-            if(newLink != null && newLink.currTile.x == otherDoor.x && newLink.currTile.y == otherDoor.y)
+            if (newLink != null && newLink.currTile.x == otherDoor.x && newLink.currTile.y == otherDoor.y)
             {
                 return newLink;
             }
@@ -448,11 +453,13 @@ private Door GetValidDoor(Tile tile)
         Utilities.Direction direction
     )
     {
-        if (!IsValidTile(currTile, tileHasBeenSearched, direction)) return null;
+        if (!IsValidTile(currTile, tileHasBeenSearched, direction))
+            return null;
 
         Link currLink = new Link(currTile, parentLink, direction);
 
-        if (currLink == null) return null;
+        if (currLink == null)
+            return null;
 
         queue.Enqueue(currLink);
 
@@ -468,7 +475,8 @@ private Door GetValidDoor(Tile tile)
         Dictionary<Tile, bool> tileHasBeenSearched
     )
     {
-        if (parentLink == null) return null;
+        if (parentLink == null)
+            return null;
 
         int currX = parentLink.currTile.x;
         int currY = parentLink.currTile.y;
@@ -478,22 +486,22 @@ private Door GetValidDoor(Tile tile)
 
         switch (direction)
         {
-            case Utilities.Direction.NORTH:
-                newX = currX;
-                newY = currY - 1;
-                break;
-            case Utilities.Direction.SOUTH:
-                newX = currX;
-                newY = currY + 1;
-                break;
-            case Utilities.Direction.WEST:
-                newX = currX - 1;
-                newY = currY;
-                break;
-            case Utilities.Direction.EAST:
-                newX = currX + 1;
-                newY = currY;
-                break;
+        case Utilities.Direction.NORTH:
+            newX = currX;
+            newY = currY - 1;
+            break;
+        case Utilities.Direction.SOUTH:
+            newX = currX;
+            newY = currY + 1;
+            break;
+        case Utilities.Direction.WEST:
+            newX = currX - 1;
+            newY = currY;
+            break;
+        case Utilities.Direction.EAST:
+            newX = currX + 1;
+            newY = currY;
+            break;
         }
 
         Tile currTile = map.GetTile(newX, newY);
@@ -503,7 +511,7 @@ private Door GetValidDoor(Tile tile)
 
     private bool IsValidTile(Tile potentialTile, Dictionary<Tile, bool> tileHasBeenSearched, Utilities.Direction direction)
     {
-        if(
+        if (
             potentialTile == null ||
             potentialTile.tileType != earthTileType ||
             TileHasBeenSearched(tileHasBeenSearched, potentialTile)
@@ -517,7 +525,7 @@ private Door GetValidDoor(Tile tile)
         Utilities.Direction leftOf = Utilities.LeftOf(direction);
         Utilities.Direction rightOf = Utilities.RightOf(direction);
 
-        for(int i = 0; i < spaceBetweenRooms / 2; i++)
+        for (int i = 0; i < spaceBetweenRooms / 2; i++)
         {
             currLeftOfPair = Utilities.CordInDirection(leftOf, currLeftOfPair);
             currRightOfPair = Utilities.CordInDirection(rightOf, currRightOfPair);
@@ -531,7 +539,8 @@ private Door GetValidDoor(Tile tile)
         }
 
         Pair<int, int> forwardPair = Utilities.CordInDirection(direction, potentialTile.x, potentialTile.y);
-        if (!IsValidSurroundingTile(forwardPair)) return false;
+        if (!IsValidSurroundingTile(forwardPair))
+            return false;
 
         return true;
     }
@@ -557,7 +566,8 @@ private Door GetValidDoor(Tile tile)
 
     private bool TileHasBeenSearched(Dictionary<Tile, bool> tileHasBeenSearched, int x, int y)
     {
-        if (map.GetTile(x, y) == null) return true;
+        if (map.GetTile(x, y) == null)
+            return true;
         return TileHasBeenSearched(tileHasBeenSearched, map.GetTile(x, y));
     }
 
@@ -575,7 +585,7 @@ private Door GetValidDoor(Tile tile)
     {
         SearchTile(tileHasBeenSearched, map.GetTile(Utilities.EndOfList(path).First, Utilities.EndOfList(path).Second));
     }
-    
+
 
 
 
@@ -595,8 +605,8 @@ private Door GetValidDoor(Tile tile)
         if (!map.DoesAreaContainOnlyThisTile(
             room.x - spaceBetweenRooms,
             room.y - spaceBetweenRooms,
-            room.w + spaceBetweenRooms*2,
-            room.h + spaceBetweenRooms*2,
+            room.w + spaceBetweenRooms * 2,
+            room.h + spaceBetweenRooms * 2,
             earthTileType
         ))
         {
@@ -611,7 +621,7 @@ private Door GetValidDoor(Tile tile)
         map.AddContainer(room);
         room.GenRoom(spaceBetweenRooms / 2);
     }
-    
+
 
 
 }

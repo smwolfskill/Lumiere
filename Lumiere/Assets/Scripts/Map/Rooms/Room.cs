@@ -40,7 +40,8 @@ public class Room : Container
 
     private void GenDoors(int radius)
     {
-        if (radius > w - radius || radius > h - radius) return;
+        if (radius > w - radius || radius > h - radius)
+            return;
 
         int doorAttempts = Utilities.RandomIntInRange(10, 50);
         // Add some doors
@@ -51,21 +52,21 @@ public class Room : Container
             Door door;
             switch (Utilities.RandomEnumValue<Utilities.Direction>())
             {
-                case Utilities.Direction.NORTH:
-                    door = new Door(x + incrementOffOfWidth, y, Utilities.Direction.NORTH, this, radius);
-                    break;
-                case Utilities.Direction.SOUTH:
-                    door = new Door(x + incrementOffOfWidth, y + h - 1, Utilities.Direction.SOUTH, this, radius);
-                    break;
-                case Utilities.Direction.WEST:
-                    door = new Door(x, y + incrementOffOfHeight, Utilities.Direction.WEST, this, radius);
-                    break;
-                case Utilities.Direction.EAST:
-                    door = new Door(x + w - 1, y + incrementOffOfHeight, Utilities.Direction.EAST, this, radius);
-                    break;
-                default:
-                    door = null;
-                    break;
+            case Utilities.Direction.NORTH:
+                door = new Door(x + incrementOffOfWidth, y, Utilities.Direction.NORTH, this, radius);
+                break;
+            case Utilities.Direction.SOUTH:
+                door = new Door(x + incrementOffOfWidth, y + h - 1, Utilities.Direction.SOUTH, this, radius);
+                break;
+            case Utilities.Direction.WEST:
+                door = new Door(x, y + incrementOffOfHeight, Utilities.Direction.WEST, this, radius);
+                break;
+            case Utilities.Direction.EAST:
+                door = new Door(x + w - 1, y + incrementOffOfHeight, Utilities.Direction.EAST, this, radius);
+                break;
+            default:
+                door = null;
+                break;
             }
 
             if (IsDoorValid(door))
@@ -77,7 +78,7 @@ public class Room : Container
 
     private bool IsDoorValid(Door doorAttempt)
     {
-        foreach(Door door in doors)
+        foreach (Door door in doors)
         {
             if (doorAttempt.x == door.x && doorAttempt.y == door.y)
                 return false;
@@ -88,8 +89,10 @@ public class Room : Container
 
     public void RefineSize()
     {
-        if (w + x > map.w) w = map.w - x;
-        if (h + y > map.h) h = map.h - y;
+        if (w + x > map.w)
+            w = map.w - x;
+        if (h + y > map.h)
+            h = map.h - y;
     }
 
     public virtual PlayerObject SpawnPlayer()
@@ -102,14 +105,14 @@ public class Room : Container
 
         // Multiply location by tile offset to account for tile spacing or tile sizes
         Vector2 locationToSpawn = new Vector2(tileLocation.x * map.tileOffset, tileLocation.y * map.tileOffset);
-        GameObject playerGameObject = GameObject.FindGameObjectWithTag ("Player");
-        if (playerGameObject == null) 
+        GameObject playerGameObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerGameObject == null)
         {
-            playerGameObject = playerToSpawn.Spawn (map, locationToSpawn);
-        } 
-        else 
+            playerGameObject = playerToSpawn.Spawn(map, locationToSpawn);
+        }
+        else
         {
-            playerGameObject.transform.position = locationToSpawn; 
+            playerGameObject.transform.position = locationToSpawn;
         }
 
 

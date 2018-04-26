@@ -53,7 +53,7 @@ class ArmorItem : EquippableItem
     /// <param name="speedModifier">How much this armor affects the player's velocity. (0 = 0% boost; 100.0 = 100% boost)</param>
     /// <param name="damageModifier">How much this armor affects the player's damage output. (0 = 0% boost; 100.0 = 100% boost)</param>
     /// </summary>
-    public ArmorItem(ItemRarity rarity = ItemRarity.COMMON, EquipmentManager.EquipSlot slot = EquipmentManager.EquipSlot.CHEST,  double armor = 1.0, double speedModifier = 0.0, double damageModifier = 0.0) : base(slot)
+    public ArmorItem(ItemRarity rarity = ItemRarity.COMMON, EquipmentManager.EquipSlot slot = EquipmentManager.EquipSlot.CHEST, double armor = 1.0, double speedModifier = 0.0, double damageModifier = 0.0) : base(slot)
     {
         InitArmor(armor, speedModifier, damageModifier, rarity);
     }
@@ -93,7 +93,7 @@ class ArmorItem : EquippableItem
 
     override public GameItem clone()
     {
-        return new ArmorItem (
+        return new ArmorItem(
             this.guiSprite,
             this.groundSprite,
             this.name,

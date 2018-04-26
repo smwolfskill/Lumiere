@@ -26,10 +26,10 @@ public class MapManager : MonoBehaviour
     void Awake()
     {
         levelNumber = 1;
-        levelText = GameObject.FindGameObjectWithTag ("UILevel").GetComponent<Text>();
+        levelText = GameObject.FindGameObjectWithTag("UILevel").GetComponent<Text>();
         UpdateDifficulty();
 
-        if(GenMapOnStart)
+        if (GenMapOnStart)
         {
             GenMap();
         }
@@ -37,7 +37,7 @@ public class MapManager : MonoBehaviour
 
     public void UpdateDifficulty()
     {
-        if(!SettingsManager.loaded)
+        if (!SettingsManager.loaded)
         {
             SettingsManager.LoadSettings();
         }
@@ -48,7 +48,7 @@ public class MapManager : MonoBehaviour
     public void GenMap()
     {
         UpdateDifficulty();
-        UpdateLevelText ();
+        UpdateLevelText();
         currMap = new GameObject();
 
         int width = (int)(initalMapSize + 1 * mapSizeIncreaseFactor);
@@ -69,7 +69,7 @@ public class MapManager : MonoBehaviour
         GameObject[] gameObjectArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
         foreach(GameObject gObject in gameObjectArray)
         {
-            if(gObject.layer == LayerMask.NameToLayer("DroppedItems") || gObject.layer == LayerMask.NameToLayer("Default") || gObject.layer == LayerMask.NameToLayer("Enemy"))
+            if (gObject.layer == LayerMask.NameToLayer("DroppedItems") || gObject.layer == LayerMask.NameToLayer("Default") || gObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 Destroy(gObject);
             }

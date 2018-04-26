@@ -7,8 +7,8 @@ public class PlayerAttack : EntityAction
 {
     private WeaponItem weapon;
     private EntityHealthManager targetHM;
-	private Transform targetTransform;
-	private float animationSpeed = 2;
+    private Transform targetTransform;
+    private float animationSpeed = 2;
 
     /// <summary>
     /// Checks whether the player can attack a monster
@@ -42,8 +42,8 @@ public class PlayerAttack : EntityAction
             // check if hotbar is a weapon and update the attack range
             if (weapon != null && weapon.SetYet())
             {
-                attackRange = Mathf.Max((float) weapon.AttackRange, attackRange);
-                Debug.Log ("Attack Range: " + attackRange);
+                attackRange = Mathf.Max((float)weapon.AttackRange, attackRange);
+                Debug.Log("Attack Range: " + attackRange);
             }
 
             RaycastHit2D hit2D = Physics2D.Raycast(origin, direction, attackRange, 1 << LayerMask.NameToLayer("Enemy"));
@@ -74,7 +74,7 @@ public class PlayerAttack : EntityAction
     /// <returns>true if the attack succeeded (e.g. we didn't run out of arrows)</returns>
     public override bool Execute(GameObject _player)
     {
-        base.Execute (_player);
+        base.Execute(_player);
 
         Player player;
         float dmg;
@@ -82,16 +82,16 @@ public class PlayerAttack : EntityAction
         player = (Player)_player.GetComponent<EntitySpriteManager>().entity;
         dmg = weapon == null ? player.FisticuffDamage : weapon.Damage;
 
-		GameObject attackAnimationObj = player.AttackAnimationObject;
+        GameObject attackAnimationObj = player.AttackAnimationObject;
 
-		//attackAnim.CreateAnimation(player, attackAnimationObj, weapon, targetTransform, animationSpeed);
-		attackAnimationObj.GetComponent<AttackAnimation>().CreateAnimation(player, attackAnimationObj, this.weapon, this.targetTransform, this.animationSpeed);
-		attackAnimationObj.GetComponent<Animation>().Play("attack");
+        //attackAnim.CreateAnimation(player, attackAnimationObj, weapon, targetTransform, animationSpeed);
+        attackAnimationObj.GetComponent<AttackAnimation>().CreateAnimation(player, attackAnimationObj, this.weapon, this.targetTransform, this.animationSpeed);
+        attackAnimationObj.GetComponent<Animation>().Play("attack");
 
         targetHM.InflictDamage(dmg);
 
-		//Debug.Log(tmpSprite.GetInstanceID());
-        
+        //Debug.Log(tmpSprite.GetInstanceID());
+
         return true;
     }
 

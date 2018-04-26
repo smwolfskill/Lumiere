@@ -7,7 +7,7 @@ using NUnit.Framework;
 /// <summary>
 /// Basic testing class for secret room generation.
 /// </summary>
-public class SecretRoomTest 
+public class SecretRoomTest
 {
     SecretRoomType secretRoomType;
     Room secretRoom;
@@ -18,33 +18,33 @@ public class SecretRoomTest
     [SetUp]
     public void Init()
     {
-        mapGameObject = new GameObject ("Map");
-        roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
-        Map map = new Map (50, 50, 1, mapGameObject, roomProperties, 1, 1);
-        secretRoomType = Resources.Load<SecretRoomType> ("Rooms/SecretRoom");
-        secretRoom = new Room (map, 0, 0, 30, 30, secretRoomType);
-        Assert.IsNotNull (map);
-        Assert.IsNotNull (secretRoom);
-        Assert.IsNotNull (secretRoomType);
+        mapGameObject = new GameObject("Map");
+        roomProperties = Resources.Load<RoomProperties>("RoomProperties");
+        Map map = new Map(50, 50, 1, mapGameObject, roomProperties, 1, 1);
+        secretRoomType = Resources.Load<SecretRoomType>("Rooms/SecretRoom");
+        secretRoom = new Room(map, 0, 0, 30, 30, secretRoomType);
+        Assert.IsNotNull(map);
+        Assert.IsNotNull(secretRoom);
+        Assert.IsNotNull(secretRoomType);
     }
 
     [TearDown]
     public void Cleanup()
     {
-        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject> ();
-        foreach (GameObject gameObject in gameObjects) 
+        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject gameObject in gameObjects)
         {
-            GameObject.Destroy (gameObject);
+            GameObject.Destroy(gameObject);
         }
 
-        if (secretRoomType != null) 
+        if (secretRoomType != null)
         {
-            Resources.UnloadAsset (secretRoomType);
+            Resources.UnloadAsset(secretRoomType);
         }
 
-        if (mapGameObject != null) 
+        if (mapGameObject != null)
         {
-            GameObject.Destroy (mapGameObject);
+            GameObject.Destroy(mapGameObject);
         }
 
         map = null;
@@ -57,8 +57,8 @@ public class SecretRoomTest
     [Test]
     public void TestTilesSpawned()
     {
-        secretRoom.GenRoom (5 / 2);
-        Assert.IsTrue (secretRoom.tiles.Count > 0);
+        secretRoom.GenRoom(5 / 2);
+        Assert.IsTrue(secretRoom.tiles.Count > 0);
     }
 
     /// <summary>
@@ -67,8 +67,8 @@ public class SecretRoomTest
     [Test]
     public void TestRoomInGame()
     {
-        GameObject room = GameObject.Find ("SecretRoom");
-        Assert.IsNotNull (room);
+        GameObject room = GameObject.Find("SecretRoom");
+        Assert.IsNotNull(room);
     }
 
 }

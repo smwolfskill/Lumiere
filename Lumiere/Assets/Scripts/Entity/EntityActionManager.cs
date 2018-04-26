@@ -43,7 +43,7 @@ public class EntityActionManager : MonoBehaviour
             return false;
         }
 
-        foreach (EntityAction entityAction in entityActions) 
+        foreach (EntityAction entityAction in entityActions)
         {
 
             if (entityAction.Validate(this.gameObject))
