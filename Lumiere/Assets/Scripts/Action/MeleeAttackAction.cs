@@ -33,8 +33,8 @@ public class MeleeAttackAction : EntityAction
 
         if (!timer.Enabled) 
         {
-            return true;
             timer.Reset ();
+            return true;
         }
 
         if (timer.HasExceeded(1.0f/attackSpeed)) 

@@ -23,7 +23,7 @@ public class MapManager : MonoBehaviour
 
     public GameObject ExitDoor;
 
-    void Start()
+    void Awake()
     {
         levelNumber = 1;
         levelText = GameObject.FindGameObjectWithTag ("UILevel").GetComponent<Text>();
@@ -56,10 +56,6 @@ public class MapManager : MonoBehaviour
 
     public void DestroyMap()
     {
-        //Default layer = 0
-        //DroppedItems layer = 8
-        //Enemy layer = 9
-
         GameObject[] gameObjectArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
         foreach(GameObject gObject in gameObjectArray)
         {
