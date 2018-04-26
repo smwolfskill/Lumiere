@@ -62,6 +62,7 @@ class RangedWeapon : WeaponItem
             this.useAction,
             this.damage,
             this.rof,
+            this.attackRange,
             this.penetration);
     }
 

@@ -43,6 +43,7 @@ public class PlayerAttack : EntityAction
             if (weapon != null && weapon.SetYet())
             {
                 attackRange = Mathf.Max((float) weapon.AttackRange, attackRange);
+                Debug.Log ("Attack Range: " + attackRange);
             }
 
             RaycastHit2D hit2D = Physics2D.Raycast(origin, direction, attackRange, 1 << LayerMask.NameToLayer("Enemy"));

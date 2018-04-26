@@ -1,7 +1,8 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System;
-using System.Diagnostics;
+
 
 /// <summary>
 /// Specialized static class designed to handle item generation algorithms.
