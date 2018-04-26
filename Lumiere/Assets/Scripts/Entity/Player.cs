@@ -68,6 +68,7 @@ public class Player : Entity
 	private GameObject CreateAttackAnimGameObject()
 	{
 		GameObject attackAnimObj = new GameObject("PlayerAttackAnim", typeof(SpriteRenderer), typeof(Animation), typeof(AttackAnimation));
+        attackAnimObj.layer = LayerMask.NameToLayer ("Player");
 		//attackAnimObj.GetComponent<SpriteRenderer>().enabled = false;
 		return attackAnimObj;
 	}

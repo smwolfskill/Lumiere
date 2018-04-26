@@ -75,9 +75,11 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private void UpdateLevelText()
     {
-        if (levelText != null) 
+        if (levelText == null) 
         {
-            levelText.text = "Current level: " + levelNumber;  
+            levelText = GameObject.FindGameObjectWithTag ("UILevel").GetComponent<Text>();
         }
+
+        levelText.text = "Current level: " + levelNumber;
     }
 }
