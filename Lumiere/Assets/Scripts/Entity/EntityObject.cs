@@ -5,21 +5,13 @@ using UnityEngine;
 public abstract class EntityObject
 {
     public GameObject gameObject;
-    public Entity.EntityDropGen entityDropGen;
+    public EntityDropGen entityDropGen;
     protected float maxHealth;
     protected float currHealth;
     protected bool isDead;
 	protected Inventory inventory;
 
-
-    /*
-    public EntityObject(float maxHealth)
-    {
-        //TODO
-    }
-    */
-
-    public EntityObject(GameObject existingGameObject, float maxHealth)//, EntityDropGen entityDropGen)
+    public EntityObject(GameObject existingGameObject, float maxHealth)
     {
         this.gameObject = existingGameObject;
         this.maxHealth = maxHealth;
@@ -76,7 +68,7 @@ public abstract class EntityObject
     /// </summary>
     virtual public void DropLootAroundGameObject()
     {
-        if(entityDropGen != null && entityDropGen.maxItems > 0)
+        if(entityDropGen != null && entityDropGen.maxLootCap > 0)
         {
             DropItemsAroundGameObject(entityDropGen.GenerateLoot());
         }

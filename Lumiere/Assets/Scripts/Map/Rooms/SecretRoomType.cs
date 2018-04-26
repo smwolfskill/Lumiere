@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [CreateAssetMenu(menuName = "Lumiere/Room/Secret")]
 public class SecretRoomType : RoomType
@@ -8,15 +9,14 @@ public class SecretRoomType : RoomType
     public TileType sandTile;
     public TileType wallTile;
     public float itemPadding = 1.5f;         //dist from secret room walls
-    public float healthPotionChance = 0.5f;  //TODO: update later w/ difficulty, etc.
-    //TODO: incorporate current level & difficulty
+    public EntityDropGen secretRoomDropGen;  //holds parameters and methods for dynamic loot
 
     public override void GenRoom(Room room, Map map)
     {
         map.FillAreaWithBorder(room.x, room.y, room.w, room.h, sandTile, wallTile, room);
 
         //Generate loot in secret room
-        GameItem[] loot = ItemSpawner.GenerateLootBag((int)Time.time, 1, 1, 4, GameItem.ItemRarity.COMMON, false, healthPotionChance);
+        GameItem[] loot = secretRoomDropGen.GenerateLoot(map);
         if(loot.Length == 0)
         {
             return;
