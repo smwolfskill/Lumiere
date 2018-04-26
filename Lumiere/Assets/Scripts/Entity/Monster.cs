@@ -13,6 +13,7 @@ public class Monster : NPC
     override public GameObject Spawn(Map map, Vector2 location)
     {
         GameObject monster = base.Spawn(map, location);
+        monster.AddComponent<Timer> ();
         GameObject particles = Instantiate(damageParticles, monster.transform);
         GameObject healthBar = Instantiate(healthBarPrefab, monster.transform, false);
         healthBar.AddComponent<EnemyHealthBarManager>();

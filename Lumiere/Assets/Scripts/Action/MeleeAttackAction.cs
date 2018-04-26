@@ -15,12 +15,8 @@ public class MeleeAttackAction : EntityAction
     /// </summary>
     public float attackSpeed;
 
-    private float lastAttackTime;
+    private Timer timer;
 
-    private void Awake()
-    {
-        lastAttackTime = 0f;
-    }
 
     /// <summary>
     /// Checks whether this entity can attack or not.
@@ -29,9 +25,19 @@ public class MeleeAttackAction : EntityAction
     /// <returns>Returns true if the entity can attack, based on attackSpeed and lastAttackTime and false otherwise.</returns>
     public override bool Validate (GameObject obj)
     {
-        float currentTime = Time.time;
-        float deltaTime = currentTime - lastAttackTime;
-        if (deltaTime >= (1.0f/attackSpeed)) 
+        timer = obj.GetComponent<Timer> ();
+        if (timer == null) 
+        {
+            return false;    
+        }
+
+        if (!timer.Enabled) 
+        {
+            return true;
+            timer.Reset ();
+        }
+
+        if (timer.HasExceeded(1.0f/attackSpeed)) 
         {
             return true;
         }
@@ -60,7 +66,7 @@ public class MeleeAttackAction : EntityAction
         }
 
         healthManager.InflictDamage (attackDamage);
-        lastAttackTime = Time.time;
+        timer.Reset ();
         return true;
     }
 }
