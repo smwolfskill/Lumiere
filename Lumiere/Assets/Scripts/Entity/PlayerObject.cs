@@ -57,7 +57,8 @@ public class PlayerObject : EntityObject
     protected override void Die()
     {
         anim.SetTrigger("TDie");
-        GameObject.Destroy(this.gameObject, 1f);
+        PlaySound ();
+        GameObject.Destroy(gameObject, 1f);
         this.isDead = true;
     }
 }

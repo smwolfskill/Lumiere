@@ -47,6 +47,7 @@ public class MeleeAttackAction : EntityAction
     /// <returns>Returns true if this action is executed successfully, false otherwise.</returns>
     public override bool Execute (GameObject obj)
     {
+        base.Execute (obj);
         GameObject player = GameObject.FindGameObjectWithTag ("Player");
         if (player == null) 
         {

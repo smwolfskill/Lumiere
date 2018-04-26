@@ -22,6 +22,11 @@ public class EntityHealthManager : MonoBehaviour
             if (damagedParticles != null)
             {
                 damagedParticles.Play();
+                AudioSource damageAudioSource = damagedParticles.GetComponent<AudioSource> ();
+                if (damageAudioSource != null) 
+                {
+                    damageAudioSource.Play ();
+                }
             }
             if (damageUI != null)
             {
