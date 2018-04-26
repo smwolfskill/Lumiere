@@ -43,7 +43,7 @@ public class UsableItem : GameItem
 
     override public GameItem clone()
     {
-        return new UsableItem (
+        return new UsableItem(
             this.guiSprite,
             this.groundSprite,
             this.name,

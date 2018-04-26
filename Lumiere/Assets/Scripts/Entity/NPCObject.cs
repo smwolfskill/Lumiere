@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NPCObject : EntityObject
 {
-	public NPCObject(GameObject existingGameObject, float maxHealth) : base(existingGameObject, maxHealth)
-	{
-	}
+    public NPCObject(GameObject existingGameObject, float maxHealth) : base(existingGameObject, maxHealth)
+    {
+    }
 }

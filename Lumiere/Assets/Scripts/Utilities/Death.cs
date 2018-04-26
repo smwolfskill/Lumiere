@@ -23,10 +23,10 @@ public class Death : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
     {
         EntityHealthManager ehm = animator.gameObject.GetComponent<EntityHealthManager>();
-        if(ehm != null)
+        if (ehm != null)
         {
             EntityObject entityObject = ehm.entityObj;
-            if(entityObject == null)
+            if (entityObject == null)
             {
                 throw new System.Exception("Dead entity's EntityHealthManager.entityObject field was null!");
             }

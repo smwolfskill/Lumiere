@@ -65,15 +65,19 @@ public class PlayerHealthTest
     /// </summary>
     public void InitHealthBar()
     {
-        
-        canvasHealthBar = new GameObject("CanvasHealthBar", typeof(RectTransform));
+
+        canvasHealthBar = new GameObject("CanvasHealthBar",
+                                         typeof(RectTransform));
         canvasHealthBar.transform.SetParent(UICanvas.transform);
-        playerHealthBar = new GameObject("PanelHealthBarFill", typeof(RectTransform), typeof(HealthBarManager));
+        playerHealthBar = new GameObject("PanelHealthBarFill",
+                                         typeof(RectTransform),
+                                         typeof(HealthBarManager));
         playerHealthBar.transform.SetParent(canvasHealthBar.transform);
     }
 
     /// <summary>
-    /// Initialize the panels used by the EquipmentManager with the correct heirarchy.
+    /// Initialize the panels used by the EquipmentManager with the correct
+    /// heirarchy.
     /// </summary>
     public void InitEquipmentPanels()
     {
@@ -120,7 +124,7 @@ public class PlayerHealthTest
             GameObject.Destroy(canvasHealthBar);
         }
 
-        if(UICanvas != null)
+        if (UICanvas != null)
         {
             GameObject.Destroy(UICanvas);
         }
@@ -132,7 +136,7 @@ public class PlayerHealthTest
     [Test]
     public void TestMaxHealth()
     {
-        Assert.AreEqual (100.0f, playerObject.GetMaxHealth ());
+        Assert.AreEqual(100.0f, playerObject.GetMaxHealth());
     }
 
     /// <summary>
@@ -141,8 +145,8 @@ public class PlayerHealthTest
     [Test]
     public void TestDamagePlayer()
     {
-        playerObject.InflictDamage (40.0f);
-        Assert.AreEqual (60.0f, playerObject.GetCurrHealth());
+        playerObject.InflictDamage(40.0f);
+        Assert.AreEqual(60.0f, playerObject.GetCurrHealth());
     }
 
     /// <summary>
@@ -151,9 +155,9 @@ public class PlayerHealthTest
     [Test]
     public void TestPlayerDeath()
     {
-        playerObject.InflictDamage (100.0f);
-        Assert.IsTrue (playerObject.GetCurrHealth() <= 0.0f);
-        Assert.IsTrue (playerObject.IsDead());
+        playerObject.InflictDamage(100.0f);
+        Assert.IsTrue(playerObject.GetCurrHealth() <= 0.0f);
+        Assert.IsTrue(playerObject.IsDead());
     }
 
     /// <summary>
@@ -162,9 +166,9 @@ public class PlayerHealthTest
     [Test]
     public void TestPlayerHeal()
     {
-        playerObject.InflictDamage (99.0f);
-        playerObject.Heal (9.0f);
-        Assert.AreEqual (10.0f, playerObject.GetCurrHealth());
+        playerObject.InflictDamage(99.0f);
+        playerObject.Heal(9.0f);
+        Assert.AreEqual(10.0f, playerObject.GetCurrHealth());
     }
 
     /// <summary>
@@ -173,8 +177,8 @@ public class PlayerHealthTest
     [Test]
     public void TestPlayerOverHeal()
     {
-        playerObject.Heal (1000.0f);
-        Assert.AreEqual (playerObject.GetMaxHealth(), playerObject.GetCurrHealth());
+        playerObject.Heal(1000.0f);
+        Assert.AreEqual(playerObject.GetMaxHealth(), playerObject.GetCurrHealth());
     }
 
     /// <summary>
@@ -183,11 +187,12 @@ public class PlayerHealthTest
     [Test]
     public void TestPlayerHealAfterDeath()
     {
-        playerObject.InflictDamage (100.0f);
-        playerObject.Heal (1000.0f);
-        Assert.IsTrue (playerObject.GetCurrHealth() <= 0.0f);
+        playerObject.InflictDamage(100.0f);
+        playerObject.Heal(1000.0f);
+        Assert.IsTrue(playerObject.GetCurrHealth() <= 0.0f);
     }
 
-    //TODO Add tests to check that the health bar's size has changed after damage has occured
+    // TODO Add tests to check that the health bar's size has changed after
+    // damage has occured
 
 }

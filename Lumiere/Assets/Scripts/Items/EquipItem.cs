@@ -18,11 +18,11 @@ public class EquipItem : EntityAction
     public override bool Validate(GameObject obj)
     {
         bool equipItem = Input.GetButtonDown("EquipItem");
-        if(equipItem)
+        if (equipItem)
         {
             GameObject UICanvas = GameObject.FindGameObjectWithTag("UICanvas");
             UIBehavior uib = UICanvas.GetComponent<UIBehavior>();
-            if(!uib.inventoryPanel.activeSelf)
+            if (!uib.inventoryPanel.activeSelf)
             {
                 return false;
             }
@@ -30,7 +30,7 @@ public class EquipItem : EntityAction
             {
                 invPanel = GameObject.FindGameObjectWithTag("InventoryPanel").GetComponent<InventoryPanel>();
                 toEquip = invPanel.GetSelectedItem().clone();
-                return toEquip != null && (toEquip is EquippableItem || toEquip is UsableItem) && toEquip.SetYet ();
+                return toEquip != null && (toEquip is EquippableItem || toEquip is UsableItem) && toEquip.SetYet();
             }
         }
         else
@@ -47,38 +47,38 @@ public class EquipItem : EntityAction
     public override bool Execute(GameObject obj)
     {
         invPanel = GameObject.FindGameObjectWithTag("InventoryPanel").GetComponent<InventoryPanel>();
-        eqPanel = GameObject.FindGameObjectWithTag ("EquipmentPanel").GetComponent<EquipmentPanel>();
+        eqPanel = GameObject.FindGameObjectWithTag("EquipmentPanel").GetComponent<EquipmentPanel>();
         EquipmentManager equipManager = eqPanel.Manager;
         UsableItem useItem = toEquip as UsableItem;
         EquippableItem equipItem = toEquip as EquippableItem;
 
         if (equipItem != null)
         {
-            EquippableItem currentlyEquipped = equipManager.DeEquip (equipItem.Slot);
-            Debug.Log (equipItem);
-            invPanel.ManagedInventory.RemoveItem (toEquip);
-            if (currentlyEquipped == null || invPanel.ManagedInventory.AddItem (currentlyEquipped) == null)
+            EquippableItem currentlyEquipped = equipManager.DeEquip(equipItem.Slot);
+            Debug.Log(equipItem);
+            invPanel.ManagedInventory.RemoveItem(toEquip);
+            if (currentlyEquipped == null || invPanel.ManagedInventory.AddItem(currentlyEquipped) == null)
             {
                 // eqPanel.Manager = equipManager;
-                equipManager.Equip (equipItem); // this should not fail
+                equipManager.Equip(equipItem); // this should not fail
                 return true;
             }
             else
             {
-                invPanel.ManagedInventory.AddItem (equipItem);
-                equipManager.Equip (currentlyEquipped);
+                invPanel.ManagedInventory.AddItem(equipItem);
+                equipManager.Equip(currentlyEquipped);
                 return false;
             }
         }
         else if (useItem != null)
         {
             bool yay = false;
-            for (int i = 0; i < equipManager.GetHotbarItemsSize (); i++)
+            for (int i = 0; i < equipManager.GetHotbarItemsSize(); i++)
             {
-                yay = equipManager.AddHotBarItem (useItem, i);
+                yay = equipManager.AddHotBarItem(useItem, i);
                 if (yay)
                 {
-                    invPanel.ManagedInventory.RemoveItem (useItem);
+                    invPanel.ManagedInventory.RemoveItem(useItem);
                     break;
                 }
             }
@@ -86,7 +86,7 @@ public class EquipItem : EntityAction
         }
         else
         {
-            throw new UnityException ("WTF are you trying to equip my man");
+            throw new UnityException("WTF are you trying to equip my man");
         }
 
     }

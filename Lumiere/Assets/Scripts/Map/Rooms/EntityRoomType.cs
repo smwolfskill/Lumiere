@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Lumiere/Room/Entity")]
-public class EntityRoomType : RoomType 
+public class EntityRoomType : RoomType
 {
     public Entity[] entities;
     public float minimumEntitiesRatio;
@@ -21,7 +21,7 @@ public class EntityRoomType : RoomType
         int minimunEntities = GetMinEntities(map);
         int maximumEntities = GetMaxEntities(map);
 
-        int numEntities = Utilities.RandomIntInRange (minimunEntities, maximumEntities);
+        int numEntities = Utilities.RandomIntInRange(minimunEntities, maximumEntities);
 
         return SpawnEntities(numEntities, room, map);
     }

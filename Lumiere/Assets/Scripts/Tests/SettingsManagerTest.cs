@@ -28,7 +28,7 @@ public class SettingsManagerTest
         if (SettingsManager.loaded == true)
         {
             SettingsManager.LoadSettings("Defaults");
-            SettingsManager.SaveSettings(path);    
+            SettingsManager.SaveSettings(path);
         }
     }
 
@@ -39,9 +39,9 @@ public class SettingsManagerTest
     public void LoadSettingsInitial()
     {
         SettingsManager.loaded = false;
-        if(!SettingsManager.loaded)
+        if (!SettingsManager.loaded)
         {
-            SettingsManager.LoadSettings("Defaults"); 
+            SettingsManager.LoadSettings("Defaults");
         }
         Assert.AreEqual(true, SettingsManager.loaded);
     }
@@ -62,8 +62,8 @@ public class SettingsManagerTest
     [TestCase(KeyCode.Tab, "FakeSetting")]
     public void TestGetKey(KeyCode expected, string settingName)
     {
-        SettingsManager.LoadSettings("Defaults"); 
-        
+        SettingsManager.LoadSettings("Defaults");
+
         try
         {
             KeyCode value = SettingsManager.GetKey(settingName);
@@ -92,13 +92,13 @@ public class SettingsManagerTest
     public void TestSetKey(string new_value, string settingName)
     {
         SettingsManager.LoadSettings("Defaults");
-        if(settingName == "FakeSetting")
+        if (settingName == "FakeSetting")
         {
             Assert.AreEqual(false, SettingsManager.SetKey(new_value, settingName));
             return;
         }
         Assert.AreEqual(true, SettingsManager.SetKey(new_value, settingName));
-        KeyCode expected = (KeyCode) System.Enum.Parse(typeof(KeyCode), new_value);
+        KeyCode expected = (KeyCode)System.Enum.Parse(typeof(KeyCode), new_value);
         Assert.AreEqual(expected, SettingsManager.GetKey(settingName));
     }
 
@@ -107,7 +107,7 @@ public class SettingsManagerTest
     /// </summary>
     public void TestGetDefaultDifficulty()
     {
-        SettingsManager.LoadSettings("Defaults"); 
+        SettingsManager.LoadSettings("Defaults");
         Assert.AreEqual(Settings.Difficulty.Normal, SettingsManager.GetDifficulty());
     }
 
@@ -120,7 +120,7 @@ public class SettingsManagerTest
     [TestCase(Settings.Difficulty.Hard)]
     public void TestSetDifficulty(Settings.Difficulty new_value)
     {
-        SettingsManager.LoadSettings("Defaults"); 
+        SettingsManager.LoadSettings("Defaults");
         SettingsManager.SetDifficulty(new_value);
         Assert.AreEqual(new_value, SettingsManager.GetDifficulty());
     }
@@ -144,7 +144,7 @@ public class SettingsManagerTest
         Assert.AreEqual(true, SettingsManager.SetKey(new_value, settingName));
         SettingsManager.SaveSettings(path);
         SettingsManager.LoadSettings(path);
-        KeyCode expected = (KeyCode) System.Enum.Parse(typeof(KeyCode), new_value);
+        KeyCode expected = (KeyCode)System.Enum.Parse(typeof(KeyCode), new_value);
         Assert.AreEqual(expected, SettingsManager.GetKey(settingName));
     }
 }

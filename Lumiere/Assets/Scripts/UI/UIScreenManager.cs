@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class UIScreenManager : MonoBehaviour 
+public class UIScreenManager : MonoBehaviour
 {
     public GameObject[] screens;
 
@@ -14,9 +14,9 @@ public class UIScreenManager : MonoBehaviour
     public void SwitchTo(string screenTag)
     {
         bool found = false;
-        foreach(GameObject screen in screens)
+        foreach (GameObject screen in screens)
         {
-            if(screen.tag == screenTag)
+            if (screen.tag == screenTag)
             {
                 found = true;
                 screen.SetActive(true);
@@ -26,7 +26,7 @@ public class UIScreenManager : MonoBehaviour
                 screen.SetActive(false);
             }
         }
-        if(!found)
+        if (!found)
         {
             throw new ArgumentException("UIScreenManager: tag '" + screenTag + "' did not match any screens!");
         }

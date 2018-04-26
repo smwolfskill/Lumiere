@@ -68,7 +68,8 @@ public class HotbarPanel : MonoBehaviour
         }
     }
 
-    public bool Visible {
+    public bool Visible
+    {
         get
         {
             return visible;
@@ -82,7 +83,7 @@ public class HotbarPanel : MonoBehaviour
         Initialize();
     }
 
-    void Start ()
+    void Start()
     {
 
         //if(!initialized)
@@ -118,15 +119,15 @@ public class HotbarPanel : MonoBehaviour
         HotbarItemButton[] childrenScripts = GetComponentsInChildren<HotbarItemButton>(); //used to access the children game objects
         //Set or create each GameItem's UI element
         //TODO: understand how/why duplicate 
-        for(int location = 0; location < capacity; location++)
+        for (int location = 0; location < capacity; location++)
         {
             int[] gridLocation = ItemLocationInGrid(location);
             int locX = gridLocation[0];
             int locY = gridLocation[1];
             HotbarItemButton childScript;
-            if(location >= childrenScripts.Length) //Hotbar grew in size; create more UI items.
+            if (location >= childrenScripts.Length) //Hotbar grew in size; create more UI items.
             {
-                GameObject child = (GameObject) GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation));
+                GameObject child = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation));
                 child.transform.SetParent(gameObject.transform, false);
                 childScript = child.GetComponent<HotbarItemButton>();
                 childScript.SetGUIReferences(this);
@@ -136,7 +137,7 @@ public class HotbarPanel : MonoBehaviour
                 childScript = childrenScripts[location];
             }
 
-            if(locX < 0 || locX >= nWidth || locY < 0 || locY >= nHeight)
+            if (locX < 0 || locX >= nWidth || locY < 0 || locY >= nHeight)
             {
                 Debug.Log("Set new item wrong params: (" + locX + "/ " + nWidth + ", " + locY + "/ " + nHeight + ")");
             }
@@ -151,7 +152,7 @@ public class HotbarPanel : MonoBehaviour
         }
 
         //If hotbar shrank in size, delete extra UI slot elements
-        for(int overIndex = capacity; overIndex < childrenScripts.Length; overIndex++)
+        for (int overIndex = capacity; overIndex < childrenScripts.Length; overIndex++)
         {
             GameObject.Destroy(childrenScripts[overIndex].gameObject);
         }
@@ -168,7 +169,8 @@ public class HotbarPanel : MonoBehaviour
 
     public GameItem GetSelectedItem()
     {
-        if (visible == false || selectedX < 0 || selectedY < 0) {
+        if (visible == false || selectedX < 0 || selectedY < 0)
+        {
             return null;
         }
         else
@@ -193,7 +195,7 @@ public class HotbarPanel : MonoBehaviour
         selectedX = -1;
         selectedY = -1;
     }
-        
+
     /// <summary>
     /// Uses Item action(s) of a selected item in the hotbar, if valid.
     /// </summary>
@@ -222,6 +224,6 @@ public class HotbarPanel : MonoBehaviour
     /// <param name="locationID">Location I.</param>
     public int[] ItemLocationInGrid(int locationID)
     {
-        return new int[] {locationID % nWidth, locationID / nWidth};
+        return new int[] { locationID % nWidth, locationID / nWidth };
     }
 }

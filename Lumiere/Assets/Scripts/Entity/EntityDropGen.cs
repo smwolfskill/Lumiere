@@ -14,10 +14,10 @@ public class EntityDropGen
     [Header("Loot Caps, regardless of level & difficulty")]
     public int minLootCap = 5; //cap on min #loot items in a room, regardless of level & difficulty.
     public int maxLootCap = 8; //cap on max #loot items in a room, regardless of level & difficulty.
-    public GameItem.ItemRarity minRarityCap = (GameItem.ItemRarity) Enum.GetValues(typeof(GameItem.ItemRarity)).Length - 1;
+    public GameItem.ItemRarity minRarityCap = (GameItem.ItemRarity)Enum.GetValues(typeof(GameItem.ItemRarity)).Length - 1;
 
     [Header("Base loot at hardest difficulty")]
-    public GameItem.ItemRarity minRarityBase_hardest = (GameItem.ItemRarity) 0;
+    public GameItem.ItemRarity minRarityBase_hardest = (GameItem.ItemRarity)0;
     public int minItemsBase_hardest = 0;                   //minItems on lowest level at hardest difficulty
     public int maxItemsBase_hardest = 1;                   //maxItems on lowest level at hardest difficulty
 
@@ -53,7 +53,7 @@ public class EntityDropGen
     /// <param name="map">Map to get the levelNumber and difficulty from. If unspecified uses set values. </param>
     public GameItem[] GenerateLoot(Map map = null)
     {
-        if(map != null)
+        if (map != null)
         {
             SetLevelAndDifficulty(map);
         }
@@ -64,20 +64,20 @@ public class EntityDropGen
         int maxItems_base = Mathf.RoundToInt(maxItemsBase_hardest + maxItemsBase_modifier * (maxDifficulty - difficulty));
         int levelsTillMinItemGain = Mathf.RoundToInt(levelsTillMinItemGain_easiest * Mathf.Pow(levelsTillMinItemGain_multiplier, difficulty));
         int levelsTillMaxItemGain = Mathf.RoundToInt(levelsTillMaxItemGain_easiest * Mathf.Pow(levelsTillMaxItemGain_multiplier, difficulty));
-        int minItems_gain = (int) levelNumber / levelsTillMinItemGain;
-        int maxItems_gain = (int) levelNumber / levelsTillMaxItemGain;
+        int minItems_gain = (int)levelNumber / levelsTillMinItemGain;
+        int maxItems_gain = (int)levelNumber / levelsTillMaxItemGain;
         int minItems = Mathf.Min(minItems_base + minItems_gain, minLootCap);
         int maxItems = Mathf.Min(maxItems_base + maxItems_gain, maxLootCap);
-        if(minItems > maxItems)
+        if (minItems > maxItems)
         {
             minItems = maxItems;
         }
 
         //Rarity
-        int minRarityBase = Mathf.RoundToInt((int) minRarityBase_hardest + minRarityBase_modifier * (maxDifficulty - difficulty));
+        int minRarityBase = Mathf.RoundToInt((int)minRarityBase_hardest + minRarityBase_modifier * (maxDifficulty - difficulty));
         int levelsTillMinRarityGain = Mathf.RoundToInt(levelsTillMinRarityGain_easiest * Mathf.Pow(levelsTillMinRarityGain_multiplier, difficulty));
-        int minRarity_gain = (int) levelNumber / levelsTillMinRarityGain;
-        GameItem.ItemRarity minRarity = (GameItem.ItemRarity) Mathf.Min(minRarityBase + minRarity_gain, (int) minRarityCap);
+        int minRarity_gain = (int)levelNumber / levelsTillMinRarityGain;
+        GameItem.ItemRarity minRarity = (GameItem.ItemRarity)Mathf.Min(minRarityBase + minRarity_gain, (int)minRarityCap);
 
         //Generate loot in secret room
         return ItemSpawner.GenerateLootBag((int)Time.time, levelNumber, minItems, maxItems, minRarity, false, healthPotionChance);

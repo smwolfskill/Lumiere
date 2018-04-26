@@ -77,13 +77,13 @@ public class Map
 
     public List<Tile> GetTiles()
     {
-        List<Tile> tiles = new List<Tile> ();
-        for (int i = 0; i < tileMatrix.GetLength(0); i++) 
+        List<Tile> tiles = new List<Tile>();
+        for (int i = 0; i < tileMatrix.GetLength(0); i++)
         {
-            for (int j = 0; j < tileMatrix.GetLength(1); j++) 
+            for (int j = 0; j < tileMatrix.GetLength(1); j++)
             {
-                tiles.Add (tileMatrix [i, j]);    
-            }   
+                tiles.Add(tileMatrix[i, j]);
+            }
         }
 
         return tiles;
@@ -107,7 +107,7 @@ public class Map
         {
             for (int currY = y; currY < y + h; currY++)
             {
-                Tile tileToAdd = 
+                Tile tileToAdd =
                 SetTile(currX, currY, new Tile(x, y, this, tileType), container);
             }
         }
@@ -117,21 +117,21 @@ public class Map
     {
         switch (direction)
         {
-            case Utilities.Direction.NORTH:
-                FillArea(x, y - length, 1, length, tileType, container);
-                break;
+        case Utilities.Direction.NORTH:
+            FillArea(x, y - length, 1, length, tileType, container);
+            break;
 
-            case Utilities.Direction.SOUTH:
-                FillArea(x, y, 1, length, tileType, container);
-                break;
+        case Utilities.Direction.SOUTH:
+            FillArea(x, y, 1, length, tileType, container);
+            break;
 
-            case Utilities.Direction.WEST:
-                FillArea(x - length, y, length, 1, tileType, container);
-                break;
+        case Utilities.Direction.WEST:
+            FillArea(x - length, y, length, 1, tileType, container);
+            break;
 
-            case Utilities.Direction.EAST:
-                FillArea(x, y, length, 1, tileType, container);
-                break;
+        case Utilities.Direction.EAST:
+            FillArea(x, y, length, 1, tileType, container);
+            break;
         }
     }
 
@@ -145,7 +145,7 @@ public class Map
         SetTile(x + w - 1, y + h - 1, new Tile(x + w - 1, y + h - 1, this, borderTileType), container);
 
     }
-    
+
     public void CreateBorder(int x, int y, int w, int h, TileType borderTileType, Container container)
     {
         FillLine(x, y, w, Utilities.Direction.EAST, borderTileType, container);
@@ -155,7 +155,7 @@ public class Map
         SetTile(x + w - 1, y + h - 1, new Tile(x + w - 1, y + h - 1, this, borderTileType), container);
     }
 
-public Tile GetTile(int x, int y)
+    public Tile GetTile(int x, int y)
     {
         if (!ValidTileSpace(x, y))
             return null;
@@ -168,10 +168,10 @@ public Tile GetTile(int x, int y)
         int roomWidth = Utilities.RandomIntInRange(roomProperties.minWidth, roomProperties.maxWidth);
         int roomHeight = Utilities.RandomIntInRange(roomProperties.minHeight, roomProperties.maxHeight);
 
-        int x = Utilities.RandomIntInRange (0, w - roomWidth);
-        int y = Utilities.RandomIntInRange (0, h - roomHeight);
+        int x = Utilities.RandomIntInRange(0, w - roomWidth);
+        int y = Utilities.RandomIntInRange(0, h - roomHeight);
 
-        return new Room (this, x, y, roomWidth, roomHeight, roomType);
+        return new Room(this, x, y, roomWidth, roomHeight, roomType);
     }
 
     public Room GenRandomRoom()
@@ -224,7 +224,8 @@ public Tile GetTile(int x, int y)
             {
                 Tile currTileObj = GetTile(currX, currY);
 
-                if (currTileObj != null && currTileObj.tileType != tileType) return false;
+                if (currTileObj != null && currTileObj.tileType != tileType)
+                    return false;
             }
         }
 
@@ -255,7 +256,8 @@ public Tile GetTile(int x, int y)
 
             foreach (ContainerType containerType in ignoreContainerTypes)
             {
-                if (containerType == container.containerType) isInIgnoreRoomObjTypes = true;
+                if (containerType == container.containerType)
+                    isInIgnoreRoomObjTypes = true;
             }
         }
         while (isInIgnoreRoomObjTypes);
@@ -277,13 +279,14 @@ public Tile GetTile(int x, int y)
     // the given room.
     public void PopulateClosestOtherRooms()
     {
-        foreach(Room room in GetRooms())
+        foreach (Room room in GetRooms())
         {
             List<Pair<Room, float>> closestRoomsByDistance = new List<Pair<Room, float>>();
 
-            foreach(Room compareToRoom in GetRooms())
+            foreach (Room compareToRoom in GetRooms())
             {
-                if (compareToRoom == room) continue;
+                if (compareToRoom == room)
+                    continue;
 
                 float dist = Vector2.Distance(new Vector2(room.x, room.y), new Vector2(compareToRoom.x, compareToRoom.y));
 
@@ -318,11 +321,11 @@ public Tile GetTile(int x, int y)
 
     public void ChangeTilesInArea(int x, int y, int radius, TileType targetTileType, TileType newTileType, Container container)
     {
-        for(int currX = x - radius; currX <= x + radius; currX++)
+        for (int currX = x - radius; currX <= x + radius; currX++)
         {
-            for(int currY = y - radius; currY <= y + radius; currY++)
+            for (int currY = y - radius; currY <= y + radius; currY++)
             {
-                if(GetTile(currX, currY) != null && GetTile(currX,currY).tileType == targetTileType)
+                if (GetTile(currX, currY) != null && GetTile(currX, currY).tileType == targetTileType)
                 {
                     CreateTileAndSetTile(currX, currY, container, newTileType);
                 }
@@ -362,17 +365,20 @@ public Tile GetTile(int x, int y)
     )
     {
         // This container has already been searched
-        if (hasSeenContainer.ContainsKey(startingContainer)) return false;
+        if (hasSeenContainer.ContainsKey(startingContainer))
+            return false;
 
         // This container can no longer be searched again
         hasSeenContainer.Add(startingContainer, true);
 
         // We have found that these two containers do connect
-        if (startingContainer == endingContainer) return true;
+        if (startingContainer == endingContainer)
+            return true;
 
-        foreach(Container nextContainer in startingContainer.connectedContainers)
+        foreach (Container nextContainer in startingContainer.connectedContainers)
         {
-            if (AreContainersConnected(nextContainer, endingContainer, hasSeenContainer)) return true;
+            if (AreContainersConnected(nextContainer, endingContainer, hasSeenContainer))
+                return true;
         }
 
         return false;
@@ -385,7 +391,7 @@ public Tile GetTile(int x, int y)
             //Containers contain themselves
             foreach (Container compareContainer in containers)
             {
-                if(!AreContainersConnected(currContainer, compareContainer))
+                if (!AreContainersConnected(currContainer, compareContainer))
                 {
                     return false;
                 }
@@ -394,7 +400,7 @@ public Tile GetTile(int x, int y)
         return true;
     }
 
-    
+
 
     /*
     public List<List<Container>> GetConnectedContainerGroups()

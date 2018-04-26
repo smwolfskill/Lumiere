@@ -29,8 +29,8 @@ public static class SettingsManager
                 settings = loaded;
             }
             return true;
-        } 
-        catch 
+        }
+        catch
         {
             //Problem with loading from file, so set default settings.
             settings = new Settings();
@@ -123,7 +123,7 @@ public static class SettingsManager
         return StringToKeyCode(settings.openMenu);
     }
     #endregion
-    
+
     /// <summary>
     /// Calls the getter for the corresponding setting.
     /// </summary>
@@ -132,20 +132,32 @@ public static class SettingsManager
     /// Throws an ArgumentException if the passed settingName param is invalid.</returns>
     public static KeyCode GetKey(string settingName)
     {
-        switch(settingName)
+        switch (settingName)
         {
-            case "moveUp": return GetMoveUp();
-            case "moveDown": return GetMoveDown();
-            case "moveLeft": return GetMoveLeft();
-            case "moveRight": return GetMoveRight();
-            case "walk": return GetWalk();
-            case "useItem": return GetUseItem();
-            case "dropItem": return GetDropItem();
-            case "pickupItem": return GetPickupItem();
-            case "openInventory": return GetOpenInventory();
-            case "stackModifier": return GetStackModifier();
-            case "openMenu": return GetOpenMenu();
-            default: throw new ArgumentException("settingName");
+        case "moveUp":
+            return GetMoveUp();
+        case "moveDown":
+            return GetMoveDown();
+        case "moveLeft":
+            return GetMoveLeft();
+        case "moveRight":
+            return GetMoveRight();
+        case "walk":
+            return GetWalk();
+        case "useItem":
+            return GetUseItem();
+        case "dropItem":
+            return GetDropItem();
+        case "pickupItem":
+            return GetPickupItem();
+        case "openInventory":
+            return GetOpenInventory();
+        case "stackModifier":
+            return GetStackModifier();
+        case "openMenu":
+            return GetOpenMenu();
+        default:
+            throw new ArgumentException("settingName");
         }
     }
 
@@ -157,28 +169,40 @@ public static class SettingsManager
     /// Returns false otherwise.</returns>
     public static bool SetKey(string key, string settingName)
     {
-        switch(settingName)
+        switch (settingName)
         {
-            case "moveUp": return SetMoveUp(key);
-            case "moveDown": return SetMoveDown(key);
-            case "moveLeft": return SetMoveLeft(key);
-            case "moveRight": return SetMoveRight(key);
-            case "walk": return SetWalk(key);
-            case "useItem": return SetUseItem(key);
-            case "dropItem": return SetDropItem(key);
-            case "pickupItem": return SetPickupItem(key);
-            case "openInventory": return SetOpenInventory(key);
-            case "stackModifier": return SetStackModifier(key);
-            case "openMenu": return SetOpenMenu(key);
-            default: return false;
+        case "moveUp":
+            return SetMoveUp(key);
+        case "moveDown":
+            return SetMoveDown(key);
+        case "moveLeft":
+            return SetMoveLeft(key);
+        case "moveRight":
+            return SetMoveRight(key);
+        case "walk":
+            return SetWalk(key);
+        case "useItem":
+            return SetUseItem(key);
+        case "dropItem":
+            return SetDropItem(key);
+        case "pickupItem":
+            return SetPickupItem(key);
+        case "openInventory":
+            return SetOpenInventory(key);
+        case "stackModifier":
+            return SetStackModifier(key);
+        case "openMenu":
+            return SetOpenMenu(key);
+        default:
+            return false;
         }
     }
 
-    
+
     #region Setters
     public static void SetDifficulty(Settings.Difficulty difficulty)
     {
-        settings.difficulty = difficulty; 
+        settings.difficulty = difficulty;
     }
 
     /// <summary>
@@ -189,7 +213,7 @@ public static class SettingsManager
     /// <returns>Returns true if the setting was set successfully.</returns>
     public static bool SetMoveUp(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.moveUp = key;
             return true;
@@ -199,7 +223,7 @@ public static class SettingsManager
 
     public static bool SetMoveDown(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.moveDown = key;
             return true;
@@ -209,7 +233,7 @@ public static class SettingsManager
 
     public static bool SetMoveLeft(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.moveLeft = key;
             return true;
@@ -219,7 +243,7 @@ public static class SettingsManager
 
     public static bool SetMoveRight(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.moveRight = key;
             return true;
@@ -229,7 +253,7 @@ public static class SettingsManager
 
     public static bool SetWalk(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.walk = key;
             return true;
@@ -239,7 +263,7 @@ public static class SettingsManager
 
     public static bool SetDropItem(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.dropItem = key;
             return true;
@@ -249,7 +273,7 @@ public static class SettingsManager
 
     public static bool SetPickupItem(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.pickupItem = key;
             return true;
@@ -259,7 +283,7 @@ public static class SettingsManager
 
     public static bool SetStackModifier(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.stackModifier = key;
             return true;
@@ -269,7 +293,7 @@ public static class SettingsManager
 
     public static bool SetOpenInventory(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.openInventory = key;
             return true;
@@ -279,7 +303,7 @@ public static class SettingsManager
 
     public static bool SetUseItem(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.useItem = key;
             return true;
@@ -289,7 +313,7 @@ public static class SettingsManager
 
     public static bool SetOpenMenu(string key)
     {
-        if(IsValidKeyCode(key))
+        if (IsValidKeyCode(key))
         {
             settings.openMenu = key;
             return true;
@@ -305,7 +329,7 @@ public static class SettingsManager
     /// <returns>Returns the KeyCode that correspondes to the passed key.</returns>
     private static KeyCode StringToKeyCode(string key)
     {
-        return (KeyCode) System.Enum.Parse(typeof(KeyCode), key, true);
+        return (KeyCode)System.Enum.Parse(typeof(KeyCode), key, true);
     }
 
     /// <summary>

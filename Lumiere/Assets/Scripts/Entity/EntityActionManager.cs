@@ -7,7 +7,7 @@ public class EntityActionManager : MonoBehaviour
     public Entity entity;
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         ExecuteValidActions(entity.actions);
     }
@@ -24,7 +24,7 @@ public class EntityActionManager : MonoBehaviour
             return false;
         }
 
-        foreach (EntityAction entityAction in entityActions) 
+        foreach (EntityAction entityAction in entityActions)
         {
 
             if (entityAction.Validate(this.gameObject))

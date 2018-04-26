@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthBarManager : MonoBehaviour {
+public class HealthBarManager : MonoBehaviour
+{
 
     RectTransform rt;
     RectTransform parentRt;
 
     public float percent = 1.0f;
 
-	void Start ()
+    void Start()
     {
         rt = GetComponent<RectTransform>();
         parentRt = transform.parent.GetComponent<RectTransform>();

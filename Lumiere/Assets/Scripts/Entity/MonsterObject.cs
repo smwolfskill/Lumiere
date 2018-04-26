@@ -7,11 +7,11 @@ public class MonsterObject : NPCObject
     private EnemyHealthBarManager healthManager;
     private Animator anim;
 
-	public MonsterObject(GameObject existingGameObject, float maxHealth) : base(existingGameObject, maxHealth)
-	{
+    public MonsterObject(GameObject existingGameObject, float maxHealth) : base(existingGameObject, maxHealth)
+    {
         healthManager = existingGameObject.GetComponentInChildren<EnemyHealthBarManager>();
         anim = this.gameObject.GetComponent<Animator>();
-	}
+    }
 
     public override void InflictDamage(float damageAmount)
     {
@@ -30,7 +30,7 @@ public class MonsterObject : NPCObject
         //Run death animation and drop loot items if any
         this.gameObject.GetComponent<MovementAnimation>().enabled = false;
         anim.SetTrigger("TDie");
-        PlaySound ();
+        PlaySound();
         this.isDead = true;
     }
 

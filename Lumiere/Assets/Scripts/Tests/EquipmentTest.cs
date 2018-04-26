@@ -65,24 +65,24 @@ class EquipmentTest
     [TestCase(null)]
     public void EquipmentSlotEquip(int slot)
     {
-        ArmorItem item = new ArmorItem ((EquipmentManager.EquipSlot) slot);
-        if (item != null) 
+        ArmorItem item = new ArmorItem((EquipmentManager.EquipSlot)slot);
+        if (item != null)
         {
-            for (int i = 0; i < Enum.GetNames(typeof(EquipmentManager.EquipSlot)).Length; i++) 
+            for (int i = 0; i < Enum.GetNames(typeof(EquipmentManager.EquipSlot)).Length; i++)
             {
-                if ((int) item.Slot == i) 
+                if ((int)item.Slot == i)
                 {
-                    Assert.IsTrue (equips.Equip (item));
+                    Assert.IsTrue(equips.Equip(item));
                     return;
                 }
-                    
+
             }
 
-            Assert.IsFalse (equips.Equip (item));
+            Assert.IsFalse(equips.Equip(item));
             return;
         }
 
-        Assert.IsFalse (equips.Equip (item));
+        Assert.IsFalse(equips.Equip(item));
     }
 
     /// <summary>
@@ -138,19 +138,19 @@ class EquipmentTest
     [TestCase(null)]
     public void EquipmentSlotDequip(int slot)
     {
-        ArmorItem item = new ArmorItem ((EquipmentManager.EquipSlot) slot);
-        EquippableItem dequippedItem = equips.DeEquip (item.Slot);
-        Assert.IsNull (dequippedItem);
-        equips.Equip (item);
-        dequippedItem = equips.DeEquip (item.Slot);
-        if (item == null || slot < 0 || slot >= Enum.GetNames (typeof(EquipmentManager.EquipSlot)).Length) 
+        ArmorItem item = new ArmorItem((EquipmentManager.EquipSlot)slot);
+        EquippableItem dequippedItem = equips.DeEquip(item.Slot);
+        Assert.IsNull(dequippedItem);
+        equips.Equip(item);
+        dequippedItem = equips.DeEquip(item.Slot);
+        if (item == null || slot < 0 || slot >= Enum.GetNames(typeof(EquipmentManager.EquipSlot)).Length)
         {
-            Assert.IsNull (dequippedItem);
+            Assert.IsNull(dequippedItem);
             return;
         }
 
-        Assert.IsNotNull (dequippedItem);
-        Assert.IsNull (equips.GetEquippedItem (item.Slot));
+        Assert.IsNotNull(dequippedItem);
+        Assert.IsNull(equips.GetEquippedItem(item.Slot));
 
     }
 

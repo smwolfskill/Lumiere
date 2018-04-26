@@ -7,7 +7,7 @@ using NUnit.Framework;
 /// <summary>
 /// Basic testing class for player animations.
 /// </summary>
-public class PlayerAnimationTest 
+public class PlayerAnimationTest
 {
     GameObject player;
     Rigidbody2D rigidbody;
@@ -28,7 +28,7 @@ public class PlayerAnimationTest
         anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animations/Player");
         playerAnimationController = anim.runtimeAnimatorController;
         //Debug.Log("RuntimeAnimController: " + anim.runtimeAnimatorController.ToString());
-        MovementAnimation moveAnim = player.AddComponent<MovementAnimation> ();
+        MovementAnimation moveAnim = player.AddComponent<MovementAnimation>();
     }
 
     [TearDown]

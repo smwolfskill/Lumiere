@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ExitButton : MonoBehaviour 
+public class ExitButton : MonoBehaviour
 {
     public Button button;
 
-	/// <summary>
+    /// <summary>
     /// Adds the function to be executed when the ExitButton is clicked
     /// </summary>
-	void Start()
+    void Start()
     {
         button.onClick.AddListener(OnClick);
-	}
+    }
 
     /// <summary>
     /// Closes the application.

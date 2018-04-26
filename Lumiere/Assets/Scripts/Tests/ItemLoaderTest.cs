@@ -7,7 +7,7 @@ using System.Collections;
 using NUnit.Framework.Internal;
 using System.IO;
 
-public class ItemLoaderTest 
+public class ItemLoaderTest
 {
     Sprite testSprite;
     GameItem testItem;
@@ -20,20 +20,20 @@ public class ItemLoaderTest
     public void Init()
     {
         Entity entity = Resources.Load<Entity>("GamePlayer");
-        testSprite = entity.GetSprite ();
-        Assert.IsNotNull (testSprite);
-        testItem = new GameItem (testSprite, null, "testName", "testDesc", 2.53, GameItem.ItemRarity.LEGENDARY, 4, 30, 22);
+        testSprite = entity.GetSprite();
+        Assert.IsNotNull(testSprite);
+        testItem = new GameItem(testSprite, null, "testName", "testDesc", 2.53, GameItem.ItemRarity.LEGENDARY, 4, 30, 22);
     }
 
     /// <summary>
     /// Called after all tests finish. Remove testing file.
     /// </summary>
     [OneTimeTearDown]
-    public void Cleanup() 
+    public void Cleanup()
     {
-        if (File.Exists (saveAndLoadFile))
+        if (File.Exists(saveAndLoadFile))
         {
-            File.Delete (saveAndLoadFile);
+            File.Delete(saveAndLoadFile);
         }
     }
 
@@ -43,10 +43,10 @@ public class ItemLoaderTest
     [Test]
     public void SaveAndLoadTest()
     {
-        bool saveSuccess = ItemLoader.SaveItem (testItem, saveAndLoadFile);
-        Assert.AreEqual (true, saveSuccess);
+        bool saveSuccess = ItemLoader.SaveItem(testItem, saveAndLoadFile);
+        Assert.AreEqual(true, saveSuccess);
         GameItem loadedItem = ItemLoader.LoadItem(saveAndLoadFile);
-        Assert.AreEqual (true, testItem.Equals (loadedItem));
+        Assert.AreEqual(true, testItem.Equals(loadedItem));
     }
 
 }

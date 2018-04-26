@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu (menuName = "Lumiere/Actions/EntityActions/PlayerMoveAction")]
+[CreateAssetMenu(menuName = "Lumiere/Actions/EntityActions/PlayerMoveAction")]
 public class PlayerMoveAction : EntityAction
 {
     public float speed = 1.0f;
@@ -25,14 +25,14 @@ public class PlayerMoveAction : EntityAction
 
     public override bool Execute(GameObject obj)
     {
-        Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D> ();
+        Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D>();
 
         //Safety check for rigidbody
         if (rigidbody == null)
         {
             return false;
         }
-            
+
         UpdateMovement();
         float movement_h = m_horiz;
         float movement_v = m_vert;
@@ -55,50 +55,50 @@ public class PlayerMoveAction : EntityAction
         bool vert = v_up ^ v_down; //XOR
         bool walking = Input.GetKey(SettingsManager.GetWalk());
         float max_d = max_dist; //max movement directly along an axis (x or y)
-        if(walking)
+        if (walking)
         {
             max_d = max_dist_walking;
         }
-        if(horiz && vert) //move diagonally
+        if (horiz && vert) //move diagonally
         {
             float eq_max = Mathf.Sqrt(2) / 2;
-            if(Mathf.Abs(m_horiz) < Mathf.Abs(m_vert)) //move more horizontally towards equilibrium (perfect diagonal)
+            if (Mathf.Abs(m_horiz) < Mathf.Abs(m_vert)) //move more horizontally towards equilibrium (perfect diagonal)
             {
-                if(h_left)
+                if (h_left)
                 {
-                    m_horiz -= 2 * direction_change_delta;    
+                    m_horiz -= 2 * direction_change_delta;
                 }
                 else
                 {
                     m_horiz += 2 * direction_change_delta;
                 }
 
-                if(m_horiz > eq_max)
+                if (m_horiz > eq_max)
                 {
                     m_horiz = eq_max;
                 }
-                else if(m_horiz < -eq_max)
+                else if (m_horiz < -eq_max)
                 {
                     m_horiz = -eq_max;
                 }
                 m_vert = Mathf.Sign(m_vert) * Mathf.Sqrt(1 - m_horiz * m_horiz);
             }
-            else if(Mathf.Abs(m_horiz) > Mathf.Abs(m_vert)) //move more vertically towards equilibrium (perfect diagonal)
+            else if (Mathf.Abs(m_horiz) > Mathf.Abs(m_vert)) //move more vertically towards equilibrium (perfect diagonal)
             {
-                if(v_down)
+                if (v_down)
                 {
-                    m_vert -= 2 * direction_change_delta;    
+                    m_vert -= 2 * direction_change_delta;
                 }
                 else
                 {
                     m_vert += 2 * direction_change_delta;
                 }
 
-                if(m_vert > eq_max)
+                if (m_vert > eq_max)
                 {
                     m_vert = eq_max;
                 }
-                else if(m_vert < -eq_max)
+                else if (m_vert < -eq_max)
                 {
                     m_vert = -eq_max;
                 }
@@ -106,7 +106,7 @@ public class PlayerMoveAction : EntityAction
             }
             else
             {
-                if(h_left)
+                if (h_left)
                 {
                     m_horiz = -eq_max;
                 }
@@ -114,7 +114,7 @@ public class PlayerMoveAction : EntityAction
                 {
                     m_horiz = eq_max;
                 }
-                if(v_down)
+                if (v_down)
                 {
                     m_vert = -eq_max;
                 }
@@ -124,10 +124,10 @@ public class PlayerMoveAction : EntityAction
                 }
             }
         }
-        else if(horiz) //only moving horizontally
+        else if (horiz) //only moving horizontally
         {
             float old_horiz = m_horiz;
-            if(h_left)
+            if (h_left)
             {
                 m_horiz = -max_d;
             }
@@ -135,20 +135,20 @@ public class PlayerMoveAction : EntityAction
             {
                 m_horiz = max_d;
             }
-            if(m_horiz > max_d)
+            if (m_horiz > max_d)
             {
                 m_horiz = max_d;
             }
-            else if(m_horiz < -max_d)
+            else if (m_horiz < -max_d)
             {
                 m_horiz = -max_d;
             }
             m_vert = 0.0f;
         }
-        else if(vert) //only moving vertically
+        else if (vert) //only moving vertically
         {
             float old_vert = m_vert;
-            if(v_down)
+            if (v_down)
             {
                 m_vert = -max_d;
             }
@@ -156,18 +156,18 @@ public class PlayerMoveAction : EntityAction
             {
                 m_vert = max_d;
             }
-            if(m_vert > max_d)
+            if (m_vert > max_d)
             {
                 m_vert = max_d;
             }
-            else if(m_vert < -max_d)
+            else if (m_vert < -max_d)
             {
                 m_vert = -max_d;
             }
             m_horiz = 0.0f;
         }
         //2. Apply distance multiplier
-        if(!horiz && !vert) //if not moving, slow to a stop.
+        if (!horiz && !vert) //if not moving, slow to a stop.
         {
             m_dist = m_dist / movement_loss_divider - movement_delta;
         }
@@ -175,11 +175,11 @@ public class PlayerMoveAction : EntityAction
         {
             m_dist = m_dist * movement_multiplier + movement_delta;
         }
-        if(m_dist < 0.0f)
+        if (m_dist < 0.0f)
         {
             m_dist = 0.0f;
         }
-        else if(m_dist > max_d)
+        else if (m_dist > max_d)
         {
             m_dist = max_d;
         }

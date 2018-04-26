@@ -9,12 +9,12 @@ public class CameraFollow : MonoBehaviour
     // Use this for initialization
     Vector3 offset;
 
-    void Start ()
+    void Start()
     {
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         if (target != null)
         {

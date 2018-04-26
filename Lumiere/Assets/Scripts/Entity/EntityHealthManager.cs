@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EntityHealthManager : MonoBehaviour 
+public class EntityHealthManager : MonoBehaviour
 {
     public EntityObject entityObj;
     private ParticleSystem damagedParticles;
@@ -17,15 +17,15 @@ public class EntityHealthManager : MonoBehaviour
 
     public void InflictDamage(float damageAmount)
     {
-        if (entityObj != null) 
+        if (entityObj != null)
         {
             if (damagedParticles != null)
             {
                 damagedParticles.Play();
-                AudioSource damageAudioSource = damagedParticles.GetComponent<AudioSource> ();
-                if (damageAudioSource != null) 
+                AudioSource damageAudioSource = damagedParticles.GetComponent<AudioSource>();
+                if (damageAudioSource != null)
                 {
-                    damageAudioSource.Play ();
+                    damageAudioSource.Play();
                 }
             }
             if (damageUI != null)
@@ -37,7 +37,7 @@ public class EntityHealthManager : MonoBehaviour
                 damageTransform.position = Camera.main.WorldToScreenPoint(transform.position);
                 damageAnimator.SetTrigger("Pop");
             }
-            entityObj.InflictDamage (damageAmount);
+            entityObj.InflictDamage(damageAmount);
 
         }
     }

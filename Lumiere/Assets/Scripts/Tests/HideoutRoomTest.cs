@@ -7,7 +7,7 @@ using NUnit.Framework;
 /// <summary>
 /// Basic testing class for hideout room generation.
 /// </summary>
-public class HideoutRoomTest 
+public class HideoutRoomTest
 {
     HideoutRoomType hideoutRoomType;
     Room hideoutRoom;
@@ -18,33 +18,33 @@ public class HideoutRoomTest
     [SetUp]
     public void Init()
     {
-        mapGameObject = new GameObject ("Map");
-        roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
-        Map map = new Map (50, 50, 1, mapGameObject, roomProperties, 1, 1);
-        hideoutRoomType = Resources.Load<HideoutRoomType> ("Rooms/HideoutRoom");
-        hideoutRoom = new Room (map, 0, 0, 30, 30, hideoutRoomType);
-        Assert.IsNotNull (map);
-        Assert.IsNotNull (hideoutRoom);
-        Assert.IsNotNull (hideoutRoomType);
+        mapGameObject = new GameObject("Map");
+        roomProperties = Resources.Load<RoomProperties>("RoomProperties");
+        Map map = new Map(50, 50, 1, mapGameObject, roomProperties, 1, 1);
+        hideoutRoomType = Resources.Load<HideoutRoomType>("Rooms/HideoutRoom");
+        hideoutRoom = new Room(map, 0, 0, 30, 30, hideoutRoomType);
+        Assert.IsNotNull(map);
+        Assert.IsNotNull(hideoutRoom);
+        Assert.IsNotNull(hideoutRoomType);
     }
 
     [TearDown]
     public void Cleanup()
     {
-        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject> ();
-        foreach (GameObject gameObject in gameObjects) 
+        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject gameObject in gameObjects)
         {
-            GameObject.Destroy (gameObject);
+            GameObject.Destroy(gameObject);
         }
 
-        if (hideoutRoomType != null) 
+        if (hideoutRoomType != null)
         {
-            Resources.UnloadAsset (hideoutRoomType);
+            Resources.UnloadAsset(hideoutRoomType);
         }
 
-        if (mapGameObject != null) 
+        if (mapGameObject != null)
         {
-            GameObject.Destroy (mapGameObject);
+            GameObject.Destroy(mapGameObject);
         }
 
         map = null;
@@ -57,8 +57,8 @@ public class HideoutRoomTest
     [Test]
     public void TestTilesSpawned()
     {
-        hideoutRoom.GenRoom (5 / 2);
-        Assert.IsTrue (hideoutRoom.tiles.Count > 0);
+        hideoutRoom.GenRoom(5 / 2);
+        Assert.IsTrue(hideoutRoom.tiles.Count > 0);
     }
 
     /// <summary>
@@ -67,8 +67,8 @@ public class HideoutRoomTest
     [Test]
     public void TestRoomInGame()
     {
-        GameObject room = GameObject.Find ("HideoutRoom");
-        Assert.IsNotNull (room);
+        GameObject room = GameObject.Find("HideoutRoom");
+        Assert.IsNotNull(room);
     }
 
 }

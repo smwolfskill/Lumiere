@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlgoRunner : MonoBehaviour {
+public class AlgoRunner : MonoBehaviour
+{
 
     public GenAlgo genAlgo;
 
@@ -16,12 +17,12 @@ public class AlgoRunner : MonoBehaviour {
 
     private Map map;
 
-    void Start ()
+    void Start()
     {
 
         //map = new Map(width, height, tileOffset, gameObject, roomProperties);
         //genAlgo.GenerateMap(map);
-        
+
     }
 
 }

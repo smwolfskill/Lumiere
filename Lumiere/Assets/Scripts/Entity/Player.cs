@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu (menuName = "Lumiere/Entity/Player")]
-public class Player : Entity 
+[CreateAssetMenu(menuName = "Lumiere/Entity/Player")]
+public class Player : Entity
 {
     [SerializeField]
     private float _FisticuffDamage;
@@ -24,35 +24,35 @@ public class Player : Entity
         }
     }
 
-	public GameObject AttackAnimationObject
-	{
-		get;
-		private set;
-	}
+    public GameObject AttackAnimationObject
+    {
+        get;
+        private set;
+    }
 
     override public GameObject Spawn(Map map, Vector2 location)
     {
-        GameObject player = base.Spawn (map, location);
+        GameObject player = base.Spawn(map, location);
         player.tag = "Player";
-        player.layer = LayerMask.NameToLayer ("Player");
+        player.layer = LayerMask.NameToLayer("Player");
 
-        Animator anim = player.AddComponent<Animator> ();
+        Animator anim = player.AddComponent<Animator>();
         anim.runtimeAnimatorController = animatorController;
-        MovementAnimation moveAnim = player.AddComponent<MovementAnimation> ();
+        MovementAnimation moveAnim = player.AddComponent<MovementAnimation>();
 
-		AttackAnimationObject = CreateAttackAnimGameObject();
-		AttackAnimationObject.transform.SetParent(player.transform);
-		AttackAnimationObject.transform.localPosition = Vector3.zero;
+        AttackAnimationObject = CreateAttackAnimGameObject();
+        AttackAnimationObject.transform.SetParent(player.transform);
+        AttackAnimationObject.transform.localPosition = Vector3.zero;
 
-        EntityActionManager actionManager = player.AddComponent<EntityActionManager> ();
+        EntityActionManager actionManager = player.AddComponent<EntityActionManager>();
         actionManager.entity = this;
         PlayerObject entityObj = new PlayerObject(player, maxHealth);
         this.entityObject = entityObj;
         entityObj.entityDropGen = entityDropGen;
-        EntityHealthManager healthManagerTest = player.GetComponent<EntityHealthManager> ();
+        EntityHealthManager healthManagerTest = player.GetComponent<EntityHealthManager>();
         if (healthManagerTest == null)
         {
-            EntityHealthManager healthManager = player.AddComponent<EntityHealthManager> ();
+            EntityHealthManager healthManager = player.AddComponent<EntityHealthManager>();
             healthManager.entityObj = entityObj;
         }
         else
@@ -65,11 +65,11 @@ public class Player : Entity
         return player;
     }
 
-	private GameObject CreateAttackAnimGameObject()
-	{
-		GameObject attackAnimObj = new GameObject("PlayerAttackAnim", typeof(SpriteRenderer), typeof(Animation), typeof(AttackAnimation));
-        attackAnimObj.layer = LayerMask.NameToLayer ("Player");
-		//attackAnimObj.GetComponent<SpriteRenderer>().enabled = false;
-		return attackAnimObj;
-	}
+    private GameObject CreateAttackAnimGameObject()
+    {
+        GameObject attackAnimObj = new GameObject("PlayerAttackAnim", typeof(SpriteRenderer), typeof(Animation), typeof(AttackAnimation));
+        attackAnimObj.layer = LayerMask.NameToLayer("Player");
+        //attackAnimObj.GetComponent<SpriteRenderer>().enabled = false;
+        return attackAnimObj;
+    }
 }

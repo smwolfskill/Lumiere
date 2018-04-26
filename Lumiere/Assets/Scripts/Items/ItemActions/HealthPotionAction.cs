@@ -13,7 +13,7 @@ public class HealthPotionAction : ItemAction
     public override bool Execute(GameObject obj)
     {
         bool baseSuccess = base.Execute(obj);
-        if(!baseSuccess)
+        if (!baseSuccess)
         {
             return false;
         }

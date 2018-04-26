@@ -4,34 +4,34 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Experimental.UIElements;
 
-public class SettingsButton : MonoBehaviour 
+public class SettingsButton : MonoBehaviour
 {
     public string settingName;
     public UnityEngine.UI.Button button;
     private bool pressed = false;   //true indicates button has been pressed
     private bool sameClick = false; //true indicates that it's the same instance of Mouse0 being clicked.
-    
+
     /// <summary>
     /// Initialized variables used by buttons on the SettingsScreen
     /// </summary>
-    void Start () 
+    void Start()
     {
         pressed = false;
         sameClick = false;
         button.onClick.AddListener(OnClick);
-        if(!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
+        if (!SettingsManager.loaded) //TODO: load settings in main game loop, NOT here.
         {
             SettingsManager.LoadSettings(); //load from default path
         }
         button.GetComponentInChildren<Text>().text = SettingsManager.GetKey(settingName).ToString();
     }
-    
+
     /// <summary>
     /// Checks if a key was pressed, and if so updates the setting to that key.
     /// </summary>
-    void Update ()
+    void Update()
     {
-        if(pressed)
+        if (pressed)
         {
             string key = "";
             bool keyPressed = false;
@@ -40,15 +40,15 @@ public class SettingsButton : MonoBehaviour
             {
                 if (e.rawType == EventType.MouseDown)
                 {
-                    if(sameClick)
+                    if (sameClick)
                     {
                         sameClick = false;
                     }
-                    else 
+                    else
                     {
                         keyPressed = true;
                         key = "Mouse" + e.button;
-                        if(e.button == 0)
+                        if (e.button == 0)
                         {
                             sameClick = true;
                         }
@@ -64,10 +64,10 @@ public class SettingsButton : MonoBehaviour
                 }
             }
 
-            if(keyPressed)
+            if (keyPressed)
             {
                 Debug.Log("Setting key '" + key + "'");
-                if(!SettingsManager.SetKey(key, settingName))
+                if (!SettingsManager.SetKey(key, settingName))
                 {
                     Debug.Log("Setting failed!");
                 }
@@ -85,7 +85,7 @@ public class SettingsButton : MonoBehaviour
     /// </summary>
     void OnClick()
     {
-        if(!sameClick)
+        if (!sameClick)
         {
             //Debug.Log("pressed");
             pressed = true;

@@ -15,7 +15,7 @@ public class ItemSpawnerTest
     [SetUp]
     public void Init()
     {
-        if(ItemSpawner.itemSpriteLists == null)
+        if (ItemSpawner.itemSpriteLists == null)
         {
             ItemSpawner.LoadItemSprites();
         }
@@ -29,7 +29,7 @@ public class ItemSpawnerTest
     {
         int firstID = ItemSpawner.GenerateItemID();
         int secondID = ItemSpawner.GenerateItemID();
-        Assert.AreEqual(++firstID,secondID);
+        Assert.AreEqual(++firstID, secondID);
     }
 
     /// <summary>
@@ -43,8 +43,8 @@ public class ItemSpawnerTest
     [TestCase(GameItem.ItemRarity.LEGENDARY, 1500.0)]
     public void ItemValue(GameItem.ItemRarity rarity, double value)
     {
-    	GameItem valueTestItem = new GameItem(null, null, "Generic Item", "I am an Item.", 10, rarity, 5, 10, 2);
-    	Assert.AreEqual(value,ItemSpawner.GenerateItemValue(valueTestItem));
+        GameItem valueTestItem = new GameItem(null, null, "Generic Item", "I am an Item.", 10, rarity, 5, 10, 2);
+        Assert.AreEqual(value, ItemSpawner.GenerateItemValue(valueTestItem));
     }
 
     /// <summary>
@@ -72,8 +72,8 @@ public class ItemSpawnerTest
     [TestCase(EquipmentManager.EquipSlot.RING, "A ring you can wear around your finger. Provides defence.")]
     public void TestArmorDescription(EquipmentManager.EquipSlot slot, string description)
     {
-    	ArmorItem armor = new ArmorItem(slot);
-    	Assert.AreEqual(description, ItemSpawner.GenerateArmorDesc(5,armor));
+        ArmorItem armor = new ArmorItem(slot);
+        Assert.AreEqual(description, ItemSpawner.GenerateArmorDesc(5, armor));
     }
 
     /// <summary>
@@ -82,8 +82,8 @@ public class ItemSpawnerTest
     [Test]
     public void TestWeaponDescription()
     {
-    	Assert.AreEqual("A sword, you can stab monsters with it.", ItemSpawner.GenerateWeaponDesc(5, new MeleeWeapon()));
-    	Assert.AreEqual("A ranged weapon, you can hit things at a distance with it.", ItemSpawner.GenerateWeaponDesc(5, new RangedWeapon()));
+        Assert.AreEqual("A sword, you can stab monsters with it.", ItemSpawner.GenerateWeaponDesc(5, new MeleeWeapon()));
+        Assert.AreEqual("A ranged weapon, you can hit things at a distance with it.", ItemSpawner.GenerateWeaponDesc(5, new RangedWeapon()));
     }
 
     /// <summary>
@@ -98,26 +98,26 @@ public class ItemSpawnerTest
     [TestCase(EquipmentManager.EquipSlot.RING, 4)]
     public void TestArmorName(EquipmentManager.EquipSlot slot, int armorRatingPosition)
     {
-    	ArmorItem armor = new ArmorItem(slot);
-    	double[] minArmor = new double[6];
-    	double[] maxArmor = new double[6];
-    	minArmor[armorRatingPosition] = 1;
-    	maxArmor[armorRatingPosition] = 5;
+        ArmorItem armor = new ArmorItem(slot);
+        double[] minArmor = new double[6];
+        double[] maxArmor = new double[6];
+        minArmor[armorRatingPosition] = 1;
+        maxArmor[armorRatingPosition] = 5;
 
-    	double[] minSpeed = new double[6];
-    	double[] maxSpeed = new double[6];
-    	minSpeed[armorRatingPosition] = 1;
-    	maxSpeed[armorRatingPosition] = 5;
+        double[] minSpeed = new double[6];
+        double[] maxSpeed = new double[6];
+        minSpeed[armorRatingPosition] = 1;
+        maxSpeed[armorRatingPosition] = 5;
 
-    	double[] minDamage = new double[6];
-    	double[] maxDamage = new double[6];
-    	minDamage[armorRatingPosition] = 1;
-    	maxDamage[armorRatingPosition] = 5;
+        double[] minDamage = new double[6];
+        double[] maxDamage = new double[6];
+        minDamage[armorRatingPosition] = 1;
+        maxDamage[armorRatingPosition] = 5;
 
-    	string name = ItemSpawner.GenerateArmorName(5, armor, minArmor, maxArmor, minSpeed, maxSpeed, minDamage, maxDamage);
-   	}
+        string name = ItemSpawner.GenerateArmorName(5, armor, minArmor, maxArmor, minSpeed, maxSpeed, minDamage, maxDamage);
+    }
 
-   	/// <summary>
+    /// <summary>
     /// Test the generation of armor name generation by rarity
     /// </summary>
     [Test]
@@ -128,39 +128,39 @@ public class ItemSpawnerTest
     [TestCase(EquipmentManager.EquipSlot.HEAD, 0, GameItem.ItemRarity.LEGENDARY, "King's")]
     public void TestArmorNameByRarity(EquipmentManager.EquipSlot slot, int armorRatingPosition, GameItem.ItemRarity rarity, string description)
     {
-    	ArmorItem armor = new ArmorItem(rarity, slot);
-    	double[] minArmor = new double[6];
-    	double[] maxArmor = new double[6];
-    	minArmor[armorRatingPosition] = 1;
-    	maxArmor[armorRatingPosition] = 5;
+        ArmorItem armor = new ArmorItem(rarity, slot);
+        double[] minArmor = new double[6];
+        double[] maxArmor = new double[6];
+        minArmor[armorRatingPosition] = 1;
+        maxArmor[armorRatingPosition] = 5;
 
-    	double[] minSpeed = new double[6];
-    	double[] maxSpeed = new double[6];
-    	minSpeed[armorRatingPosition] = 1;
-    	maxSpeed[armorRatingPosition] = 5;
+        double[] minSpeed = new double[6];
+        double[] maxSpeed = new double[6];
+        minSpeed[armorRatingPosition] = 1;
+        maxSpeed[armorRatingPosition] = 5;
 
-    	double[] minDamage = new double[6];
-    	double[] maxDamage = new double[6];
-    	minDamage[armorRatingPosition] = 1;
-    	maxDamage[armorRatingPosition] = 5;
+        double[] minDamage = new double[6];
+        double[] maxDamage = new double[6];
+        minDamage[armorRatingPosition] = 1;
+        maxDamage[armorRatingPosition] = 5;
 
-    	string name = ItemSpawner.GenerateArmorName(5, armor, minArmor, maxArmor, minSpeed, maxSpeed, minDamage, maxDamage);
-    	string[] ssize = name.Split(null);
-    	Assert.AreEqual(ssize[0], description);
-   	
-   	}
+        string name = ItemSpawner.GenerateArmorName(5, armor, minArmor, maxArmor, minSpeed, maxSpeed, minDamage, maxDamage);
+        string[] ssize = name.Split(null);
+        Assert.AreEqual(ssize[0], description);
 
-   	/// <summary>
+    }
+
+    /// <summary>
     /// Test the main loot bag function
     /// </summary>
     [Test]
     public void TestGenerateLootBag()
     {
-    	GameItem[] loot = ItemSpawner.GenerateLootBag(5,5);
-    	for(int i = 0; i < loot.Length; i++)
-    	{
-    		Assert.IsNotNull(loot[i]);
-    	}
-   	
-   	}
+        GameItem[] loot = ItemSpawner.GenerateLootBag(5, 5);
+        for (int i = 0; i < loot.Length; i++)
+        {
+            Assert.IsNotNull(loot[i]);
+        }
+
+    }
 }

@@ -25,7 +25,7 @@ public class MonsterMovementTest
         randomMove = Resources.Load<EntityAction>("RandomMove");
         rigidbody = null;
 
-        monsterObject = Monster.CreateInstance<Monster> ();
+        monsterObject = Monster.CreateInstance<Monster>();
         monsterObject.actions = new EntityAction[] { randomMove };
         entityActionManager.entity = monsterObject;
 
@@ -85,7 +85,10 @@ public class MonsterMovementTest
     public void TestSuccessMove()
     {
         monster.SetActive(true);
-        if (rigidbody == null) { InitRigidbody(); }
+        if (rigidbody == null)
+        {
+            InitRigidbody();
+        }
         bool executed = randomMove.Execute(monster);
         Assert.AreEqual(true, executed);
     }
@@ -98,7 +101,10 @@ public class MonsterMovementTest
     public IEnumerator TestChangePosition()
     {
         monster.SetActive(true);
-        if (rigidbody == null) { InitRigidbody(); }
+        if (rigidbody == null)
+        {
+            InitRigidbody();
+        }
         Vector2 originalPosition = rigidbody.position;
         randomMove.Execute(monster);
         yield return new WaitForFixedUpdate();

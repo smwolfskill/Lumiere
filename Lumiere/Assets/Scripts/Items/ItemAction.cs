@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ItemAction : EntityAction 
+public abstract class ItemAction : EntityAction
 {
     public int itemID;
 
@@ -27,12 +27,12 @@ public abstract class ItemAction : EntityAction
     /// <returns>Return false if no item clicked upon, or player not in range of the object.</returns>
     public override bool Validate(GameObject obj)
     {
-        if(UseItemInput())
+        if (UseItemInput())
         {
             //Debug.Log("use item input");
             GameObject panel = GameObject.FindGameObjectWithTag("InventoryPanel");
             invPanel = panel.GetComponent<InventoryPanel>();
-            if(!invPanel.Visible)
+            if (!invPanel.Visible)
             {
                 return false;
             }
@@ -56,7 +56,7 @@ public abstract class ItemAction : EntityAction
 
     public override bool Execute(GameObject obj)
     {
-        if(invPanel == null)
+        if (invPanel == null)
         {
             return false;
         }
