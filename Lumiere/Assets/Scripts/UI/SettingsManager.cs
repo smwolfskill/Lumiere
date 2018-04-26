@@ -112,9 +112,15 @@ public static class SettingsManager
     {
         return StringToKeyCode(settings.useItem);
     }
+
     public static Settings.Difficulty GetDifficulty()
     {
         return settings.difficulty;
+    }
+
+    public static KeyCode GetOpenMenu()
+    {
+        return StringToKeyCode(settings.openMenu);
     }
     #endregion
     
@@ -138,6 +144,7 @@ public static class SettingsManager
             case "pickupItem": return GetPickupItem();
             case "openInventory": return GetOpenInventory();
             case "stackModifier": return GetStackModifier();
+            case "openMenu": return GetOpenMenu();
             default: throw new ArgumentException("settingName");
         }
     }
@@ -162,6 +169,7 @@ public static class SettingsManager
             case "pickupItem": return SetPickupItem(key);
             case "openInventory": return SetOpenInventory(key);
             case "stackModifier": return SetStackModifier(key);
+            case "openMenu": return SetOpenMenu(key);
             default: return false;
         }
     }
@@ -274,6 +282,16 @@ public static class SettingsManager
         if(IsValidKeyCode(key))
         {
             settings.useItem = key;
+            return true;
+        }
+        return false;
+    }
+
+    public static bool SetOpenMenu(string key)
+    {
+        if(IsValidKeyCode(key))
+        {
+            settings.openMenu = key;
             return true;
         }
         return false;

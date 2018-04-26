@@ -10,7 +10,6 @@ public class NextLevel : MonoBehaviour {
     {
         if(collision.gameObject.tag == "Player")
         {
-            Debug.Log("a");
             mapManager.DestroyMap();
             mapManager.GenMap();
         }
