@@ -106,6 +106,7 @@ public class UIBehavior : MonoBehaviour
         }
         else
         {
+            Debug.Log("restoring timeScale of " + menu_restoreTime.ToString());
             HideUI();
             Time.timeScale = menu_restoreTime;
         }

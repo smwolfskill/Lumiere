@@ -38,17 +38,9 @@ public class UINavigationBehavior : MonoBehaviour
                 LoadSettingsToButtons();
                 break;
             case "UIGameOverButton": //reload the scene to ensure the game is entirely reset.
-                /*GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if(player != null)
-                {
-                Debug.Log("player exists");
-                    Animator anim = player.GetComponent<Animator>();
-                    //PlayerObject playerObject = player.GetComponent<EntityHealthManager>().entityObj;
-                    anim.SetTrigger("TDie");
-                    GameObject.Destroy(player, 1f);
-                }*/
                 Scene scene = SceneManager.GetActiveScene(); //current scene
                 SceneManager.LoadScene(scene.name, LoadSceneMode.Single);
+                Time.timeScale = 1.0f; //restore default passage of time if set otherwise
                 break;
         }
 
