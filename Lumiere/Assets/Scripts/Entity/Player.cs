@@ -33,8 +33,9 @@ public class Player : Entity
     override public GameObject Spawn(Map map, Vector2 location)
     {
         GameObject player = base.Spawn (map, location);
-
         player.tag = "Player";
+        player.layer = LayerMask.NameToLayer ("Player");
+
         Animator anim = player.AddComponent<Animator> ();
         anim.runtimeAnimatorController = animatorController;
         MovementAnimation moveAnim = player.AddComponent<MovementAnimation> ();

@@ -61,11 +61,11 @@ public class MapManager : MonoBehaviour
         //Enemy layer = 9
 
         GameObject[] gameObjectArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-        foreach(GameObject gameObject in gameObjectArray)
+        foreach(GameObject gObject in gameObjectArray)
         {
-            if(gameObject.layer == 8 || gameObject.layer == 0 || gameObject.layer == 9)
+            if(gObject.layer == LayerMask.NameToLayer("DroppedItems") || gObject.layer == LayerMask.NameToLayer("Default") || gObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Destroy(gameObject);
+                Destroy(gObject);
             }
         }
     }
