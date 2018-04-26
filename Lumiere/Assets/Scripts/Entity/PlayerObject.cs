@@ -31,6 +31,9 @@ public class PlayerObject : EntityObject
         GameObject hotbarPanel = GameObject.FindGameObjectWithTag("HotbarPanel");
         hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);
 
+        //Set mass to 0 to prevent player from pushing around monsters
+        Rigidbody2D playerRigidbody = this.gameObject.GetComponent<Rigidbody2D>();
+        playerRigidbody.mass = 0.0f;
         anim = this.gameObject.GetComponent<Animator>();
     }
 
