@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public abstract class Entity : BaseObject 
 {
@@ -10,34 +11,6 @@ public abstract class Entity : BaseObject
     public LinkedList<GameObject> nearbyItems = new LinkedList<GameObject>(); //list of items that this entity could pickup if desired. Will be used by AI mainly
     public EntityObject entityObject;
     public EntityDropGen entityDropGen;
-
-    /// <summary>
-    /// Holds fields governing type, quality and quantity of items dropped upon entity death.
-    /// </summary>
-    [System.Serializable]
-    public class EntityDropGen
-    {
-        public int quality = 1;
-        public int minItems;
-        public int maxItems;
-        public GameItem.ItemRarity minRarity;
-        public double healthPotionChance; //percentage chance of one item dropped being a health potion, in range [0, 1] inclusive.
-
-        public EntityDropGen(int quality, int minItems, int maxItems, GameItem.ItemRarity minRarity, double healthPotionChance)
-        {
-            this.quality = quality;
-            this.minItems = minItems;
-            this.maxItems = maxItems;
-            this.minRarity = minRarity;
-            this.healthPotionChance = healthPotionChance;
-        }
-
-        public GameItem[] GenerateLoot()
-        {
-            return ItemSpawner.GenerateLootBag(-1, quality, minItems, maxItems, minRarity, false, healthPotionChance);
-        }
-    }
-
 
     /// <summary>
     /// Spawn the entity at the specified location.
@@ -65,16 +38,7 @@ public abstract class Entity : BaseObject
         rigidbody.angularDrag = 0f;
         rigidbody.freezeRotation = true;
 
-
-        //EntityObject entityObj = new EntityObject(entity, maxHealth);
-        // TODO: add to map
-
-        // EntityObject eo = new EntityObject(entity);
-        // after this function terminates, we lose the pointer to eo!
-        // so, we need to hold onto it; our solution: put it into map
-        //        to do that, add an array in map: EntityObject[] entityObjects;
-        //        Map::addEntityObject()
-        //        Map::removeEntityObject()
+        entityDropGen.SetLevelAndDifficulty(map); //Update entity's loot gen parameters with this map's level & difficulty.
 
         return entity;
     }
