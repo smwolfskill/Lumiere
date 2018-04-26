@@ -355,9 +355,11 @@ static class ItemSpawner
     public static UsableItem GenerateHealthPotion(int seed, int quality, GameItem.ItemRarity rarity, bool useSeed = false)
     {
         //TODO: incorporate quality more by allowing custom healing amounts
+        //Allow 1 more potential potion every 5 levels, up to the max stack of course.
         Random random = GetRandom(seed, useSeed);
         int potionMaxStack = 5;
-        int quantity = random.Next(1, potionMaxStack - 1);
+        int maxAmount = UnityEngine.Mathf.Min((int) (quality / 5) + 1, potionMaxStack);
+        int quantity = random.Next(1, maxAmount + 1);
         UsableItem healthPotion = new UsableItem(null, null, "Health Potion", "A health potion.", 1, rarity, quantity, potionMaxStack, 100, "HealthPotionAction");
         SetItemSprites(seed, "Health Potion", healthPotion, useSeed);
         return healthPotion;

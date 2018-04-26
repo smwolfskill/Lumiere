@@ -51,7 +51,7 @@ public class EquipmentItemButton : MonoBehaviour, IPointerEnterHandler, IPointer
     void TaskOnClick()
     {
         //TODO: Do anything on item click?
-        Debug.Log("TODO: anything on item click?");
+        //Debug.Log("TODO: anything on item click?");
     }
 
     public void OnPointerEnter(PointerEventData eventData)
