@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class UINavigationBehavior : MonoBehaviour 
 {
-	public GameObject nextScreen;
+	public GameObject[] nextScreens;
 	public Button button;
 	public Button[] settingsButtons;
 	public GameObject[] currentScreens;
@@ -36,9 +37,14 @@ public class UINavigationBehavior : MonoBehaviour
             case "UICancelButton": //same as revert, but exits Settings screen after clicking
                 LoadSettingsToButtons();
                 break;
+            case "UIGameOverButton": //reload the scene to ensure the game is entirely reset.
+                Scene scene = SceneManager.GetActiveScene(); //current scene
+                SceneManager.LoadScene(scene.name, LoadSceneMode.Single);
+                Time.timeScale = 1.0f; //restore default passage of time if set otherwise
+                break;
         }
 
-		if(nextScreen == null || (nextScreen != null && nextScreen.tag != "UISettingsScreen"))
+        if(nextScreens == null)
 		{
             //Hide all current screens
             foreach(GameObject screen in currentScreens)
@@ -46,13 +52,34 @@ public class UINavigationBehavior : MonoBehaviour
                 screen.SetActive(false);
             }
 		}
-		if(nextScreen != null)
+		else
 		{
-            //Show next screen
-			nextScreen.SetActive(true);
-		}
+            //1. Hide current screens if one of next screens is the settings screen
+            bool nextIsSettingsScreen = false;
+            foreach(GameObject screen in nextScreens)
+            {
+                if(screen.tag == "UISettingsScreen")
+                {
+                    nextIsSettingsScreen = true;
+                    break;
+                }
+            }
+            if(!nextIsSettingsScreen)
+            {
+                //Hide all current screens, unless going to settings screen
+                foreach(GameObject screen in currentScreens)
+                {
+                    screen.SetActive(false);
+                }
+            }
 
-		
+            //2. Show next screens
+            foreach(GameObject screen in nextScreens)
+            {
+                screen.SetActive(true);
+            }
+			//nextScreen.SetActive(true);
+		}
 	}
 
 	/// <summary>

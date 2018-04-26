@@ -102,7 +102,16 @@ public class Room : Container
 
         // Multiply location by tile offset to account for tile spacing or tile sizes
         Vector2 locationToSpawn = new Vector2(tileLocation.x * map.tileOffset, tileLocation.y * map.tileOffset);
-        GameObject playerGameObject = playerToSpawn.Spawn(map, locationToSpawn);
+        GameObject playerGameObject = GameObject.FindGameObjectWithTag ("Player");
+        if (playerGameObject == null) 
+        {
+            playerGameObject = playerToSpawn.Spawn (map, locationToSpawn);
+        } 
+        else 
+        {
+            playerGameObject.transform.position = locationToSpawn; 
+        }
+
 
         return (PlayerObject)playerGameObject.GetComponent<EntityObjectManager>().entityObject;
     }

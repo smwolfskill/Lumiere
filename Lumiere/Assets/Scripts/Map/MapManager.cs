@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class MapManager : MonoBehaviour
 
     private int levelNumber = 1;
     private const float difficulty = 1.5f;
+    private Text levelText;
 
     private const int initalMapSize = 40;
     private const float mapSizeIncreaseFactor = 3;
@@ -24,6 +26,7 @@ public class MapManager : MonoBehaviour
     void Start()
     {
         levelNumber = 1;
+        levelText = GameObject.FindGameObjectWithTag ("UILevel").GetComponent<Text>();
 
         if(GenMapOnStart)
         {
@@ -35,6 +38,7 @@ public class MapManager : MonoBehaviour
 
     public void GenMap()
     {
+        UpdateLevelText ();
         currMap = new GameObject();
 
         int width = (int)(initalMapSize + 1 * mapSizeIncreaseFactor);
@@ -47,6 +51,7 @@ public class MapManager : MonoBehaviour
         complexGenAlgo.GenerateMap(map, ExitDoor);
 
         levelNumber++;
+
     }
 
     public void DestroyMap()
@@ -56,12 +61,25 @@ public class MapManager : MonoBehaviour
         //Enemy layer = 9
 
         GameObject[] gameObjectArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-        foreach(GameObject gameObject in gameObjectArray)
+        foreach(GameObject gObject in gameObjectArray)
         {
-            if(gameObject.layer == 8 || gameObject.layer == 0 || gameObject.layer == 9)
+            if(gObject.layer == LayerMask.NameToLayer("DroppedItems") || gObject.layer == LayerMask.NameToLayer("Default") || gObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Destroy(gameObject);
+                Destroy(gObject);
             }
         }
+    }
+
+    /// <summary>
+    /// Updates the level text.
+    /// </summary>
+    private void UpdateLevelText()
+    {
+        if (levelText == null) 
+        {
+            levelText = GameObject.FindGameObjectWithTag ("UILevel").GetComponent<Text>();
+        }
+
+        levelText.text = "Current level: " + levelNumber;
     }
 }

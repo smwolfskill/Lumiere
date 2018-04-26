@@ -7,10 +7,14 @@ public class UIBehavior : MonoBehaviour
 {
     public GameObject inventoryPanel;
     public GameObject tooltip;
+    public GameObject uiScreensPanel;
+    public GameObject menuPanel;
     public bool inventoryVisible = false;
+    public bool menuVisible = false;
 
-    private bool lastToggleInventoryInput = false; //last input to toggle inventory
     private Canvas canvas;
+    private UIScreenManager screenManager = null;
+    private float menu_restoreTime = 1.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -20,15 +24,18 @@ public class UIBehavior : MonoBehaviour
             SettingsManager.LoadSettings(); //load from default path
         }
         canvas = GetComponent<Canvas>();
-        //TODO in future iterations: add other methods of input which would open/close UI (e.g. Esc to open the menu).
+        if(uiScreensPanel != null)
+        {
+            screenManager = uiScreensPanel.GetComponent<UIScreenManager>();
+        }
+
         //Have UI inputs of greatest precedence (e.g. opening menu) at beginning of conditional 
-        //so they will be performed last if there are multiple inputs.
-        /*if(menuVisible)
+        //so they will be performed first if there are multiple inputs.
+        if(menuVisible)
         {
             ToggleMenu(true);
         }
-
-        else */if(inventoryVisible)
+        else if(inventoryVisible)
         {
             ToggleInventory(true);
         }
@@ -44,16 +51,16 @@ public class UIBehavior : MonoBehaviour
 	// Update is called once per frame
     void Update ()
     {
-        //TODO in future iterations: add other methods of input which would open/close UI (e.g. Esc to open the menu).
         //Have UI inputs of greatest precedence (e.g. opening menu) at beginning of conditional 
-        //so they will be performed last if there are multiple inputs.
+        //so they will be performed first if there are multiple inputs.
 
+        bool toggleMenu = ToggleMenuInput();
         bool toggleInventory = ToggleInventoryInput();
-        /*if(toggleMenu) //fill-in once have menu UI
+        if(toggleMenu)
         {
             ToggleMenu(!menuVisible);
         }
-        else */if(toggleInventory)
+        else if(toggleInventory && !menuVisible) //don't respond to other input if menu is showing
         {
             ToggleInventory(!inventoryVisible);
         }
@@ -62,15 +69,12 @@ public class UIBehavior : MonoBehaviour
     public bool ToggleInventoryInput()
     {
         bool toggleInventoryInput = Input.GetKeyDown(SettingsManager.GetOpenInventory());
-        bool toggleInventory = toggleInventoryInput && toggleInventoryInput != lastToggleInventoryInput;
-        lastToggleInventoryInput = toggleInventoryInput;
-        return toggleInventory;
+        return toggleInventoryInput;
     }
 
     public void ToggleInventory(bool show)
     {
-        inventoryVisible = show;
-        if(inventoryVisible)
+        if(show)
         {
             ShowUI();
             SetAllInactive();
@@ -80,13 +84,42 @@ public class UIBehavior : MonoBehaviour
         {
             HideUI();
         }
+        inventoryVisible = show;
+    }
+
+    public bool ToggleMenuInput()
+    {
+        bool toggleMenuInput = Input.GetKeyDown(SettingsManager.GetOpenMenu());
+        return toggleMenuInput;
+    }
+
+    public void ToggleMenu(bool show)
+    {
+        if(show)
+        {
+            ShowUI();
+            SetAllInactive();
+            menuPanel.SetActive(true);
+            //Freeze time!
+            menu_restoreTime = Time.timeScale;
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            Debug.Log("restoring timeScale of " + menu_restoreTime.ToString());
+            HideUI();
+            Time.timeScale = menu_restoreTime;
+        }
+        menuVisible = show;
     }
 
     public void SetAllInactive()
     {
         inventoryPanel.SetActive(false);
         tooltip.SetActive(false);
-        //TODO in future iterations: set all separate UI components to be inactive.
+        menuPanel.SetActive(false);
+        inventoryVisible = false;
+        menuVisible = false;
     }
 
     public void ShowUI()
@@ -96,7 +129,6 @@ public class UIBehavior : MonoBehaviour
 
     public void HideUI()
     {
-        //canvas.enabled = false;
         SetAllInactive();
     }
 
@@ -110,5 +142,18 @@ public class UIBehavior : MonoBehaviour
     public void HideTooltip()
     {
         tooltip.SetActive(false);
+    }
+
+    public void GameOver()
+    {
+        if(uiScreensPanel == null)
+        {
+            Debug.Log("UIBehavior: Error: No GameOver screen to show; uiScreensPanel is null!");
+        } 
+        else
+        {    
+            uiScreensPanel.SetActive(true);
+            screenManager.SwitchTo("UIGameOverScreen");
+        }
     }
 }

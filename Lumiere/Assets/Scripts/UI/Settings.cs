@@ -26,9 +26,10 @@ public class Settings
     public string pickupItem;
     public string stackModifier;
     public string openInventory;
+    public string openMenu;
 
     /// <summary>
-    /// Holds the default settings
+    /// Holds the default settings.
     /// </summary>
     public Settings()
     {
@@ -37,12 +38,13 @@ public class Settings
         moveDown = "S";
         moveLeft = "A";
         moveRight = "D";
-        walk = "LeftAlt";
+        walk = "C";
         useItem = "E";
         dropItem = "Q";
         pickupItem = "Mouse0";
         stackModifier = "LeftShift";
         openInventory = "Tab";
+        openMenu = "Escape";
     }
 
 }

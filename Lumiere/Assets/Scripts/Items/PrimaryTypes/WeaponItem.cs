@@ -66,7 +66,9 @@ public class WeaponItem : UsableItem
             this.itemID,
             this.useAction,
             this.damage,
-            this.rof);
+            this.rof,
+            this.attackRange
+        );
     }
 
     /// <summary>

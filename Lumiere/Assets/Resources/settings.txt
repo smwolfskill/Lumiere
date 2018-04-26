@@ -4,10 +4,11 @@
     "moveDown": "S",
     "moveLeft": "A",
     "moveRight": "D",
-    "walk": "LeftAlt",
+    "walk": "C",
     "useItem": "E",
     "dropItem": "Q",
     "pickupItem": "Mouse0",
     "stackModifier": "LeftShift",
-    "openInventory": "Tab"
+    "openInventory": "Tab",
+    "openMenu": "Escape"
 }

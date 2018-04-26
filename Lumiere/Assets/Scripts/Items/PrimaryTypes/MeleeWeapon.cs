@@ -66,7 +66,9 @@ class MeleeWeapon : WeaponItem
             this.useAction,
             this.damage,
             this.rof,
-            this.arc);
+            this.attackRange,
+            this.arc
+        );
     }
 
     /// <summary>

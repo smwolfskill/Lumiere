@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
+using UnityEngine.SceneManagement;
 
 public class PlayerObject : EntityObject
 {
@@ -31,7 +33,17 @@ public class PlayerObject : EntityObject
         GameObject hotbarPanel = GameObject.FindGameObjectWithTag("HotbarPanel");
         hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);
 
-        anim = this.gameObject.GetComponent<Animator>();
+        if(this.gameObject != null)
+        {
+            anim = this.gameObject.GetComponent<Animator>();
+            //Set mass to 0 to prevent player from pushing around monsters
+            Rigidbody2D playerRigidbody = this.gameObject.GetComponent<Rigidbody2D>();
+            if(playerRigidbody != null)
+            {
+                playerRigidbody.mass = 0.0f;
+
+            }
+        }
     }
 
     public override void InflictDamage(float damageAmount)
@@ -60,5 +72,14 @@ public class PlayerObject : EntityObject
         PlaySound ();
         GameObject.Destroy(gameObject, 1f);
         this.isDead = true;
+        //TODO: Show Game Over screen
+        /*UnityEngine.SceneManagement.Scene scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene(); //current scene
+        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scene.name, LoadSceneMode.Single);*/
+        GameObject uiCanvas = GameObject.FindGameObjectWithTag("UICanvas");
+        if(uiCanvas != null)
+        {
+            UIBehavior uiBehavior = uiCanvas.GetComponent<UIBehavior>();
+            uiBehavior.GameOver();
+        }
     }
 }
