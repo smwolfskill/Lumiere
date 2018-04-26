@@ -95,4 +95,13 @@ public abstract class EntityObject
             itemToDrop.CreateGameObject(gameObject.transform.position);
         }
     }
+
+    protected void PlaySound()
+    {
+        AudioSource aSource = gameObject.GetComponent<AudioSource> ();
+        if (aSource != null && aSource.clip != null) 
+        {
+            aSource.Play ();
+        }
+    }
 }

@@ -6,6 +6,7 @@ public abstract class Entity : BaseObject
 {
     public EntityAction[] actions;     //will hold all actions that this entity can perform
     public Vector2 colliderSize; // the size of the entity's collider
+    public AudioClip deathSound;
     public Inventory inventory;
     public LinkedList<GameObject> nearbyItems = new LinkedList<GameObject>(); //list of items that this entity could pickup if desired. Will be used by AI mainly
     public EntityObject entityObject;
@@ -59,6 +60,10 @@ public abstract class Entity : BaseObject
 
         BoxCollider2D collider = entity.AddComponent<BoxCollider2D> ();
         collider.size = colliderSize;
+
+        AudioSource aSource = entity.AddComponent<AudioSource> ();
+        aSource.playOnAwake = false;
+        aSource.clip = deathSound;
 
         Rigidbody2D rigidbody = entity.AddComponent<Rigidbody2D> ();
         rigidbody.gravityScale = 0f;

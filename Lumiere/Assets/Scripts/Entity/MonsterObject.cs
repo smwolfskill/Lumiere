@@ -32,6 +32,9 @@ public class MonsterObject : NPCObject
         //Disable animations and die
         this.gameObject.GetComponent<MovementAnimation>().enabled = false;
         anim.SetTrigger("TDie");
+        PlaySound ();
         this.isDead = true;
     }
+
+
 }

@@ -73,6 +73,8 @@ public class PlayerAttack : EntityAction
     /// <returns>true if the attack succeeded (e.g. we didn't run out of arrows)</returns>
     public override bool Execute(GameObject _player)
     {
+        base.Execute (_player);
+
         Player player;
         float dmg;
 
