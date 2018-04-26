@@ -1,15 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EntityActionManager : MonoBehaviour
 {
     public Entity entity;
+    private UIBehavior uiBehavior = null;
+
+    void Start()
+    {
+        GameObject uiCanvas = GameObject.FindGameObjectWithTag("UICanvas");
+        if(uiCanvas != null)
+        {
+            uiBehavior = uiCanvas.GetComponent<UIBehavior>();
+            if(uiBehavior == null)
+            {
+                throw new Exception("Error: UICanvas has no UIBehavior component!");
+            }
+        }
+    }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
-        ExecuteValidActions(entity.actions);
+        //Execute valid actions every frame, unless the in-game menu is open (game paused).
+        if(uiBehavior == null || !uiBehavior.menuVisible)
+        {
+            ExecuteValidActions(entity.actions);
+        }
     }
 
     /// <summary>

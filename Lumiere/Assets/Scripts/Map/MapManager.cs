@@ -9,7 +9,7 @@ public class MapManager : MonoBehaviour
     public bool GenMapOnStart = false;
 
     private int levelNumber = 1;
-    private const float difficulty = 1.5f;
+    private float difficulty = 1.5f;
     private Text levelText;
 
     private const int initalMapSize = 40;
@@ -27,17 +27,27 @@ public class MapManager : MonoBehaviour
     {
         levelNumber = 1;
         levelText = GameObject.FindGameObjectWithTag ("UILevel").GetComponent<Text>();
+        UpdateDifficulty();
 
         if(GenMapOnStart)
         {
             GenMap();
         }
+    }
 
+    public void UpdateDifficulty()
+    {
+        if(!SettingsManager.loaded)
+        {
+            SettingsManager.LoadSettings();
+        }
+        difficulty = (float) SettingsManager.GetDifficulty();
     }
 
 
     public void GenMap()
     {
+        UpdateDifficulty();
         UpdateLevelText ();
         currMap = new GameObject();
 
