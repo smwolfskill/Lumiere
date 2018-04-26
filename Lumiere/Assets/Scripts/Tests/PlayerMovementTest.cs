@@ -25,7 +25,7 @@ public class PlayerMovementTest
         entityActionManager = player.AddComponent<EntityActionManager>();
         playerMove = Resources.Load<EntityAction>("PlayerMove");
         rigidbody = null;
-        playerObj = Player.CreateInstance<Player> ();
+        playerObj = Player.CreateInstance<Player>();
         playerObj.actions = new EntityAction[] { playerMove };
         entityActionManager.entity = playerObj;
         Assert.IsNotNull(playerMove);
@@ -43,7 +43,7 @@ public class PlayerMovementTest
             Resources.UnloadAsset(playerMove);
         }
 
-        if(player != null)
+        if (player != null)
         {
             GameObject.Destroy(player);
         }
@@ -92,7 +92,10 @@ public class PlayerMovementTest
     [Test]
     public void TestSuccessMove()
     {
-        if (rigidbody == null) { InitRigidbody(); }
+        if (rigidbody == null)
+        {
+            InitRigidbody();
+        }
         bool executed = playerMove.Execute(player);
         Assert.AreEqual(true, executed);
     }
@@ -104,7 +107,10 @@ public class PlayerMovementTest
     [UnityTest]
     public IEnumerator TestNoInput()
     {
-        if (rigidbody == null) { InitRigidbody(); }
+        if (rigidbody == null)
+        {
+            InitRigidbody();
+        }
         Vector2 originalPosition = rigidbody.position;
         yield return new WaitForFixedUpdate();
         Assert.AreEqual(originalPosition, rigidbody.position);

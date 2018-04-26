@@ -60,7 +60,7 @@ public class EquipmentManager
         {
             for (int i = 0; i < hotbar.Length; i++)
             {
-                if (hotbar [i] == null || !hotbar [i].SetYet ())
+                if (hotbar[i] == null || !hotbar[i].SetYet())
                 {
                     return false;
                 }
@@ -88,8 +88,8 @@ public class EquipmentManager
     /// <returns>True if successful, False otherwise.</returns>
     public bool Equip(EquippableItem item)
     {
-        int index = (int) item.Slot;
-        if (index < 0 || index >= equipment.Length) 
+        int index = (int)item.Slot;
+        if (index < 0 || index >= equipment.Length)
         {
             return false;
         }
@@ -99,7 +99,7 @@ public class EquipmentManager
             return false;
         }
 
-        equipment [(int) item.Slot] = item;
+        equipment[(int)item.Slot] = item;
         UpdateEquipPanel();
         return true;
     }
@@ -111,13 +111,13 @@ public class EquipmentManager
     /// <returns>The item if it was removed, null if there was no item or removal somehow failed.</returns>
     public EquippableItem DeEquip(EquipSlot slot)
     {
-        int index = (int) slot;
-        if (index < 0 || index >= equipment.Length) 
+        int index = (int)slot;
+        if (index < 0 || index >= equipment.Length)
         {
             return null;
         }
-        EquippableItem itemToRemove = equipment [index];
-        equipment [index] = null;
+        EquippableItem itemToRemove = equipment[index];
+        equipment[index] = null;
         UpdateEquipPanel();
         return itemToRemove;
     }
@@ -138,8 +138,8 @@ public class EquipmentManager
     /// <returns>The item if the slot contained an item. Null otherwise.</returns>
     public EquippableItem GetEquippedItem(EquipSlot slot)
     {
-        int index = (int) slot;
-        if (index < 0 || index >= equipment.Length) 
+        int index = (int)slot;
+        if (index < 0 || index >= equipment.Length)
         {
             return null;
         }
@@ -154,7 +154,7 @@ public class EquipmentManager
     /// <returns>The item if the slot contained an item. Null otherwise.</returns>
     public EquippableItem GetEquippedItemFromIndex(int index)
     {
-        if (index < 0 || index >= equipment.Length) 
+        if (index < 0 || index >= equipment.Length)
         {
             return null;
         }
@@ -187,7 +187,7 @@ public class EquipmentManager
     /// <returns>The usable item if it exists, null if the hotbar slot is empty or out of bounds.</returns>
     public UsableItem GetHotbarItem(int index)
     {
-        if (index < 0 || index >= hotbar.Length) 
+        if (index < 0 || index >= hotbar.Length)
         {
             return null;
         }
@@ -203,17 +203,17 @@ public class EquipmentManager
     /// <returns>True if successful, False if the slot already contains an item or the function fails.</returns>
     public bool AddHotBarItem(UsableItem item, int index)
     {
-        if (index < 0 || index >= hotbar.Length) 
+        if (index < 0 || index >= hotbar.Length)
         {
             return false;
         }
 
-        if (hotbar [index] != null) 
+        if (hotbar[index] != null)
         {
             return false;
         }
 
-        hotbar [index] = item;
+        hotbar[index] = item;
         UpdateHotbarPanel();
         return true;
     }
@@ -225,13 +225,13 @@ public class EquipmentManager
     /// <returns>The item being removed if it exists at that index, Null otherwise.</returns>
     public UsableItem RemoveHotBarItem(int index)
     {
-        if (index < 0 || index >= hotbar.Length) 
+        if (index < 0 || index >= hotbar.Length)
         {
             return null;
         }
 
-        UsableItem itemToRemove = hotbar [index];
-        hotbar [index] = null;
+        UsableItem itemToRemove = hotbar[index];
+        hotbar[index] = null;
         UpdateHotbarPanel();
         return itemToRemove;
     }

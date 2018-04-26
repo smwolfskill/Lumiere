@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityObjectManager : MonoBehaviour {
+public class EntityObjectManager : MonoBehaviour
+{
     public EntityObject entityObject;
 }

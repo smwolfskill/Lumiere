@@ -7,12 +7,12 @@ public abstract class EntityAction : Action
     protected Entity target;
     public AudioClip actionClip;
 
-    public override bool Execute (GameObject obj)
+    public override bool Execute(GameObject obj)
     {
-        AudioSource source = obj.GetComponent<AudioSource> ();
-        if (source != null && actionClip != null) 
+        AudioSource source = obj.GetComponent<AudioSource>();
+        if (source != null && actionClip != null)
         {
-            source.PlayOneShot (actionClip);
+            source.PlayOneShot(actionClip);
         }
 
         return true;

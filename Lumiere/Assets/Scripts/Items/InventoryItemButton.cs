@@ -21,7 +21,7 @@ public class InventoryItemButton : MonoBehaviour, IPointerEnterHandler, IPointer
     private int locationX;
     private int locationY;
 
-	void Start ()
+    void Start()
     {
         button.onClick.AddListener(TaskOnClick);
     }
@@ -39,7 +39,7 @@ public class InventoryItemButton : MonoBehaviour, IPointerEnterHandler, IPointer
         this.locationY = locationY;
         backgroundImage.sprite = null;
         itemImage.sprite = newItem.GuiSprite;
-        if(item.SetYet())
+        if (item.SetYet())
         {
             backgroundImage.color = newItem.RarityColor();
             itemImage.color = new Color(1f, 1f, 1f, 1f);
@@ -54,7 +54,7 @@ public class InventoryItemButton : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void UpdateQuantityText()
     {
-        if(item.SetYet() && item.MaxStacks > 1)
+        if (item.SetYet() && item.MaxStacks > 1)
         {
             itemQuantityText.enabled = true;
             itemQuantityText.text = item.Quantity.ToString();
@@ -74,7 +74,7 @@ public class InventoryItemButton : MonoBehaviour, IPointerEnterHandler, IPointer
     public void OnPointerEnter(PointerEventData eventData)
     {
         panelScript.SetSelected(locationX, locationY);
-        if(item.SetYet())
+        if (item.SetYet())
         {
             uiBehavior.ShowTooltip(item.TooltipText());
         }
@@ -83,7 +83,7 @@ public class InventoryItemButton : MonoBehaviour, IPointerEnterHandler, IPointer
     public void OnPointerExit(PointerEventData eventData)
     {
         panelScript.ResetSelectedItem();
-        if(item.SetYet())
+        if (item.SetYet())
         {
             uiBehavior.HideTooltip();
         }

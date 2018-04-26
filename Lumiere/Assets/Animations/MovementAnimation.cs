@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementAnimation : MonoBehaviour 
+public class MovementAnimation : MonoBehaviour
 {
     private Vector2 velocity;
     private Rigidbody2D rb;
@@ -18,24 +18,24 @@ public class MovementAnimation : MonoBehaviour
         WEST
     }
 
-	// Use this for initialization
-	void Awake () 
+    // Use this for initialization
+    void Awake()
     {
-        rb = GetComponent<Rigidbody2D> ();
-        anim = GetComponent<Animator> ();
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
         lastDirection = Direction.NORTH;
-        animationMapping = new Dictionary<Direction, string> ();
-        animationMapping [Direction.NORTH] = "TNorth";
-        animationMapping [Direction.EAST] = "TEast";
-        animationMapping [Direction.WEST] = "TWest";
-        animationMapping [Direction.SOUTH] = "TSouth";
-	}
-	
-	void FixedUpdate () 
+        animationMapping = new Dictionary<Direction, string>();
+        animationMapping[Direction.NORTH] = "TNorth";
+        animationMapping[Direction.EAST] = "TEast";
+        animationMapping[Direction.WEST] = "TWest";
+        animationMapping[Direction.SOUTH] = "TSouth";
+    }
+
+    void FixedUpdate()
     {
-        UpdateLastDirection ();
-        UpdateAnimation ();
-	}
+        UpdateLastDirection();
+        UpdateAnimation();
+    }
 
     /// <summary>
     /// Update the entity's last facing direction based on velocity. Horizontal directions take priority over vertical directions.
@@ -43,19 +43,19 @@ public class MovementAnimation : MonoBehaviour
     void UpdateLastDirection()
     {
         velocity = rb.velocity;
-        if (velocity.x > 0) 
+        if (velocity.x > 0)
         {
             lastDirection = Direction.EAST;
-        } 
-        else if (velocity.x < 0) 
+        }
+        else if (velocity.x < 0)
         {
             lastDirection = Direction.WEST;
-        } 
-        else if (velocity.y > 0) 
+        }
+        else if (velocity.y > 0)
         {
             lastDirection = Direction.NORTH;
-        } 
-        else if (velocity.y < 0) 
+        }
+        else if (velocity.y < 0)
         {
             lastDirection = Direction.SOUTH;
         }
@@ -68,16 +68,16 @@ public class MovementAnimation : MonoBehaviour
     {
         float speed = velocity.magnitude;
         string animationModifier = "";
-        if (speed < 0.1f) 
+        if (speed < 0.1f)
         {
             animationModifier = "Idle";
-        } 
-        else 
+        }
+        else
         {
-            animationModifier = "Walk";    
+            animationModifier = "Walk";
         }
 
-        anim.SetTrigger (animationMapping [lastDirection] + animationModifier);
+        anim.SetTrigger(animationMapping[lastDirection] + animationModifier);
 
     }
 }

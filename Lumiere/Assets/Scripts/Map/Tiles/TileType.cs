@@ -10,9 +10,9 @@ public abstract class TileType : BaseObject
     {
         GameObject gameObject = new GameObject(name);
         SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-        gameObject.transform.position = new Vector2 (x * map.tileOffset, y * map.tileOffset);
+        gameObject.transform.position = new Vector2(x * map.tileOffset, y * map.tileOffset);
 
         return gameObject;
     }
-        
+
 }

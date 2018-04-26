@@ -17,7 +17,7 @@ public class PlayerObject : EntityObject
 
     public PlayerObject(GameObject existingGameObject, float maxHealth) : base(existingGameObject, maxHealth)
     {
-        this.inventory = new Inventory(5,3);
+        this.inventory = new Inventory(5, 3);
         this.EquipmentManager = new EquipmentManager(10, 1);
         this.healthBar = GameObject.Find("PanelHealthBarFill");
         GameObject UICanvas = GameObject.FindGameObjectWithTag("UICanvas");
@@ -33,12 +33,12 @@ public class PlayerObject : EntityObject
         GameObject hotbarPanel = GameObject.FindGameObjectWithTag("HotbarPanel");
         hotbarPanel.GetComponent<HotbarPanel>().SetEquipmentManager(this.EquipmentManager);
 
-        if(this.gameObject != null)
+        if (this.gameObject != null)
         {
             anim = this.gameObject.GetComponent<Animator>();
             //Set mass to 0 to prevent player from pushing around monsters
             Rigidbody2D playerRigidbody = this.gameObject.GetComponent<Rigidbody2D>();
-            if(playerRigidbody != null)
+            if (playerRigidbody != null)
             {
                 playerRigidbody.mass = 0.0f;
 
@@ -48,7 +48,7 @@ public class PlayerObject : EntityObject
 
     public override void InflictDamage(float damageAmount)
     {
-        float armor =  ((float)EquipmentManager.GetArmorRating());
+        float armor = ((float)EquipmentManager.GetArmorRating());
         float multiplier = (float)(1 - (0.05 * armor / (1 + 0.05 * Mathf.Abs(armor))));
         base.InflictDamage(damageAmount * multiplier);
         //Debug.Log ("Inflicting damage! Health: " + currHealth + " Max Health: " + maxHealth);
@@ -69,14 +69,14 @@ public class PlayerObject : EntityObject
     protected override void Die()
     {
         anim.SetTrigger("TDie");
-        PlaySound ();
+        PlaySound();
         GameObject.Destroy(gameObject, 1f);
         this.isDead = true;
         //TODO: Show Game Over screen
         /*UnityEngine.SceneManagement.Scene scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene(); //current scene
         UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scene.name, LoadSceneMode.Single);*/
         GameObject uiCanvas = GameObject.FindGameObjectWithTag("UICanvas");
-        if(uiCanvas != null)
+        if (uiCanvas != null)
         {
             UIBehavior uiBehavior = uiCanvas.GetComponent<UIBehavior>();
             uiBehavior.GameOver();

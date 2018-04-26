@@ -7,7 +7,7 @@ using NUnit.Framework;
 /// <summary>
 /// Basic testing class for entity spawning.
 /// </summary>
-public class EntitySpawnTest 
+public class EntitySpawnTest
 {
     EntityRoomType entityRoomType;
     Room entityRoom;
@@ -19,41 +19,41 @@ public class EntitySpawnTest
     [SetUp]
     public void Init()
     {
-        mapGameObject = new GameObject ("Map");
-        roomProperties = Resources.Load<RoomProperties> ("RoomProperties");
-        map = new Map (50, 50, 1, mapGameObject, roomProperties, 1, 1);
+        mapGameObject = new GameObject("Map");
+        roomProperties = Resources.Load<RoomProperties>("RoomProperties");
+        map = new Map(50, 50, 1, mapGameObject, roomProperties, 1, 1);
 
-        entityRoomType = Resources.Load<EntityRoomType> ("Rooms/EntityRoom");
-        entityToSpawn = Resources.Load<Entity> ("Entities/Monsters/Monster 1");
+        entityRoomType = Resources.Load<EntityRoomType>("Rooms/EntityRoom");
+        entityToSpawn = Resources.Load<Entity>("Entities/Monsters/Monster 1");
         entityRoom = new Room(map, 0, 0, 30, 30, entityRoomType);
-        Assert.IsNotNull (map);
-        Assert.IsNotNull (entityRoom);
-        Assert.IsNotNull (entityRoomType);
-        Assert.IsNotNull (entityToSpawn);
+        Assert.IsNotNull(map);
+        Assert.IsNotNull(entityRoom);
+        Assert.IsNotNull(entityRoomType);
+        Assert.IsNotNull(entityToSpawn);
     }
 
     [TearDown]
     public void Cleanup()
     {
-        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject> ();
-        foreach (GameObject gameObject in gameObjects) 
+        GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject gameObject in gameObjects)
         {
-            GameObject.Destroy (gameObject);
+            GameObject.Destroy(gameObject);
         }
 
-        if (entityRoomType != null) 
+        if (entityRoomType != null)
         {
-            Resources.UnloadAsset (entityRoomType);
+            Resources.UnloadAsset(entityRoomType);
         }
 
-        if (entityToSpawn != null) 
+        if (entityToSpawn != null)
         {
-            Resources.UnloadAsset (entityToSpawn);
+            Resources.UnloadAsset(entityToSpawn);
         }
 
-        if (mapGameObject != null) 
+        if (mapGameObject != null)
         {
-            GameObject.Destroy (mapGameObject);
+            GameObject.Destroy(mapGameObject);
         }
 
         map = null;
@@ -66,8 +66,8 @@ public class EntitySpawnTest
     [Test]
     public void TestTilesSpawned()
     {
-        entityRoom.GenRoom (5 / 2);
-        Assert.IsTrue (entityRoom.tiles.Count > 0);
+        entityRoom.GenRoom(5 / 2);
+        Assert.IsTrue(entityRoom.tiles.Count > 0);
     }
 
     /// <summary>
@@ -76,8 +76,8 @@ public class EntitySpawnTest
     [Test]
     public void TestRoomInGame()
     {
-        GameObject room = GameObject.Find ("EntityRoom");
-        Assert.IsNotNull (room);
+        GameObject room = GameObject.Find("EntityRoom");
+        Assert.IsNotNull(room);
     }
 
     /// <summary>
@@ -86,17 +86,17 @@ public class EntitySpawnTest
     [Test]
     public void TestEntitiesSpawned()
     {
-        entityRoom.GenRoom (5 / 2);
+        entityRoom.GenRoom(5 / 2);
         int minEntities = entityRoomType.GetMinEntities(map);
         int maxEntities = entityRoomType.GetMaxEntities(map);
-        int entitiesSpawned = entityRoomType.GetEntitiesSpawned ();
+        int entitiesSpawned = entityRoomType.GetEntitiesSpawned();
 
         // We cannot guarentee any enemies will spawn due to the fact that
         // there may not be room for enemies to spawn in a given room. We
         // can assure that there will be no more than a certain amount of
         // enemies spawn though.
         //Assert.IsTrue (entitiesSpawned >= minEntities);
-        Assert.IsTrue (entitiesSpawned <= maxEntities);
+        Assert.IsTrue(entitiesSpawned <= maxEntities);
     }
 
     /// <summary>
@@ -109,13 +109,13 @@ public class EntitySpawnTest
         // that it'll be likely some enemies spawn.
         map.difficulty = 1000;
         map.levelNumber = 1000;
-        
-        entityRoom.GenRoom (5 / 2);
+
+        entityRoom.GenRoom(5 / 2);
         string monster1Name = "Monster 1";
         string monster2Name = "Monster 2";
         GameObject monster1 = GameObject.Find(monster1Name);
-        GameObject monster2 = GameObject.Find (monster2Name);
-        Assert.IsTrue (monster1 != null || monster2 != null);
+        GameObject monster2 = GameObject.Find(monster2Name);
+        Assert.IsTrue(monster1 != null || monster2 != null);
     }
 
     /// <summary>
@@ -124,21 +124,21 @@ public class EntitySpawnTest
     [Test]
     public void TestEntitySpawnLocation()
     {
-        Vector2 location1 = new Vector2 (0f, 0f);
-        GameObject entity1 = entityToSpawn.Spawn (map, location1);
-        Assert.AreEqual (location1, (Vector2) entity1.transform.position);
+        Vector2 location1 = new Vector2(0f, 0f);
+        GameObject entity1 = entityToSpawn.Spawn(map, location1);
+        Assert.AreEqual(location1, (Vector2)entity1.transform.position);
 
 
-        Vector2 location2 = new Vector2 (-15f, -15f);
-        GameObject entity2 = entityToSpawn.Spawn (map, location2);
-        Assert.AreEqual (location2, (Vector2) entity2.transform.position);
+        Vector2 location2 = new Vector2(-15f, -15f);
+        GameObject entity2 = entityToSpawn.Spawn(map, location2);
+        Assert.AreEqual(location2, (Vector2)entity2.transform.position);
 
-        Vector2 location3 = new Vector2 (15f, 15f);
-        GameObject entity3 = entityToSpawn.Spawn (map, location3);
-        Assert.AreEqual (location3, (Vector2) entity3.transform.position);
+        Vector2 location3 = new Vector2(15f, 15f);
+        GameObject entity3 = entityToSpawn.Spawn(map, location3);
+        Assert.AreEqual(location3, (Vector2)entity3.transform.position);
 
-        GameObject.Destroy (entity1);
-        GameObject.Destroy (entity2);
-        GameObject.Destroy (entity3);
+        GameObject.Destroy(entity1);
+        GameObject.Destroy(entity2);
+        GameObject.Destroy(entity3);
     }
 }

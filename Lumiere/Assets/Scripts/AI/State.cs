@@ -20,27 +20,27 @@ public class State : ScriptableObject
     /// <param name="stateController">State controller.</param>
     public void UpdateState(StateController stateController)
     {
-        DoActions (stateController);
-        CheckTransitions (stateController);
+        DoActions(stateController);
+        CheckTransitions(stateController);
     }
 
     /// <summary>
     /// Executes the actions to be performed in this state in the order they were specified.
     /// </summary>
     /// <param name="stateController">The state controller of the AI.</param>
-    private void DoActions (StateController stateController)
+    private void DoActions(StateController stateController)
     {
         GameObject gameObject = stateController.gameObject;
-        if (gameObject == null) 
+        if (gameObject == null)
         {
-            throw new MissingReferenceException ();
+            throw new MissingReferenceException();
         }
 
-        foreach (Action action in actions) 
+        foreach (Action action in actions)
         {
-            if (action.Validate (gameObject)) 
+            if (action.Validate(gameObject))
             {
-                action.Execute (gameObject);
+                action.Execute(gameObject);
             }
         }
     }
@@ -52,13 +52,13 @@ public class State : ScriptableObject
     /// <param name="stateController">The state controller of the AI.</param>
     private void CheckTransitions(StateController stateController)
     {
-        for (int i = 0; i < transitions.Length; i++) 
+        for (int i = 0; i < transitions.Length; i++)
         {
-            if (transitions [i].decision.Decide (stateController)) 
+            if (transitions[i].decision.Decide(stateController))
             {
-                stateController.TransitionToState (transitions [i].trueState);
+                stateController.TransitionToState(transitions[i].trueState);
                 break;
-            } 
+            }
         }
     }
 

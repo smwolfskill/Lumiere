@@ -14,16 +14,18 @@ public class Tile
 
     public Tile(int x, int y, Map map, TileType tileType)
     {
-        this.x = x; this.y = y;
+        this.x = x;
+        this.y = y;
         this.map = map;
         this.tileType = tileType;
-        this.gameObject = tileType.PopulateGameObject (x, y, map);
+        this.gameObject = tileType.PopulateGameObject(x, y, map);
     }
 
     public void SetX_Y(int x, int y)
     {
-        this.x = x; this.y = y;
-        gameObject.transform.position = new Vector2 (x, y);
+        this.x = x;
+        this.y = y;
+        gameObject.transform.position = new Vector2(x, y);
     }
 
     public void SetContainer(Container container)
@@ -38,7 +40,7 @@ public class Tile
 
     public void Remove()
     {
-        if (gameObject != null) 
+        if (gameObject != null)
         {
             GameObject.Destroy(gameObject);
         }
@@ -50,22 +52,22 @@ public class Tile
     {
         return tileType.walkable;
     }
-        
+
     public Tile GetNeighbor(Utilities.Direction direction)
     {
         switch (direction)
         {
-            case Utilities.Direction.NORTH:
-                return map.GetTile(x, y - 1);
+        case Utilities.Direction.NORTH:
+            return map.GetTile(x, y - 1);
 
-            case Utilities.Direction.SOUTH:
-                return map.GetTile(x, y + 1);
+        case Utilities.Direction.SOUTH:
+            return map.GetTile(x, y + 1);
 
-            case Utilities.Direction.WEST:
-                return map.GetTile(x - 1, y);
+        case Utilities.Direction.WEST:
+            return map.GetTile(x - 1, y);
 
-            case Utilities.Direction.EAST:
-                return map.GetTile(x + 1, y);
+        case Utilities.Direction.EAST:
+            return map.GetTile(x + 1, y);
         }
         return null;
     }
@@ -77,13 +79,13 @@ public class Tile
     public List<Tile> GetNeighbors(List<TileType> allowedTileTypes = null)
     {
         List<Tile> neighbors = new List<Tile>();
-        foreach(Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
+        foreach (Utilities.Direction direction in Enum.GetValues(typeof(Utilities.Direction)))
         {
-            Tile neighbor = this.GetNeighbor (direction);
+            Tile neighbor = this.GetNeighbor(direction);
             if (
                 neighbor != null &&
                 (allowedTileTypes == null || allowedTileTypes.Contains(neighbor.tileType))
-            ) 
+            )
             {
                 neighbors.Add(neighbor);
             }

@@ -46,7 +46,7 @@ public class EquippableItem : GameItem
 
     override public GameItem clone()
     {
-        return new ArmorItem (
+        return new ArmorItem(
             this.guiSprite,
             this.groundSprite,
             this.name,

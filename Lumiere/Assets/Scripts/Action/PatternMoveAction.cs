@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Lumiere/Actions/EntityActions/PatternMoveAction")]
-public class PatternMoveAction : MonsterMoveAction 
+public class PatternMoveAction : MonsterMoveAction
 {
     public string[] inputPattern;
     private int[,] pattern;
@@ -15,9 +15,12 @@ public class PatternMoveAction : MonsterMoveAction
     private float timer = 0f;
     private bool initialized = false;
 
-    public override bool Validate (GameObject obj)
+    public override bool Validate(GameObject obj)
     {
-        if (!base.Validate(obj)) { return false; }
+        if (!base.Validate(obj))
+        {
+            return false;
+        }
 
         //If monster is requesting to move for the first time, then allow the move.
         if (!initialized)
@@ -41,25 +44,25 @@ public class PatternMoveAction : MonsterMoveAction
         return false;
     }
 
-    public override bool Execute (GameObject obj)
+    public override bool Execute(GameObject obj)
     {
-        Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D> ();
-        if (rigidbody == null) 
+        Rigidbody2D rigidbody = obj.GetComponent<Rigidbody2D>();
+        if (rigidbody == null)
         {
             return false;
         }
 
-        if (pattern == null) 
+        if (pattern == null)
         {
-            InitializePattern ();
+            InitializePattern();
         }
 
         //Debug.Log ("Steps: " + numSteps);
         //Debug.Log ("Current Step: " + currentStep);
         int nextStep = (currentStep + 1) % numSteps;
-        Vector2 speedScale = new Vector2 (speed, -speed);
-        Vector2 velocity = (FindStep (nextStep) - FindStep (currentStep));
-        velocity.Scale (speedScale);
+        Vector2 speedScale = new Vector2(speed, -speed);
+        Vector2 velocity = (FindStep(nextStep) - FindStep(currentStep));
+        velocity.Scale(speedScale);
         rigidbody.velocity = velocity;
         currentStep = nextStep;
 
@@ -68,19 +71,19 @@ public class PatternMoveAction : MonsterMoveAction
 
     private Vector2 FindStep(int step)
     {
-        for (int i = 0; i < pattern.GetLength(0); i++) 
+        for (int i = 0; i < pattern.GetLength(0); i++)
         {
-            for (int j = 0; j < pattern.GetLength(1); j++) 
+            for (int j = 0; j < pattern.GetLength(1); j++)
             {
-                if (pattern [i, j] == step) 
+                if (pattern[i, j] == step)
                 {
-                    return new Vector2 (j, i);
-                }    
+                    return new Vector2(j, i);
+                }
             }
-            
+
         }
 
-        return new Vector2 (-1, -1);
+        return new Vector2(-1, -1);
     }
 
     private void InitializePattern()
@@ -89,22 +92,22 @@ public class PatternMoveAction : MonsterMoveAction
         int rows = inputPattern.Length;
         currentStep = 0;
         numSteps = 0;
-        if (rows > 0) 
+        if (rows > 0)
         {
-            columns = inputPattern [0].Split(' ').Length;
+            columns = inputPattern[0].Split(' ').Length;
         }
 
-        pattern = new int[rows,columns];
-        for (int i = 0; i < rows; i++) 
+        pattern = new int[rows, columns];
+        for (int i = 0; i < rows; i++)
         {
-            string[] row = inputPattern [i].Split (' ');
-            for (int j = 0; j < columns; j++) 
+            string[] row = inputPattern[i].Split(' ');
+            for (int j = 0; j < columns; j++)
             {
-                pattern [i,j] = int.Parse (row [j]);
+                pattern[i, j] = int.Parse(row[j]);
 
-                if (pattern [i, j] > numSteps) 
+                if (pattern[i, j] > numSteps)
                 {
-                    numSteps = pattern [i, j];
+                    numSteps = pattern[i, j];
                 }
             }
         }

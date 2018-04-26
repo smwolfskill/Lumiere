@@ -16,11 +16,11 @@ public class DropItem : EntityAction
     public override bool Validate(GameObject obj)
     {
         bool dropItem = Input.GetKeyDown(SettingsManager.GetDropItem());
-        if(dropItem)
+        if (dropItem)
         {
             GameObject panel = GameObject.FindGameObjectWithTag("InventoryPanel");
             invPanel = panel.GetComponent<InventoryPanel>();
-            if(!invPanel.Visible)
+            if (!invPanel.Visible)
             {
                 return false;
             }
@@ -52,13 +52,13 @@ public class DropItem : EntityAction
     {
         bool stackModifierInput = Input.GetKey(SettingsManager.GetStackModifier()); //if pressed, will drop entire stack
         int amountToDrop = 1;
-        if(stackModifierInput)
+        if (stackModifierInput)
         {
             amountToDrop = toDrop.Quantity;
         }
 
         GameItem removedItem = invPanel.ManagedInventory.RemoveItem(invPanel.SelectedX, invPanel.SelectedY, amountToDrop);
-        if(removedItem == null)
+        if (removedItem == null)
         {
             return false; //nothing to drop. Inventory bug
         }

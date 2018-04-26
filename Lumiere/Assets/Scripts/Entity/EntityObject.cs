@@ -9,7 +9,7 @@ public abstract class EntityObject
     protected float maxHealth;
     protected float currHealth;
     protected bool isDead;
-	protected Inventory inventory;
+    protected Inventory inventory;
 
     public EntityObject(GameObject existingGameObject, float maxHealth)
     {
@@ -17,7 +17,7 @@ public abstract class EntityObject
         this.maxHealth = maxHealth;
         this.currHealth = maxHealth;
         this.isDead = false;
-		this.inventory = null;
+        this.inventory = null;
 
         this.gameObject.AddComponent<EntityHealthManager>();
     }
@@ -68,7 +68,7 @@ public abstract class EntityObject
     /// </summary>
     virtual public void DropLootAroundGameObject()
     {
-        if(entityDropGen != null && entityDropGen.maxLootCap > 0)
+        if (entityDropGen != null && entityDropGen.maxLootCap > 0)
         {
             DropItemsAroundGameObject(entityDropGen.GenerateLoot());
         }
@@ -82,7 +82,7 @@ public abstract class EntityObject
     virtual public void DropItemsAroundGameObject(GameItem[] itemsToDrop)//, float spacing = 0.5f)
     {
         //For now, just drop items all on same location b/c don't want any items getting stuck in walls if entity is against one
-        foreach(GameItem itemToDrop in itemsToDrop)
+        foreach (GameItem itemToDrop in itemsToDrop)
         {
             itemToDrop.CreateGameObject(gameObject.transform.position);
         }
@@ -90,10 +90,10 @@ public abstract class EntityObject
 
     protected void PlaySound()
     {
-        AudioSource aSource = gameObject.GetComponent<AudioSource> ();
-        if (aSource != null && aSource.clip != null) 
+        AudioSource aSource = gameObject.GetComponent<AudioSource>();
+        if (aSource != null && aSource.clip != null)
         {
-            aSource.Play ();
+            aSource.Play();
         }
     }
 }

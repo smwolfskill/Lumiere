@@ -4,7 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(menuName = "Lumiere/Room Properties")]
-public class RoomProperties : ScriptableObject 
+public class RoomProperties : ScriptableObject
 {
     public int minWidth;
     public int minHeight;

@@ -61,7 +61,8 @@ public class InventoryPanel : MonoBehaviour
         }
     }
 
-    public bool Visible {
+    public bool Visible
+    {
         get
         {
             return visible;
@@ -76,9 +77,9 @@ public class InventoryPanel : MonoBehaviour
 
     }
 
-    void Start ()
+    void Start()
     {
-        
+
         //if(!initialized)
         //{
         //    Reset();
@@ -112,15 +113,15 @@ public class InventoryPanel : MonoBehaviour
         InventoryItemButton[] childrenScripts = GetComponentsInChildren<InventoryItemButton>(); //used to access the children game objects
         //Set or create each GameItem's UI element
         //TODO: understand how/why duplicate 
-        for(int location = 0; location < capacity; location++)
+        for (int location = 0; location < capacity; location++)
         {
             int[] gridLocation = ItemLocationInGrid(location);
             int locX = gridLocation[0];
             int locY = gridLocation[1];
             InventoryItemButton childScript;
-            if(location >= childrenScripts.Length) //Inventory grew in size; create more UI items.
+            if (location >= childrenScripts.Length) //Inventory grew in size; create more UI items.
             {
-                GameObject child = (GameObject) GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation)/*,
+                GameObject child = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + itemUIPrefabLocation)/*,
                                                  gameObject.transform*/);
                 child.transform.SetParent(gameObject.transform, false);
                 childScript = child.GetComponent<InventoryItemButton>();
@@ -131,7 +132,7 @@ public class InventoryPanel : MonoBehaviour
                 childScript = childrenScripts[location];
             }
 
-            if(locX < 0 || locX >= nWidth || locY < 0 || locY >= nHeight)
+            if (locX < 0 || locX >= nWidth || locY < 0 || locY >= nHeight)
             {
                 Debug.Log("Set new item wrong params: (" + locX + "/ " + nWidth + ", " + locY + "/ " + nHeight + ")");
             }
@@ -139,7 +140,7 @@ public class InventoryPanel : MonoBehaviour
         }
 
         //If inventory shrank in size, delete extra UI slot elements
-        for(int overIndex = capacity; overIndex < childrenScripts.Length; overIndex++)
+        for (int overIndex = capacity; overIndex < childrenScripts.Length; overIndex++)
         {
             GameObject.Destroy(childrenScripts[overIndex].gameObject);
         }
@@ -162,12 +163,13 @@ public class InventoryPanel : MonoBehaviour
 
     public GameItem GetSelectedItem()
     {
-        if (visible == false || selectedX < 0 || selectedY < 0) {
+        if (visible == false || selectedX < 0 || selectedY < 0)
+        {
             return null;
         }
         else
         {
-            return inv.GetItem(selectedX, selectedY);            
+            return inv.GetItem(selectedX, selectedY);
         }
     }
 
@@ -211,6 +213,6 @@ public class InventoryPanel : MonoBehaviour
     /// <param name="locationID">Location I.</param>
     public int[] ItemLocationInGrid(int locationID)
     {
-        return new int[] {locationID % nWidth, locationID / nWidth};
+        return new int[] { locationID % nWidth, locationID / nWidth };
     }
 }

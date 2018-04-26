@@ -15,8 +15,8 @@ public static class ItemLoader
     {
         if (File.Exists(filename))
         {
-            string fileData = File.ReadAllText (filename);
-            GameItem loadedItem = JsonUtility.FromJson<GameItem> (fileData);
+            string fileData = File.ReadAllText(filename);
+            GameItem loadedItem = JsonUtility.FromJson<GameItem>(fileData);
             return loadedItem;
         }
         return null;
@@ -33,7 +33,7 @@ public static class ItemLoader
         string serializedItem = JsonUtility.ToJson(item, true);
         try
         {
-            File.WriteAllText (filename, serializedItem);
+            File.WriteAllText(filename, serializedItem);
             return true;
         }
         catch

@@ -24,29 +24,33 @@ public class Utilities : MonoBehaviour
 
     public static Turn GetTurn(Direction currDir, Direction nextDir)
     {
-        if (currDir == nextDir) return Turn.FORWARD;
+        if (currDir == nextDir)
+            return Turn.FORWARD;
 
-        if (LeftOf(currDir) == nextDir) return Turn.LEFT;
+        if (LeftOf(currDir) == nextDir)
+            return Turn.LEFT;
 
-        if (RightOf(currDir) == nextDir) return Turn.RIGHT;
+        if (RightOf(currDir) == nextDir)
+            return Turn.RIGHT;
 
-        if (Behind(currDir) == nextDir) return Turn.BACKWARD;
+        if (Behind(currDir) == nextDir)
+            return Turn.BACKWARD;
 
         return Turn.FORWARD;
     }
 
     public static Direction LeftOf(Direction direction)
     {
-        switch(direction)
+        switch (direction)
         {
-            case Direction.NORTH:
-                return Direction.WEST;
-            case Direction.WEST:
-                return Direction.SOUTH;
-            case Direction.SOUTH:
-                return Direction.EAST;
-            case Direction.EAST:
-                return Direction.NORTH;
+        case Direction.NORTH:
+            return Direction.WEST;
+        case Direction.WEST:
+            return Direction.SOUTH;
+        case Direction.SOUTH:
+            return Direction.EAST;
+        case Direction.EAST:
+            return Direction.NORTH;
         }
 
         return Direction.NORTH;
@@ -56,14 +60,14 @@ public class Utilities : MonoBehaviour
     {
         switch (direction)
         {
-            case Direction.NORTH:
-                return Direction.EAST;
-            case Direction.EAST:
-                return Direction.SOUTH;
-            case Direction.SOUTH:
-                return Direction.WEST;
-            case Direction.WEST:
-                return Direction.NORTH;
+        case Direction.NORTH:
+            return Direction.EAST;
+        case Direction.EAST:
+            return Direction.SOUTH;
+        case Direction.SOUTH:
+            return Direction.WEST;
+        case Direction.WEST:
+            return Direction.NORTH;
         }
 
         return Direction.NORTH;
@@ -73,37 +77,37 @@ public class Utilities : MonoBehaviour
     {
         switch (direction)
         {
-            case Direction.NORTH:
-                return Direction.SOUTH;
-            case Direction.EAST:
-                return Direction.WEST;
-            case Direction.SOUTH:
-                return Direction.NORTH;
-            case Direction.WEST:
-                return Direction.EAST;
+        case Direction.NORTH:
+            return Direction.SOUTH;
+        case Direction.EAST:
+            return Direction.WEST;
+        case Direction.SOUTH:
+            return Direction.NORTH;
+        case Direction.WEST:
+            return Direction.EAST;
         }
 
         return Direction.NORTH;
     }
 
-    public static Pair<int,int> CordInDirection(Direction direction, int x, int y)
+    public static Pair<int, int> CordInDirection(Direction direction, int x, int y)
     {
         switch (direction)
         {
-            case Direction.NORTH:
-                return new Pair<int, int>(x, y - 1);
-            case Direction.EAST:
-                return new Pair<int, int>(x + 1,y);
-            case Direction.SOUTH:
-                return new Pair<int, int>(x, y + 1);
-            case Direction.WEST:
-                return new Pair<int, int>(x - 1, y);
+        case Direction.NORTH:
+            return new Pair<int, int>(x, y - 1);
+        case Direction.EAST:
+            return new Pair<int, int>(x + 1, y);
+        case Direction.SOUTH:
+            return new Pair<int, int>(x, y + 1);
+        case Direction.WEST:
+            return new Pair<int, int>(x - 1, y);
         }
 
         return new Pair<int, int>(x, y);
     }
 
-    public static Pair<int, int> CordInDirection(Direction direction, Pair<int,int> pair)
+    public static Pair<int, int> CordInDirection(Direction direction, Pair<int, int> pair)
     {
         return CordInDirection(direction, pair.First, pair.Second);
     }
@@ -133,9 +137,10 @@ public class Utilities : MonoBehaviour
     {
         int difX = destX - currX;
         int difY = destY - currY;
-        float angle =  Mathf.Atan2(difY, difX) * (180.0f / Mathf.PI);
+        float angle = Mathf.Atan2(difY, difX) * (180.0f / Mathf.PI);
 
-        if (angle < 0) angle += 360;
+        if (angle < 0)
+            angle += 360;
         return angle;
     }
 

@@ -19,7 +19,7 @@ public class HotbarItemButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private int locationX;
     private int locationY;
 
-    void Start ()
+    void Start()
     {
         button.onClick.AddListener(TaskOnClick);
     }
@@ -36,7 +36,7 @@ public class HotbarItemButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         this.locationY = locationY;
         backgroundImage.sprite = null;
         itemImage.sprite = newItem.GuiSprite;
-        if(item.SetYet())
+        if (item.SetYet())
         {
             backgroundImage.color = newItem.RarityColor();
             itemImage.color = new Color(1f, 1f, 1f, 1f);
